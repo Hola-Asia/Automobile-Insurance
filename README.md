@@ -1,2 +1,2 @@
-# Automobile-Insurance-Background-Management-System
+# Automobile-Insurance
 Project Group 6
