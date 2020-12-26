@@ -68,6 +68,7 @@
           <el-breadcrumb separator-class="el-icon-arrow-right" class="linehei">
             <el-breadcrumb-item :to="{ path: '/' }">一级分类</el-breadcrumb-item>
             <el-breadcrumb-item>二级分类</el-breadcrumb-item>
+            
           </el-breadcrumb>
         </el-header>
         <el-main>
