@@ -1,6 +1,6 @@
 <template>
-  <div style="height:100%">
-    <el-container style="height:100%">
+  <div style="height: 100%">
+    <el-container style="height: 100%">
       <el-aside width="200px">
         <el-col :span="12">
           <el-menu
@@ -12,38 +12,54 @@
             text-color="#fff"
             active-text-color="#ffd04b"
           >
-            <el-menu-item index="1">
-              <i class="el-icon-menu"></i>
-              <span slot="title"></span>
-            </el-menu-item>
-            <el-menu-item index="2">
-              <i class="el-icon-document"></i>
-              <span slot="title">订单管理</span>
-            </el-menu-item>
-            <el-menu-item index="3">
-              <i class="el-icon-user-solid"></i>
-              <span slot="title">客户管理</span>
-            </el-menu-item>
-            <el-menu-item index="4">
-              <i class="el-icon-chat-line-square"></i>
-              <span slot="title">咨询管理</span>
-            </el-menu-item>
-            <el-menu-item index="5">
-              <i class="el-icon-house"></i>
-              <span slot="title">关于我们</span>
-            </el-menu-item>
-            <el-menu-item index="6">
-              <i class="el-icon-s-check"></i>
-              <span slot="title">保单管理</span>
-            </el-menu-item>
-            <el-menu-item index="7">
-              <i class="el-icon-edit"></i>
-              <span slot="title">意见反馈</span>
-            </el-menu-item>
-            <el-menu-item index="8">
-              <i class="el-icon-s-tools"></i>
-              <span slot="title">权限管理</span>
-            </el-menu-item>
+            <router-link to="/">
+              <el-menu-item index="1">
+                <i class="el-icon-menu"></i>
+                <span slot="title"></span>
+              </el-menu-item>
+            </router-link>
+            <router-link to="/">
+              <el-menu-item index="2">
+                <i class="el-icon-document"></i>
+                <span slot="title">订单管理</span>
+              </el-menu-item>
+            </router-link>
+            <router-link to="/">
+              <el-menu-item index="3">
+                <i class="el-icon-user-solid"></i>
+                <span slot="title">客户管理</span>
+              </el-menu-item>
+            </router-link>
+            <router-link to="/information">
+              <el-menu-item index="4">
+                <i class="el-icon-chat-line-square"></i>
+                <span slot="title">资讯管理</span>
+              </el-menu-item>
+            </router-link>
+            <router-link to="/">
+              <el-menu-item index="5">
+                <i class="el-icon-house"></i>
+                <span slot="title">关于我们</span>
+              </el-menu-item>
+            </router-link>
+            <router-link to="/">
+              <el-menu-item index="6">
+                <i class="el-icon-s-check"></i>
+                <span slot="title">保单管理</span>
+              </el-menu-item>
+            </router-link>
+            <router-link to="/">
+              <el-menu-item index="7">
+                <i class="el-icon-edit"></i>
+                <span slot="title">意见反馈</span>
+              </el-menu-item>
+            </router-link>
+            <router-link to="/">
+              <el-menu-item index="8">
+                <i class="el-icon-s-tools"></i>
+                <span slot="title">权限管理</span>
+              </el-menu-item>
+            </router-link>
           </el-menu>
         </el-col>
       </el-aside>
@@ -54,7 +70,9 @@
             <el-breadcrumb-item>二级分类</el-breadcrumb-item>
           </el-breadcrumb>
         </el-header>
-        <el-main>Main</el-main>
+        <el-main>
+          <router-view></router-view>
+        </el-main>
       </el-container>
     </el-container>
   </div>
@@ -65,7 +83,14 @@ export default {
   data() {
     return {};
   },
-  methods: {},
+  methods: {
+      handleOpen(key, keyPath) {
+        console.log(key, keyPath);
+      },
+      handleClose(key, keyPath) {
+        console.log(key, keyPath);
+      }
+    },
   components: {},
 };
 </script>
@@ -80,7 +105,7 @@ export default {
 }
 
 .el-aside {
-  background-color:#545c64;
+  background-color: #545c64;
   color: #333;
   text-align: center;
   line-height: 100%;
@@ -110,19 +135,19 @@ body > .el-container {
   width: 100%;
 }
 el-menu-item {
-    height: 60px;
-    line-height: 60px;
+  height: 60px;
+  line-height: 60px;
 }
-.el-menu-item, .el-submenu__title {
-    height: 85px;
-    line-height: 85px;
+.el-menu-item,
+.el-submenu__title {
+  height: 85px;
+  line-height: 85px;
 }
-el-menu{
-    border: none;
+el-menu {
+  border: none;
 }
-.linehei{
-    height: 60px;
-    line-height: 60px;
+.linehei {
+  height: 60px;
+  line-height: 60px;
 }
-
 </style>
