@@ -23,7 +23,7 @@ const routes = [
         component: Information
       },
       {
-        //订单管理页接口
+        // 订单管理页接口
         path: '/order',
         name: 'Order',
         component: Order

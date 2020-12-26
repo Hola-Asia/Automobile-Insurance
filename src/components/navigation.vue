@@ -66,8 +66,20 @@
       <el-container>
         <el-header>
           <el-breadcrumb separator-class="el-icon-arrow-right" class="linehei">
-            <el-breadcrumb-item :to="{ path: '/' }">一级分类</el-breadcrumb-item>
+            <el-breadcrumb-item :to="{ path: '/' }"
+              >一级分类</el-breadcrumb-item
+            >
             <el-breadcrumb-item>二级分类</el-breadcrumb-item>
+            <el-dropdown @command="handleCommand">
+              <span class="el-dropdown-link">
+                <i class="el-icon-s-home"></i>
+                个人用户
+                <i class="el-icon-arrow-down el-icon--right"></i>
+              </span>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item command="a">退出登录</el-dropdown-item></el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
           </el-breadcrumb>
         </el-header>
         <el-main>
@@ -84,13 +96,18 @@ export default {
     return {};
   },
   methods: {
-      handleOpen(key, keyPath) {
-        console.log(key, keyPath);
-      },
-      handleClose(key, keyPath) {
-        console.log(key, keyPath);
-      }
+    // 导航
+    handleOpen(key, keyPath) {
+      console.log(key, keyPath);
     },
+    handleClose(key, keyPath) {
+      console.log(key, keyPath);
+    },
+    // 下拉
+    handleCommand(command) {
+      this.$message("click on item " + command);
+    },
+  },
   components: {},
 };
 </script>
@@ -143,7 +160,7 @@ el-menu-item {
   height: 85px;
   line-height: 85px;
 }
-el-menu {
+.el-menu {
   border: none;
 }
 .linehei {
@@ -152,5 +169,25 @@ el-menu {
 }
 a {
   text-decoration: none;
+}
+/* 下拉菜单 */
+.el-dropdown-link {
+  cursor: pointer;
+  color: #606266;
+}
+.el-dropdown-link:hover {
+  cursor: pointer;
+  color: #409eff;
+}
+.el-icon-arrow-down {
+  font-size: 12px;
+}
+.el-dropdown span {
+  border: none;
+  outline: none;
+}
+.el-header[data-v-09d1a3b8],
+.el-footer[data-v-09d1a3b8] {
+  text-align: right;
 }
 </style>
