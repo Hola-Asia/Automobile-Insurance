@@ -18,7 +18,7 @@
                 <span slot="title"></span>
               </el-menu-item>
             </router-link>
-            <router-link to="/">
+            <router-link to="/order">
               <el-menu-item index="2">
                 <i class="el-icon-document"></i>
                 <span slot="title">订单管理</span>
@@ -149,5 +149,8 @@ el-menu {
 .linehei {
   height: 60px;
   line-height: 60px;
+}
+a {
+  text-decoration: none;
 }
 </style>
