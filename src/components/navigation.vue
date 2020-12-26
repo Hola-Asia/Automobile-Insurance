@@ -57,7 +57,7 @@
             <router-link to="/">
               <el-menu-item index="8">
                 <i class="el-icon-s-tools"></i>
-                <span slot="title">权限管理1</span>
+                <span slot="title">权限管理</span>
               </el-menu-item>
             </router-link>
           </el-menu>
