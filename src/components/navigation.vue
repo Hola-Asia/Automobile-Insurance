@@ -42,7 +42,7 @@
                 <span slot="title">关于我们</span>
               </el-menu-item>
             </router-link>
-            <router-link to="/">
+            <router-link to="/guaranteeSlipList">
               <el-menu-item index="6">
                 <i class="el-icon-s-check"></i>
                 <span slot="title">保单管理</span>

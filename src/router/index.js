@@ -3,7 +3,9 @@ import VueRouter from 'vue-router';
 import Navigation from '../components/navigation.vue';
 import Information from '../views/Information.vue';
 import Order from '../views/Order.vue';
-import Login from '../views/Login.vue'
+import Login from '../views/Login.vue';
+import GuaranteeSlipList from '../views/GuaranteeSlipList.vue';
+
 
 Vue.use(VueRouter)
 
@@ -31,9 +33,17 @@ const routes = [{
                 path: '/order',
                 name: 'Order',
                 component: Order
+            },
+            //保单列表接口
+            {
+                path: '/guaranteeSlipList',
+                name: 'GuaranteeSlipList',
+                component: GuaranteeSlipList
             }
         ]
-    },
+    }
+
+
 ]
 
 const router = new VueRouter({

@@ -1,27 +1,114 @@
 <template>
-    <div>
-        <div>
-            <h1>汽 车 保 险 后 台 管 理 系 统</h1>
-            <el-input placeholder="请输入用户名" v-model="user" clearable></el-input>
-            <el-input type="password" placeholder="请输入密码" v-model="password" clearable></el-input>
-            <el-row>
-            <el-button>登陆</el-button>
-            </el-row>
-        </div>
+    <div class="background">
+      <h1>汽 车 保 险 后 台 管 理 系 统</h1>
+      <div class="form">
+        <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+          <el-form-item label=" " prop="user">
+            <el-input class="user" type="text" v-model="ruleForm.user" autocomplete="off" placeholder="请输入账号"></el-input>
+          </el-form-item>
+          <el-form-item label=" " prop="password">
+            <el-input class="password" type="password" v-model="ruleForm.password" autocomplete="off" placeholder="请输入密码"></el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="submitForm('ruleForm')">登陆</el-button>
+            <el-button @click="resetForm('ruleForm')">重置</el-button>
+          </el-form-item>
+        </el-form>
+      </div>
     </div>
 </template>
 
 <script>
 export default {
     data() {
+      //账号验证
+      var validatePass = (rule, value, callback) => {
+        if (value === '') {
+          callback(new Error('请输入账号'));
+        } else {
+          if (this.ruleForm.password !== '') {
+            this.$refs.ruleForm.validateField('password');
+          }
+          callback();
+        }
+      };
+      //密码验证
+      var validatePass2 = (rule, value, callback) => {
+        if (value === '') {
+          callback(new Error('请输入密码'));
+        } else {
+          callback();
+        }
+      };
       return {
-        user: '',
-        password:''
+        ruleForm: {
+          user: '',
+          password: ''
+        },
+        rules: {
+          user: [
+            { validator: validatePass, trigger: 'blur' }
+          ],
+          password: [
+            { validator: validatePass2, trigger: 'blur' }
+          ]
+        }
+      };
+    },
+    methods: {
+      //登陆按钮
+      submitForm(formName) {
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            alert('submit!');
+          } else {
+            console.log('error submit!!');
+            this.open();
+            return false;
+          }
+        });
+      },
+      //重置按钮
+      resetForm(formName) {
+        this.$refs[formName].resetFields();
+      },
+      //提示框
+      open() {
+        this.$message('账号或密码输入错误');
       }
     }
 }
 </script>
 
 <style lang="less" scoped>
-
+.background{
+  background: url(./../assets/images/login/login.png) center;
+  background-size: cover;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+}
+ h1{
+    color: #fff;
+    text-align: center;
+    font-size: 36px;
+    margin-top: 400px;
+  }
+.form{
+  background: #00A0C3;
+  width: 400px;
+  height: 300px;
+  margin: 0px 0 0 -242px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  
+  .user,.password{
+    width: 286px;
+    height: 40px;
+    color: #fff;
+    text-align: center;
+  }
+}
 </style>
