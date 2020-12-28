@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import Navigation from '../components/navigation.vue'
 import Information from '../views/Information.vue'
 import Order from '../views/Order.vue'
+import Details from '../views/Details.vue'
 
 Vue.use(VueRouter)
 
@@ -26,7 +27,15 @@ const routes = [
         // 订单管理页接口
         path: '/order',
         name: 'Order',
-        component: Order
+        component: Order,
+        children:[
+          {
+            //订单详情页接口
+            path: '/details',
+            name: 'Details',
+            component: Details,
+          }
+        ]
       }
     ]
   },
