@@ -98,7 +98,9 @@
         <el-table-column
             label="操作"
             align="center">
-            <a href="" class="desc">订单详情</a>
+            <router-link to="/details">
+              <a href="javascript:" class="desc">订单详情</a>
+            </router-link>
         </el-table-column>
       </el-table>
     </el-row>

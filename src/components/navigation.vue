@@ -77,7 +77,7 @@
                 <i class="el-icon-arrow-down el-icon--right"></i>
               </span>
               <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item command="a">退出登录</el-dropdown-item></el-dropdown-item>
+                <el-dropdown-item command="a">退出登录</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
           </el-breadcrumb>

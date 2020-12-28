@@ -27,15 +27,13 @@ const routes = [
         // 订单管理页接口
         path: '/order',
         name: 'Order',
-        component: Order,
-        children:[
-          {
-            //订单详情页接口
-            path: '/details',
-            name: 'Details',
-            component: Details,
-          }
-        ]
+        component: Order
+      },
+      {
+        // 订单管理页接口
+        path: '/details',
+        name: 'Details',
+        component: Details
       }
     ]
   },
