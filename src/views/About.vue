@@ -31,7 +31,7 @@
       </div>
       <div class="checkBtn">
         <el-button type="primary">查询</el-button>
-        <el-button type="info">重置</el-button>
+        <el-button type="info" @click="reset">重置</el-button>
       </div>
     </el-row>
     <el-row>
@@ -170,6 +170,13 @@ export default {
     },
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
+    },
+    //重置按钮
+    reset(){
+      this.selName = '';
+      this.datePic1 = '';
+      this.datePic2 = '';
+      this.datePic3 = '';
     }
   }
 }

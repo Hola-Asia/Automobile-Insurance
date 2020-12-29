@@ -7,7 +7,7 @@
               <span>订单状态</span>
             </div>
             <div class="grid-content">
-              <el-button type="primary" plain>全部</el-button>
+              <el-button type="primary" plain v-focus>全部</el-button>
               <el-button type="primary" plain>已完成</el-button>
               <el-button type="primary" plain>待处理</el-button>
               <el-button type="primary" plain>已关闭</el-button>
@@ -23,8 +23,8 @@
         </el-dropdown-menu>
       </el-dropdown>
       <el-input v-model="selName" class="inputName" :placeholder = placeStr></el-input>
-      <el-input v-model="selName" class="inputPrice" placeholder = '保费金额-最小' prefix-icon="iconfont icon-iconmoney"></el-input> -
-      <el-input v-model="selName" class="inputPrice" placeholder = '保费金额-最大' prefix-icon="iconfont icon-iconmoney"></el-input>
+      <el-input v-model="priceMin" class="inputPrice" placeholder = '保费金额-最小' prefix-icon="iconfont icon-iconmoney"></el-input> -
+      <el-input v-model="priceMax" class="inputPrice" placeholder = '保费金额-最大' prefix-icon="iconfont icon-iconmoney"></el-input>
       <div class="block">
         <el-date-picker
             v-model="datePicStart"
@@ -36,7 +36,7 @@
       </div>
       <div class="checkBtn">
         <el-button type="primary">查询</el-button>
-        <el-button type="info">重置</el-button>
+        <el-button type="info" @click="reset">重置</el-button>
       </div>
     </el-row>
     <el-row>
@@ -131,6 +131,8 @@ export default {
       selName:'',
       datePicStart:'',
       currentPage4: 1,
+      priceMin:'',
+      priceMax:'',
       pickerOptions: {
         shortcuts: [{
           onClick(picker) {
@@ -290,6 +292,22 @@ export default {
     },
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
+    },
+    reset(){
+      this.sel = '筛选方式';
+      this.placeStr = '请选择筛选方式';
+      this.selName = '';
+      this.datePicStart = '';
+      this.priceMin = '';
+      this.priceMax = '';
+    }
+  },
+  directives: {
+    focus: {
+      // 指令的定义
+      inserted: function (el) {
+        el.focus()
+      }
     }
   }
 }
