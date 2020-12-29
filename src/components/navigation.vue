@@ -36,7 +36,7 @@
                 <span slot="title">资讯管理</span>
               </el-menu-item>
             </router-link>
-            <router-link to="/">
+            <router-link to="/about">
               <el-menu-item index="5">
                 <i class="el-icon-house"></i>
                 <span slot="title">关于我们</span>
