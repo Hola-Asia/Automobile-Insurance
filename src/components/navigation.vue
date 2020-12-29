@@ -48,7 +48,7 @@
                 <span slot="title">保单管理</span>
               </el-menu-item>
             </router-link>
-            <router-link to="/">
+            <router-link to="/opinion">
               <el-menu-item index="7">
                 <i class="el-icon-edit"></i>
                 <span slot="title">意见反馈</span>
@@ -112,7 +112,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped lang="less">
 .el-header,
 .el-footer {
   background-color: #ffffff;
@@ -133,7 +133,6 @@ export default {
   background-color: #f1f1f1;
   color: #333;
   text-align: center;
-  line-height: 160px;
 }
 
 body > .el-container {
