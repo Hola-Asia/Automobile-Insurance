@@ -5,6 +5,7 @@ import Information from '../views/Information.vue';
 import Order from '../views/Order.vue';
 import Login from '../views/Login.vue';
 import GuaranteeSlipList from '../views/GuaranteeSlipList.vue';
+import GuaranteeSlipParticulars from '../views/GuaranteeSlipParticulars.vue';
 
 
 Vue.use(VueRouter)
@@ -17,6 +18,12 @@ const routes = [{
     {
         path: '/',
         redirect: { name: 'Login' },
+    },
+    //保单详情接口
+    {
+        path: '/guaranteeSlipParticulars',
+        name: 'GuaranteeSlipParticulars',
+        component: GuaranteeSlipParticulars
     },
     {
         path: '/navigation',

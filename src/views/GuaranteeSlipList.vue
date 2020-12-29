@@ -1,57 +1,132 @@
 <template>
   <div>
       <el-card class="box-card">
-            <el-row id="option1">
-                <div>
-                    <span>保单类型:</span>
-                    <el-button type="primary">全部</el-button>
-                    <el-button>交强险</el-button>
-                    <el-button>商业险</el-button>
-                </div>
-            </el-row>
-            <el-row id="option2">
-                <div>
-                    <span>保单状态:</span>
-                    <el-button type="primary">全部</el-button>
-                    <el-button>已失效</el-button>
-                    <el-button>已退保</el-button>
-                    <el-button>保障中</el-button>
-                </div>
-            </el-row>
-                <el-row>
-                    <el-col :span="4">
-                        <div class="grid-content bg-purple-dark">
-                        <el-select v-model="value" placeholder="请选择">
-                            <el-option
-                            v-for="item in options"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value">
-                            </el-option>
-                        </el-select>
-                        </div>
-                    </el-col>
-                    <el-col :span="8"><div class="grid-content bg-purple"><el-input placeholder="请输入内容" v-model="input" clearable> </el-input></div></el-col>
-                    <el-col :span="8">
-                        <div class="grid-content bg-purple">
-                            <div class="block">
-                                <span class="demonstration"></span>
-                                <el-date-picker
-                                v-model="timer"
-                                type="daterange"
-                                align="right"
-                                unlink-panels
-                                range-separator="至"
-                                start-placeholder="开始日期"
-                                end-placeholder="结束日期"
-                                :picker-options="pickerOptions">
-                                </el-date-picker>
-                            </div>
-                        </div>
-                    </el-col>
-                    <el-col :span="2"><div class="grid-content bg-purple-dark"><el-button type="primary">查询</el-button></div></el-col>
-                    <el-col :span="2"><div class="grid-content bg-purple-dark"><el-button type="info" @click="reset">重置</el-button></div></el-col>
-                </el-row>
+        <el-row id="option1">
+          <div>
+            <span>保单类型:</span>
+            <el-button :type="guaranteeSlipType==1?'primary':''" @click='guaranteeSlipTypeSet(1)'>全部</el-button>
+            <el-button :type="guaranteeSlipType==2?'primary':''" @click='guaranteeSlipTypeSet(2)'>交强险</el-button>
+            <el-button :type="guaranteeSlipType==3?'primary':''" @click='guaranteeSlipTypeSet(3)'>商业险</el-button>
+          </div>
+        </el-row>
+        <el-row id="option2">
+          <div>
+            <span>保单状态:</span>
+            <el-button :type="guaranteeSlipStatus==1?'primary':''" @click='guaranteeSlipStatusSet(1)'>全部</el-button>
+            <el-button :type="guaranteeSlipStatus==2?'primary':''" @click='guaranteeSlipStatusSet(2)'>已失效</el-button>
+            <el-button :type="guaranteeSlipStatus==3?'primary':''" @click='guaranteeSlipStatusSet(3)'>已退保</el-button>
+            <el-button :type="guaranteeSlipStatus==4?'primary':''" @click='guaranteeSlipStatusSet(4)'>保障中</el-button>
+          </div>
+        </el-row>
+        <el-row>
+          <!-- 下拉框 -->
+          <el-col :span="4">
+            <div class="grid-content bg-purple-dark">
+              <el-select v-model="value" placeholder="请选择">
+                <el-option
+                v-for="item in options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+                </el-option>
+              </el-select>
+            </div>
+          </el-col>
+          <!-- 输入框 -->
+          <el-col :span="8"><el-input :placeholder="value==''?'请先选择搜索类型':'请输入内容'" v-model="input" clearable :disabled="value==''?true:false"></el-input></el-col>
+          <el-col :span="8">
+              <div class="grid-content bg-purple">
+                  <div class="block">
+                      <span class="demonstration"></span>
+                      <el-date-picker
+                      v-model="timer"
+                      type="daterange"
+                      align="right"
+                      unlink-panels
+                      range-separator="至"
+                      start-placeholder="开始日期"
+                      end-placeholder="结束日期"
+                      :picker-options="pickerOptions">
+                      </el-date-picker>
+                  </div>
+              </div>
+          </el-col>
+          <!-- 查询按钮 -->
+          <el-col :span="2"><el-button type="primary">查询</el-button></el-col>
+          <!-- 重置按钮 -->
+          <el-col :span="2"><el-button type="info" @click="reset">重置</el-button></el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="24" class="quantity"><span>查询结果: 共计4条数据</span></el-col>
+        </el-row>
+        <el-table
+            :data="tableData"
+            stripe
+            style="width: 100%">
+            <el-table-column
+              prop="policyNumber"
+              label="保单号码"
+              width="185">
+            </el-table-column>
+            <el-table-column
+              prop="licenseNumber"
+              label="车牌号码"
+              width="180">
+            </el-table-column>
+            <el-table-column
+              prop="frameNumber"
+              label="车架号码">
+            </el-table-column>
+            <el-table-column
+              prop="typesOfInsurance"
+              label="险种">
+            </el-table-column>
+            <el-table-column
+              prop="brandModel"
+              label="品牌型号">
+            </el-table-column>
+            <el-table-column
+              prop="owner"
+              label="车主名称">
+            </el-table-column>
+            <el-table-column
+              prop="phoneNumber"
+              label="手机号码">
+            </el-table-column>
+            <el-table-column
+              prop="startingTime"
+              label="保险起始时间"
+              width="110">
+            </el-table-column>
+            <el-table-column
+              prop="endTime"
+              label="保险结束时间"
+              width="110">
+            </el-table-column>
+            <el-table-column
+              prop="status"
+              label="保单状态">
+            </el-table-column>
+            <el-table-column
+              label="操作">
+              <router-link to="/guaranteeSlipParticulars">
+              <el-button  type="text" size="small">查看保单</el-button>
+              </router-link>
+            </el-table-column>
+          </el-table>
+          <el-row :gutter="20">
+            <el-col :span="8" :offset="16"><div class="block">
+              <el-pagination
+                background
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                :current-page="currentPage4"
+                :page-sizes="[10,15,20]"
+                layout="total,prev,pager,next,jumper,sizes"
+                :total="30">
+              </el-pagination>
+            </div></el-col>
+          </el-row>
       </el-card>
   </div>
 </template>
@@ -77,7 +152,9 @@ export default {
           value: '选项5',
           label: '车牌号'
         }],
+        //搜索类型
         value: '',
+        //搜索内容
         input: '',
         pickerOptions: {
           shortcuts: [{
@@ -106,16 +183,134 @@ export default {
             }
           }]
         },
-        timer: ''
+        //分页数据
+        currentPage4: 1,
+        //搜索时间段
+        timer: '',
+        //保单类型
+        guaranteeSlipType:1,
+        //保单状态
+        guaranteeSlipStatus:1,
+        //表格数据
+        tableData: [{
+          //保单号码
+          policyNumber: '12345678901234567890',
+          // 车牌号码
+          licenseNumber: '京A-XXXXX',
+          // 车架号码
+          frameNumber: 'LFVHESR516452XXXX',
+          // 险种
+          typesOfInsurance:'车损险/三者险',
+          // 品牌型号
+          brandModel:'雅阁HG7154CBMA轿车',
+          // 车主名称
+          owner:'王小X',
+          // 手机号码
+          phoneNumber:'1315242XXXX',
+          // 保险起始时间
+          startingTime:'2018-10-12 11:32:45',
+          // 保险结束时间
+          endTime:'2019-10-11 24:00:00',
+          // 保单状态
+          status:'保障中',
+          // 操作
+          operation:'查看保单'
+        },{
+          //保单号码
+          policyNumber: '12345678901234567890',
+          // 车牌号码
+          licenseNumber: '京A-XXXXX',
+          // 车架号码
+          frameNumber: 'LFVHESR516452XXXX',
+          // 险种
+          typesOfInsurance:'车损险/三者险',
+          // 品牌型号
+          brandModel:'雅阁HG7154CBMA轿车',
+          // 车主名称
+          owner:'王小X',
+          // 手机号码
+          phoneNumber:'1315242XXXX',
+          // 保险起始时间
+          startingTime:'2018-10-12 11:32:45',
+          // 保险结束时间
+          endTime:'2019-10-11 24:00:00',
+          // 保单状态
+          status:'保障中',
+          // 操作
+          operation:'查看保单'
+        },{
+          //保单号码
+          policyNumber: '12345678901234567890',
+          // 车牌号码
+          licenseNumber: '京A-XXXXX',
+          // 车架号码
+          frameNumber: 'LFVHESR516452XXXX',
+          // 险种
+          typesOfInsurance:'车损险/三者险',
+          // 品牌型号
+          brandModel:'雅阁HG7154CBMA轿车',
+          // 车主名称
+          owner:'王小X',
+          // 手机号码
+          phoneNumber:'1315242XXXX',
+          // 保险起始时间
+          startingTime:'2018-10-12 11:32:45',
+          // 保险结束时间
+          endTime:'2019-10-11 24:00:00',
+          // 保单状态
+          status:'保障中',
+          // 操作
+          operation:'查看保单'
+        },{
+          //保单号码
+          policyNumber: '12345678901234567890',
+          // 车牌号码
+          licenseNumber: '京A-XXXXX',
+          // 车架号码
+          frameNumber: 'LFVHESR516452XXXX',
+          // 险种
+          typesOfInsurance:'车损险/三者险',
+          // 品牌型号
+          brandModel:'雅阁HG7154CBMA轿车',
+          // 车主名称
+          owner:'王小X',
+          // 手机号码
+          phoneNumber:'1315242XXXX',
+          // 保险起始时间
+          startingTime:'2018-10-12 11:32:45',
+          // 保险结束时间
+          endTime:'2019-10-11 24:00:00',
+          // 保单状态
+          status:'保障中',
+          // 操作
+          operation:'查看保单'
+        }]
       }
-
       },
         methods: {
-        reset() {
-            this.value='';
-            this.input='';
-            this.timer='';
-        }
+          //重置按钮
+          reset() {
+              this.value='';
+              this.input='';
+              this.timer='';
+              this.guaranteeSlipType=1;
+              this.guaranteeSlipStatus=1;
+          },
+          //保单类型按钮
+          guaranteeSlipTypeSet(i){
+            this.guaranteeSlipType=i;
+          },
+          //保单状态按钮
+          guaranteeSlipStatusSet(i){
+            this.guaranteeSlipStatus=i;
+          },
+          //分页
+          handleSizeChange(val) {
+            console.log(`每页 ${val} 条`);
+          },
+          handleCurrentChange(val) {
+            console.log(`当前页: ${val}`);
+          }
         }
       
     }
@@ -142,7 +337,34 @@ export default {
     }
     .grid-content.bg-purple-dark{
         line-height: 20px;
-        margin-top: 61px;
+        margin-top: 6px;
     }
-    
+    .quantity{
+      background: #C3E6F5;
+      text-align: left;
+      line-height: 50px;
+      height: 50px;
+      span{
+        margin-left: 20px;
+        font-size: 14px;
+      }
+    }
+    .el-row{
+      line-height: 50px;
+      height: 50px;
+    }
+    thead tr{
+      line-height: 40px;
+      height: 40px;
+      text-align: center;
+      th div{
+        text-align: center;
+      }
+    }
+    tbody td div{
+      text-align: center;
+    }
+    .el-pagination{
+      margin-top: 20px;
+    }
 </style>
