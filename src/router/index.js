@@ -11,6 +11,7 @@ import GuaranteeSlipParticulars from '../views/GuaranteeSlipParticulars.vue';
 Vue.use(VueRouter)
 
 const routes = [{
+        //登陆接口
         path: '/login',
         name: 'Login',
         component: Login

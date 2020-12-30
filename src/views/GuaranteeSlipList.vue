@@ -4,18 +4,18 @@
         <el-row id="option1">
           <div>
             <span>保单类型:</span>
-            <el-button :type="guaranteeSlipType==1?'primary':''" @click='guaranteeSlipTypeSet(1)'>全部</el-button>
-            <el-button :type="guaranteeSlipType==2?'primary':''" @click='guaranteeSlipTypeSet(2)'>交强险</el-button>
-            <el-button :type="guaranteeSlipType==3?'primary':''" @click='guaranteeSlipTypeSet(3)'>商业险</el-button>
+            <el-button :type="guaranteeSlipType==null?'primary':''" @click='guaranteeSlipTypeSet(null)'>全部</el-button>
+            <el-button :type="guaranteeSlipType==0?'primary':''" @click='guaranteeSlipTypeSet(0)'>交强险</el-button>
+            <el-button :type="guaranteeSlipType==1?'primary':''" @click='guaranteeSlipTypeSet(1)'>商业险</el-button>
           </div>
         </el-row>
         <el-row id="option2">
           <div>
             <span>保单状态:</span>
-            <el-button :type="guaranteeSlipStatus==1?'primary':''" @click='guaranteeSlipStatusSet(1)'>全部</el-button>
-            <el-button :type="guaranteeSlipStatus==2?'primary':''" @click='guaranteeSlipStatusSet(2)'>已失效</el-button>
-            <el-button :type="guaranteeSlipStatus==3?'primary':''" @click='guaranteeSlipStatusSet(3)'>已退保</el-button>
-            <el-button :type="guaranteeSlipStatus==4?'primary':''" @click='guaranteeSlipStatusSet(4)'>保障中</el-button>
+            <el-button :type="guaranteeSlipStatus==null?'primary':''" @click='guaranteeSlipStatusSet(null)'>全部</el-button>
+            <el-button :type="guaranteeSlipStatus==0?'primary':''" @click='guaranteeSlipStatusSet(0)'>已失效</el-button>
+            <el-button :type="guaranteeSlipStatus==1?'primary':''" @click='guaranteeSlipStatusSet(1)'>已退保</el-button>
+            <el-button :type="guaranteeSlipStatus==2?'primary':''" @click='guaranteeSlipStatusSet(2)'>保障中</el-button>
           </div>
         </el-row>
         <el-row>
@@ -52,7 +52,7 @@
               </div>
           </el-col>
           <!-- 查询按钮 -->
-          <el-col :span="2"><el-button type="primary">查询</el-button></el-col>
+          <el-col :span="2"><el-button type="primary" @click="beg">查询</el-button></el-col>
           <!-- 重置按钮 -->
           <el-col :span="2"><el-button type="info" @click="reset">重置</el-button></el-col>
         </el-row>
@@ -188,9 +188,9 @@ export default {
         //搜索时间段
         timer: '',
         //保单类型
-        guaranteeSlipType:1,
+        guaranteeSlipType:null,
         //保单状态
-        guaranteeSlipStatus:1,
+        guaranteeSlipStatus:null,
         //表格数据
         tableData: [{
           //保单号码
@@ -310,6 +310,43 @@ export default {
           },
           handleCurrentChange(val) {
             console.log(`当前页: ${val}`);
+          },
+          beg(){
+            this.$axios({
+                url: '/policy/listWhere',
+                data: {
+                  // 车牌号码 
+                  // "carNumber": "string",
+                  // 车架号码 
+                  // "chassisNumber": "string",
+                  // 保单结束时间 
+                  // "endTime": "2020-12-30T07:08:25.788Z",
+                  // 保单id 
+                  // "id": 0,
+                  // 险种 
+                  // "insuranceName": "string",
+                  // 车主姓名
+                  // "name": "string",
+                  // 保单号码
+                  // "number": 0,
+                  // 分页大小
+                  // "pageSize": 5,
+                  // 电话号码 
+                  // "phone": "string",
+                  // 开始序号 
+                  // "startIndex": 0,
+                  // 保单起始时间 
+                  // "startTime": "2020-12-30T07:08:25.788Z",
+                  // 险种状态 0为交强险,1为商业险
+                  // "type": 0,
+                  // 保单状态 0为失效,1为退保,2为保障中 
+                  // "status": 0
+                }
+            }).then((res)=>{
+                alert(res);
+            }).catch((err)=>{
+                alert(err)
+            })
           }
         }
       
