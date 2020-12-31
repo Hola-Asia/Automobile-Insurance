@@ -6,7 +6,7 @@
         <ul>
           <li><router-link to="accountManage" class="h-btn">账号管理</router-link></li>
           <li><router-link to="departmentManage" class="h-btn">部门管理</router-link></li>
-          <li><router-link to="roleManage" class="h-btn" style="color:#66B1FF;">角色管理</router-link></li>
+          <li><router-link to="roleManage" class="h-btn" id="teShu">角色管理</router-link></li>
         </ul>
       </div>
     </div>
@@ -73,17 +73,59 @@
         <!--底部页码-->
         <div class="block clearfix">
           <el-pagination
+              background
               @size-change="handleSizeChange"
               @current-change="handleCurrentChange"
               :current-page="currentPage4"
               :page-sizes="[5, 10, 15]"
               :page-size="100"
-              layout="total, sizes, prev, pager, next, jumper"
-              :total="400">
+              layout=" prev, pager, next, sizes , jumper"
+              :total="20">
           </el-pagination>
         </div>
       </div>
     </el-card>
+    <!--查看-->
+    <div v-show="show" class="look">
+      <div class="lookKuang">
+        <div class="s-top">
+          <span class="title">人员明细</span>
+          <span class="total">共计11人</span>
+        </div>
+        <div class="showTable">
+          <el-table
+              :data="tableData1"
+              style="width: 100%;height: 400px;overflow:scroll;overflow-x: hidden; overflow-y: auto;" :header-cell-style="{fontSize:'14x',textAlign:'center'}"
+              :cell-style="{textAlign:'center',fontSize:'13x',padding:'0px'}"
+              :row-style="{height:'40px',border:'none'}"
+              stripe>
+            <el-table-column
+                prop="accountName"
+                label="账号名称"
+                width="90">
+            </el-table-column>
+            <el-table-column
+                prop="phone"
+                label="手机号码"
+                width="120">
+            </el-table-column>
+            <el-table-column
+                prop="depart"
+                label="归属部门"
+                width="100">
+            </el-table-column>
+            <el-table-column
+                prop="position"
+                label="职位"
+                width="80">
+            </el-table-column>
+          </el-table>
+        </div>
+        <div class="b-btn">
+          <el-button type="primary" class="c-btn" @click="close1">关闭</el-button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 <script>
@@ -96,12 +138,88 @@ export default {
         region: ''
       },
       addShow:false,
-      look:true,
+      show:false,
       currentPage1: 5,
       currentPage2: 5,
       currentPage3: 5,
       currentPage4: 4,
       departmentName:'',
+      tableData1: [{
+        accountName: '王小虎',
+        phone: '13512456321',
+        depart: '产品部',
+        position: '产品经理',
+      }, {
+        accountName: '王小虎',
+        phone: '13512456321',
+        depart: '产品部',
+        position: '产品经理',
+      }, {
+        accountName: '王小虎',
+        phone: '13512456321',
+        depart: '产品部',
+        position: '产品经理',
+      }, {
+        accountName: '王小虎',
+        phone: '13512456321',
+        depart: '产品部',
+        position: '产品经理',
+      },{
+        accountName: '王小虎',
+        phone: '13512456321',
+        depart: '产品部',
+        position: '产品经理',
+      }, {
+        accountName: '王小虎',
+        phone: '13512456321',
+        depart: '产品部',
+        position: '产品经理',
+      },{
+        accountName: '王小虎',
+        phone: '13512456321',
+        depart: '产品部',
+        position: '产品经理',
+      },{
+        accountName: '王小虎',
+        phone: '13512456321',
+        depart: '产品部',
+        position: '产品经理',
+      }, {
+        accountName: '王小虎',
+        phone: '13512456321',
+        depart: '产品部',
+        position: '产品经理',
+      },{
+        accountName: '王小虎',
+        phone: '13512456321',
+        depart: '产品部',
+        position: '产品经理',
+      },{
+        accountName: '王小虎',
+        phone: '13512456321',
+        depart: '产品部',
+        position: '产品经理',
+      }, {
+        accountName: '王小虎',
+        phone: '13512456321',
+        depart: '产品部',
+        position: '产品经理',
+      },{
+        accountName: '王小虎',
+        phone: '13512456321',
+        depart: '产品部',
+        position: '产品经理',
+      },{
+        accountName: '王小虎',
+        phone: '13512456321',
+        depart: '产品部',
+        position: '产品经理',
+      }, {
+        accountName: '王小虎',
+        phone: '13512456321',
+        depart: '产品部',
+        position: '产品经理',
+      }],
       qiYong:[{
         status: '选项1',
         label: '已启用'
@@ -155,6 +273,12 @@ export default {
     };
   },
   methods: {
+    close1(){
+      this.show = !this.show;
+    },
+    handleShow(){
+      this.show = !this.show;
+    },
     onSubmit() {
       console.log('submit!');
     },
@@ -211,38 +335,6 @@ export default {
             });
       }
       console.log(index, row);
-    },
-    handleShow(){
-      const h = this.$createElement;
-      this.$msgbox({
-        title: '查看部门人员 共计1人',
-        message: h('p', null, [
-          h('span', null, '内容可以是 '),
-          h('i', { style: 'color: teal' }, 'VNode')
-        ]),
-        showCancelButton: true,
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        beforeClose: (action, instance, done) => {
-          if (action === 'confirm') {
-            instance.confirmButtonLoading = true;
-            instance.confirmButtonText = '执行中...';
-            setTimeout(() => {
-              done();
-              setTimeout(() => {
-                instance.confirmButtonLoading = false;
-              }, 300);
-            }, 3000);
-          } else {
-            done();
-          }
-        }
-      }).then(action => {
-        this.$message({
-          type: 'info',
-          message: 'action: ' + action
-        });
-      });
     },
     // tableRowClassName({row,rowIndex}) {
     //   if (rowIndex === 1) {
@@ -303,6 +395,12 @@ export default {
           line-height: 30px;
           font-weight: bold;
           font-size: 16px;
+          &:hover{
+            color:#66B1FF;
+          }
+        }
+        #teShu{
+          color:#66B1FF;
         }
       }
     }
@@ -365,9 +463,65 @@ export default {
     margin: 20px;
   }
 }
+.look{
+  position: fixed;
+  top:0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(117,117,117,0.5);
+  .lookKuang{
+    width: 400px;
+    height: 500px;
+    background: #fff;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    margin-top: -250px;
+    margin-left: -200px;
+    border-radius: 4px;
+    .s-top{
+      border-bottom: 1px #eee solid;
+      width: 100%;
+      height: 32px;
+      .title{
+        width: 122px;
+        height: 18px;
+        font-weight: bold;
+        font-size: 18px;
+        padding: 16px 0px 0px 18px;
+        display: inline-block;
+      }
+      .total{
+        font-size: 15px;
+      }
+    }
+    .showTable{
+      height: 400px;
+    }
+    .b-btn{
+      text-align: center;
+      margin-top: 14px;
+      .c-btn{
+        font-size: 15px;
+      }
+    }
+  }
+}
 .clearfix:after{
   clear: both;
   content:'';
   display:block;
+}
+</style>
+<style lang="less">
+.showTable th,.showTable td {
+  border-bottom: none !important;
+}
+::-webkit-scrollbar {
+  display: none;
+}
+.el-table::before {
+  height: 0px !important;
 }
 </style>
