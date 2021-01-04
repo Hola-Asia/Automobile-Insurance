@@ -19,8 +19,8 @@
           </el-form-item>
           <el-form-item label="启用状态" class="m-top-font">
             <el-select v-model="formInline.region" placeholder="请选择">
-              <el-option label="已启用" value="hasStart"></el-option>
-              <el-option label="未启用" value="hasNotStart"></el-option>
+              <el-option label="启用" value="1"></el-option>
+              <el-option label="未启用" value="0"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item>
@@ -37,25 +37,24 @@
             border
             style="width: 100%" :header-cell-style="{background:'#D7D7D7',fontSize:'14x',textAlign:'center'}"
             :cell-style="{textAlign:'center',fontSize:'13x',padding:'0px'}"
-            :row-style="{height:'50px'}"
-            :row-class-name="tableRowClassName">
+            :row-style="{height:'50px'}">
           <el-table-column
-              prop="departName"
+              prop="name"
               label="部门名称"
               width="180">
           </el-table-column>
           <el-table-column
-              prop="date"
+              prop="createTime"
               label="创建时间"
               width="240">
           </el-table-column>
-          <el-table-column
-              label="查看人员">
-              <a type="primary" @click="handleShow" class="show">查看</a>
-<!--              <a href="javascript:;" class="show" @click="handleShow">查看</a>-->
+          <el-table-column label="查看人员">
+            <template slot-scope="scope">
+              <a type="primary" @click="handleShow(scope.$index, scope.row)" class="show">查看</a>
+            </template>
           </el-table-column>
           <el-table-column
-              prop="enableStatus"
+              prop="status"
               label="启用状态"
               width="180">
           </el-table-column>
@@ -64,7 +63,11 @@
               <el-button
                   size="mini"
                   type="primary"
-                  @click="handleStop(scope.$index, scope.row)">停用</el-button>
+                  @click="handleStop(scope.$index, scope.row)" v-if="scope.row.status=='未启用'">启用</el-button>
+              <el-button
+                  size="mini"
+                  type="primary"
+                  @click="handleStop(scope.$index, scope.row)" v-else-if="scope.row.status=='启用'">停用</el-button>
               <el-button
                   size="mini"
                   type="primary"
@@ -73,47 +76,44 @@
           </el-table-column>
         </el-table>
         <!--底部页码-->
-        <div class="block clearfix">
+        <div class="block clearfix" v-show="showYeMa">
           <el-pagination
               background
               @size-change="handleSizeChange"
               @current-change="handleCurrentChange"
-              :current-page="currentPage4"
+              :current-page="currentPage1"
               :page-sizes="[5, 10, 15]"
               :page-size="100"
               layout=" prev, pager, next, sizes , jumper"
-              :total="20">
+              :total=totalAccount>
           </el-pagination>
         </div>
       </div>
     </el-card>
     <!--添加-->
-    <div v-show="addShow" class="tianJia">
-      <div class="addKuang">
-        <p class="addDepart">添加部门</p>
-        <label for="userName">部门名称：</label>
-        <el-input v-model="departmentName" placeholder="请输入1-16字的账号名称" id="userName" class="inpt"></el-input><br>
-        <label>启用状态：</label>
-        <el-select v-model="status" placeholder="请选择" class="inpt">
-          <el-option
-              v-for="item in qiYong"
-              :key="item.status"
-              :label="item.label"
-              :value="item.status">
-          </el-option>
-        </el-select><br>
-        <div class="b-btn">
-          <el-button type="info" class="c-btn" @click="clear">取消</el-button>
-          <el-button type="primary" class="c-btn">确认</el-button>
-        </div>
+    <el-dialog title="添加部门" :visible.sync="dialogFormVisible" class="addBox">
+      <el-form :model="form">
+        <el-form-item label="部门名称" :label-width="formLabelWidth">
+          <el-input v-model="form.name" placeholder="请输入部门名称"></el-input>
+        </el-form-item>
+        <el-form-item label="启用状态" :label-width="formLabelWidth">
+          <el-select v-model="form.status" placeholder="请选择">
+            <el-option label="启用" value="1"></el-option>
+            <el-option label="未启用" value="0"></el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click="addQuRen">确 定</el-button>
       </div>
-    </div>
+    </el-dialog>
     <!--查看-->
     <div v-show="show" class="look">
       <div class="lookKuang">
         <div class="s-top">
           <span class="title">查看部门人员</span>
-          <span class="total">共计11人</span>
+          <span class="total">共计{{ totalPerson }}人</span>
         </div>
         <div class="showTable">
           <el-table
@@ -123,7 +123,7 @@
               :row-style="{height:'40px',border:'none'}"
               stripe>
             <el-table-column
-                prop="accountName"
+                prop="username"
                 label="账号名称"
                 width="90">
             </el-table-column>
@@ -133,12 +133,12 @@
                 width="120">
             </el-table-column>
             <el-table-column
-                prop="depart"
+                prop="departmentName"
                 label="归属部门"
                 width="100">
             </el-table-column>
             <el-table-column
-                prop="position"
+                prop="roleName"
                 label="职位"
                 width="80">
             </el-table-column>
@@ -149,6 +149,70 @@
         </div>
       </div>
     </div>
+    <!--弹框停用-->
+    <el-dialog
+        title="账号启用/停用"
+        :visible.sync="dialogVisible"
+        width="30%"
+        height="100px">
+      <span>确定将 {{name}} 停用吗？<br></span>
+      <span>停用后，所有账号将无法选择该部门</span>
+      <span slot="footer" class="dialog-footer">
+            <el-button @click="dialogVisible = false">取 消</el-button>
+            <el-button type="primary" @click="stopStatus">确 定</el-button>
+          </span>
+    </el-dialog>
+    <!--弹框启用-->
+    <el-dialog
+        title="账号启用/停用"
+        :visible.sync="dialogVisible1"
+        width="30%"
+        height="100px">
+      <span>确定将 {{name}} 启用吗？</span><br>
+      <span slot="footer" class="dialog-footer">
+              <el-button @click="dialogVisible1 = false">取 消</el-button>
+              <el-button type="primary" @click="stopStatus">确 定</el-button>
+          </span>
+    </el-dialog>
+    <!--弹框禁止停用-->
+    <el-dialog
+        title="账号启用/停用"
+        :visible.sync="dialogVisible2"
+        width="30%"
+        height="100px">
+      <span class="forbidden">该部门仍存在人员，请将人员转移部门</span><br>
+      <span class="forbidden">后，才能停用该部门</span>
+      <span slot="footer" class="dialog-footer">
+              <el-button @click="dialogVisible2 = false">取 消</el-button>
+              <el-button type="primary" @click="dialogVisible2 = false">确 定</el-button>
+          </span>
+    </el-dialog>
+    <!--弹框删除-->
+    <el-dialog
+        title="部门删除"
+        :visible.sync="dialogVisible3"
+        width="30%"
+        height="100px">
+      <span>确定将 {{name}} 删除吗？</span><br>
+      <span>删除后，所有账号将无法选择该部门</span>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible3 = false">取 消</el-button>
+        <el-button type="primary" @click="departDelete">确 定</el-button>
+      </span>
+    </el-dialog>
+    <!--弹框禁止删除-->
+    <el-dialog
+        title="部门删除"
+        :visible.sync="dialogVisible4"
+        width="30%"
+        height="100px">
+      <span class="forbidden">该部门仍存在人员，请将人员转移部门</span><br>
+      <span class="forbidden">后，才能删除该部门</span>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible4 = false">取 消</el-button>
+        <el-button type="primary" @click="dialogVisible4 = false">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -156,256 +220,349 @@ export default {
   name: "DepartmentManage",
   data() {
     return {
-      formInline: {
-        depart: '',
-        region: ''
+      //搜索
+      formInline:{
+        depart:'',
+        region:'',
       },
+      //初始化页面列表
+      tableData: [],
+      name:'',
+      createTime:'',
+      status:'',
 
-      tableData1: [{
-        accountName: '王小虎',
-        phone: '13512456321',
-        depart: '产品部',
-        position: '产品经理',
-      }, {
-        accountName: '王小虎',
-        phone: '13512456321',
-        depart: '产品部',
-        position: '产品经理',
-      }, {
-        accountName: '王小虎',
-        phone: '13512456321',
-        depart: '产品部',
-        position: '产品经理',
-      }, {
-        accountName: '王小虎',
-        phone: '13512456321',
-        depart: '产品部',
-        position: '产品经理',
-      },{
-        accountName: '王小虎',
-        phone: '13512456321',
-        depart: '产品部',
-        position: '产品经理',
-      }, {
-        accountName: '王小虎',
-        phone: '13512456321',
-        depart: '产品部',
-        position: '产品经理',
-      },{
-        accountName: '王小虎',
-        phone: '13512456321',
-        depart: '产品部',
-        position: '产品经理',
-      },{
-        accountName: '王小虎',
-        phone: '13512456321',
-        depart: '产品部',
-        position: '产品经理',
-      }, {
-        accountName: '王小虎',
-        phone: '13512456321',
-        depart: '产品部',
-        position: '产品经理',
-      },{
-        accountName: '王小虎',
-        phone: '13512456321',
-        depart: '产品部',
-        position: '产品经理',
-      },{
-        accountName: '王小虎',
-        phone: '13512456321',
-        depart: '产品部',
-        position: '产品经理',
-      }, {
-        accountName: '王小虎',
-        phone: '13512456321',
-        depart: '产品部',
-        position: '产品经理',
-      },{
-        accountName: '王小虎',
-        phone: '13512456321',
-        depart: '产品部',
-        position: '产品经理',
-      },{
-        accountName: '王小虎',
-        phone: '13512456321',
-        depart: '产品部',
-        position: '产品经理',
-      }, {
-        accountName: '王小虎',
-        phone: '13512456321',
-        depart: '产品部',
-        position: '产品经理',
-      }],
-      addShow:false,
-      show:false,
-
-      currentPage1: 5,
-      currentPage2: 5,
-      currentPage3: 5,
+      //渲染页面的数据
+      //分页大小
+      yeSize:5,
+      //页数
+      yeMa:1,
+      //账户表里面的总条数
+      totalAccount:0,
+      //页码
+      currentPage1: 1,
+      currentPage2: 2,
+      currentPage3: 3,
       currentPage4: 4,
-      departmentName:'',
-      qiYong:[{
-        status: '选项1',
-        label: '已启用'
-      }, {
-        status: '选项2',
-        label: '未启用'
-      }],
-      status: '',
 
-      tableData: [{
-        departName: '王小X',
-        date:'2016-09-12  10：32：12',
-        enableStatus:'已启用',
-      }, {
-        departName: '王小X',
-        date:'2016-09-12  10：32：12',
-        enableStatus:'已启用',
-      }, {
-        departName: '王小X',
-        date:'2016-09-12  10：32：12',
-        enableStatus:'已启用',
-      }, {
-        departName: '王小X',
-        date:'2016-09-12  10：32：12',
-        enableStatus:'已启用',
-      },{
-          departName: '王小X',
-          date:'2016-09-12  10：32：12',
-          enableStatus:'已启用',
-      },{
-          departName: '王小X',
-          date:'2016-09-12  10：32：12',
-          enableStatus:'已启用',
-      },{
-          departName: '王小X',
-          date:'2016-09-12  10：32：12',
-          enableStatus:'已启用',
-      },{
-          departName: '王小X',
-          date:'2016-09-12  10：32：12',
-          enableStatus:'已启用',
-      },{
-          departName: '王小X',
-          date:'2016-09-12  10：32：12',
-          enableStatus:'已启用',
-      },{
-          departName: '王小X',
-          date:'2016-09-12  10：32：12',
-          enableStatus:'已启用',
-        },,{
-        departName: '王小X',
-        date:'2016-09-12  10：32：12',
-        enableStatus:'已启用',
-      },{
-        departName: '王小X',
-        date:'2016-09-12  10：32：12',
-        enableStatus:'已启用',
-      },{
-        departName: '王小X',
-        date:'2016-09-12  10：32：12',
-        enableStatus:'已启用',
-      },{
-        departName: '王小X',
-        date:'2016-09-12  10：32：12',
-        enableStatus:'已启用',
-      },],
+      //用来控制模态框的显示与隐藏
+      dialogVisible: false,
+      dialogVisible1: false,
+      dialogVisible2: false,
+      dialogVisible3: false,
+      dialogVisible4: false,
+      //添加框
+      dialogFormVisible: false,
+      form: {
+        name: '',
+        status: '',
+      },
+      formLabelWidth: '100px',
+
+      //查看
+      show:false,
+      //合计人数
+      totalPerson:'',
+      tableData1: [],
+      //即将要删除的部门id
+      deleteId:'',
+      //用来控制页码是否显示
+      showYeMa:true,
     };
   },
+  created(){
+    //挂载后渲染页面数据内容
+    this.init(this.yeSize,this.yeMa);
+  },
   methods: {
+    //渲染页面
+    init(limit,page){
+      this.$axios({
+        url:'/department/list',
+        method:'get',
+        params:{
+          limit:limit,
+          page:page,
+        },
+      }).then((res)=>{
+        if (res.status === 200){
+          if (res.data.data.length > 0){
+            this.totalAccount = res.data.count;
+            //先置空
+            this.tableData = [];
+            (res.data.data).forEach(function (v){
+              if (v.status === 1){
+                v.status = '启用';
+              }else{
+                v.status = '未启用';
+              }
+            })
+            this.tableData = res.data.data;
+          }else{
+            alert('未查询到相关数据信息');
+          }
+        }
+      }).catch((err)=>{
+        alert(err);
+      })
+    },
+    //当确定停用时
+    stopStatus(){
+      let stopJson = JSON.parse(sessionStorage.getItem('stopDepart'));
+      if (stopJson.status == '启用'){
+        stopJson.status = 1;
+      }else{
+        stopJson.status = 0;
+      }
+      this.$axios({
+        url:'/department/updateDepartmentByStatus',
+        method:'post',
+        data:{
+          id: stopJson.id,
+          status: stopJson.status,
+        }
+      }).then((res)=>{
+        if (res.status == 200){
+          if (res.data.code == 0){
+            this.$message({
+              message: '修改成功！',
+              type: 'success'
+            });
+            //关闭弹框
+            this.dialogVisible1=false;
+            this.dialogVisible=false;
+            //刷新页面
+            this.$router.go(0);
+          }
+        }else{
+          this.$message.error('修改失败！');
+        }
+      }).catch((err)=>{
+        alert(err);
+      })
+    },
+    //停用/启用的方法
+    handleStop(index, row) {
+      //渲染页面
+      sessionStorage.setItem('stopDepart',JSON.stringify(row));
+      if (row.status == '未启用'){
+        this.name = row.name;
+        this.dialogVisible1 = true;
+      }else{
+        this.name = row.name;
+        //判断该部门是否有账号存在
+        let that = this;
+        this.$axios({
+          url: '/department/queryAllUserByDepartmentId',
+          method: 'get',
+          params: {
+            id: row.id,
+          }
+        }).then((res) => {
+          if (res.status === 200) {
+            if (res.data.count > 0) {
+              //该部门还有人，不能进行停用
+              that.dialogVisible2 = true;
+            } else {
+              //可以进行停用
+              that.dialogVisible = true;
+            }
+          }
+        }).catch((err) => {
+          alert(err);
+        })
+      }
+    },
+    //搜索
+    onSubmit() {
+      //判断部门名称是否有值
+      if (this.formInline.depart.trim()) {
+        this.$axios({
+          url: '/department/queryDepartmentByName',
+          params: {
+            name: this.formInline.depart.trim(),
+          },
+          method: "get",
+        }).then((res) => {
+          //查询成功有数据
+          if (res.status === 200) {
+            if (res.data.data.length > 0) {
+              //渲染页码
+              this.totalAccount = res.data.count;
+              //先置空
+              this.tableData = [];
+              //渲染数据
+              (res.data.data).forEach(function (v) {
+                if (v.status === 0) {
+                  v.status = '未启用';
+                } else {
+                  v.status = '启用';
+                }
+              })
+              //不显示底部页码
+              this.showYeMa = false;
+              this.tableData = res.data.data;
+            } else {
+              alert('未查询到部门名称数据信息');
+            }
+          }
+        }).catch((err) => {
+          console.log(err);
+        })
+      }else if (this.formInline.region && this.formInline.depart.trim() == ''){
+        //启用状态有值
+        this.$axios({
+          url: '/department/queryDepartmentByStatus',
+          params: {
+            status:this.formInline.region,
+          },
+          method: "get",
+        }).then((res) => {
+          //查询成功有数据
+          if (res.status === 200) {
+            if (res.data.data.length > 0) {
+              //渲染页码
+              this.totalAccount = res.data.count;
+              //先置空
+              this.tableData = [];
+              //渲染数据
+              (res.data.data).forEach(function (v) {
+                if (v.status === 0) {
+                  v.status = '未启用';
+                } else {
+                  v.status = '启用';
+                }
+              })
+              //不显示底部页码
+              this.showYeMa = false;
+              this.tableData = res.data.data;
+            } else {
+              //先置空
+              this.tableData = [];
+            }
+          }
+        }).catch((err) => {
+          console.log(err);
+        })
+      }else{
+        this.init(this.yeSize,this.yeMa);
+        this.showYeMa = true;
+      }
+    },
     close1(){
       this.show = !this.show;
     },
-    onSubmit() {
-      console.log('submit!');
-    },
-    handleStop(index, row) {
-      //需要判断当前部门是都还有人，有则不删除，并弹框
-      if (true){
-        this.$alert('<strong style="color: red;font-size: 15px;text-align: center">该部门仍存在人员，请将人员转移部门后，才能停用该部门</strong>', '账号启用/停用', {
-          dangerouslyUseHTMLString: true
-        });
-      }else{
-        this.$confirm('确定将 产品部 停用吗？停用后，所有账号将无法选择该部门', '账号启用/停用', {
-          distinguishCancelAndClose: true,
-          confirmButtonText: '确定',
-          cancelButtonText: '取消'
-        })
-            .then(() => {
-              this.$message({
-                type: 'info',
-                message: '保存修改'
-              });
-            })
-            .catch(action => {
-              this.$message({
-                type: 'info',
-                message: '取消修改'
-              })
+    //删除部门
+    departDelete(){
+      //删除该部门
+      this.$axios({
+        url: '/department/deleteDepartment',
+        method: 'get',
+        params: {
+          id: this.deleteId,
+        }
+      }).then((res) => {
+        if (res.status === 200){
+          if (res.data.code == 0){
+            this.$message({
+              message: '删除成功！',
+              type: 'success'
             });
-      }
-      console.log(index, row);
+            this.dialogVisible3 = false;
+            //刷新页面
+            this.$router.go(0);
+          }
+        }else{
+          this.$message.error('删除失败！');
+        }
+      })
     },
+    //显示删除部门的弹框
     handleDelete(index, row) {
-      //需要判断当前部门是都还有人，有则不删除，并弹框
-      if (false){
-        this.$alert('<strong style="color: #FF0000;font-weight:400;font-size: 15px;text-align: center">该部门仍存在人员，请将人员转移部门后，才能删除该部门</strong>', '账号启用/停用', {
-          dangerouslyUseHTMLString: true
-        });
-      }else{
-        this.$confirm('确定将 产品部 删除吗？删除后，所有账号将无法选择该部门', '账号启用/停用', {
-          distinguishCancelAndClose: true,
-          confirmButtonText: '确定',
-          cancelButtonText: '取消'
-        })
-            .then(() => {
-              this.$message({
-                type: 'info',
-                message: '保存修改'
-              });
-            })
-            .catch(action => {
-              this.$message({
-                type: 'info',
-                message: '取消修改'
-              })
-            });
-      }
-      console.log(index, row);
+      //需要判断当前部门是否还有人，有则不删除，并弹框
+      let that = this;
+      this.$axios({
+        url: '/department/queryAllUserByDepartmentId',
+        method: 'get',
+        params: {
+          id: row.id,
+        }
+      }).then((res) => {
+        if (res.status === 200) {
+          if (res.data.count > 0) {
+            //该部门还有人，不能进行删除
+            this.dialogVisible4 = true;
+          } else {
+            //可以进行删除
+            that.deleteId = row.id;
+            this.dialogVisible3 = true;
+            this.name = row.name;
+          }
+        }
+      }).catch((err) => {
+        alert(err);
+      })
     },
-    handleShow(){
+    handleShow(index,row){
       this.show = !this.show;
-    },
-    // tableRowClassName({row,rowIndex}) {
-    //   if (rowIndex === 1) {
-    //     return 'warning-row';
-    //   }
-    //   // if (rowIndex%2 === 0) {
-    //   //   return 'select-row';
-    //   // }
-    //   return '';
-    // },
-    tableRowClassName({row, rowIndex}) {
-      if (rowIndex === 1) {
-        return 'warning-row';
-      } else if (rowIndex === 3) {
-        return 'success-row';
-      }
-      return '';
+      console.log(index,row);
+      //渲染页面
+      this.$axios({
+        url:'/department/queryAllUserByDepartmentId',
+        method:'get',
+        params:{
+          id:row.id,
+        }
+      }).then((res)=>{
+        if (res.status === 200){
+          if (res.data.data.length > 0){
+            //先置空
+            this.tableData1 = [];
+            this.tableData1 = res.data.data;
+          }else{
+            alert('未查询到相关数据信息');
+          }
+        }
+      }).catch((err)=>{
+        alert(err);
+      })
     },
     handleSizeChange(val) {
-      console.log(`每页 ${val} 条`);
+      this.yeSize = val;
+      this.init(this.yeSize,this.yeMa);
     },
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
+      this.yeMa = val;
+      this.init(this.yeSize,this.yeMa);
     },
+    //添加弹框显示
     add(){
-      this.addShow=!this.addShow;
+      this.dialogFormVisible=true;
     },
-    clear(){
-      this.addShow=!this.addShow;
-    }
+    //添加弹框中点击确定
+    addQuRen(){
+      this.$axios({
+        url:'/department/addDepartment',
+        method:'post',
+        data: this.form,
+      }).then((res)=>{
+        console.log(res);
+        if (res.status == 200){
+          if (res.data.code == 0){
+            this.$message({
+              message: '添加成功！',
+              type: 'success'
+            });
+            this.dialogFormVisible = false;
+            //刷新页面
+            this.$router.go(0);
+          }
+        }else{
+          this.$message.error('添加失败！');
+        }
+      }).catch((err)=>{
+        alert(err);
+      })
+    },
   }
 }
 </script>
@@ -485,48 +642,6 @@ export default {
     margin: 20px;
   }
 }
-.tianJia{
-  position: fixed;
-  top:0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(117,117,117,0.5);
-  .addKuang{
-    width: 400px;
-    height: 300px;
-    background: #fff;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    margin-top: -150px;
-    margin-left: -200px;
-    border-radius: 4px;
-    .addDepart{
-      width: 100%;
-      height: 30px;
-      font-weight: bold;
-      font-size: 20px;
-      padding: 32px 0px 0px 16px;
-    }
-    label{
-      display: inline-block;
-      width: 95px;
-      margin: 23px 10px 42px 30px;
-    }
-    .inpt{
-      width: 227px;
-      height: 15px;
-    }
-    .b-btn{
-      text-align: center;
-      margin-top: 14px;
-    }
-    .c-btn{
-      margin-right: 32px;
-    }
-  }
-}
 .look{
   position: fixed;
   top:0;
@@ -572,6 +687,7 @@ export default {
     }
   }
 }
+
 .clearfix:after{
   clear: both;
   content:'';
@@ -588,5 +704,14 @@ export default {
 }
 .el-table::before {
   height: 0px !important;
+}
+.forbidden{
+  color: red;
+}
+.el-dialog {
+  width: 32%!important;
+}
+.el-form-item__content {
+  width: 54%;
 }
 </style>

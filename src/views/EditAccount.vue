@@ -4,13 +4,13 @@
       <p class="header">编辑账号</p>
       <div class="content">
       <label for="userName">账号名称：</label>
-      <el-input v-model="userName" placeholder="请输入1-16字的账号名称" id="userName" class="inpt"></el-input><br>
+      <el-input v-model="editJson.username" placeholder="请输入1-16字的账号名称" id="userName" class="inpt"></el-input><br>
       <label for="phone">手机号码：</label>
-      <el-input v-model="phone" placeholder="请输入手机号" id="phone" class="inpt"></el-input><br>
+      <el-input v-model="editJson.phone" placeholder="请输入手机号" id="phone" class="inpt"></el-input><br>
       <label for="pass">密码：</label>
-      <el-input v-model="pass" placeholder="请输入修改后密码" id="pass" class="inpt"></el-input><br>
+      <el-input v-model="editJson.password" placeholder="请输入修改后密码" id="pass" class="inpt"></el-input><br>
       <label>归属部门：</label>
-      <el-select v-model="depart" placeholder="请选择" class="inpt">
+      <el-select v-model="editJson.departmentId" placeholder="请选择" class="inpt">
         <el-option
             v-for="item in departOptions"
             :key="item.value"
@@ -19,7 +19,7 @@
         </el-option>
       </el-select><br>
       <label>职位：</label>
-      <el-select v-model="role" placeholder="请选择" class="inpt">
+      <el-select v-model="editJson.roleId"  placeholder="请选择" class="inpt">
         <el-option
             v-for="item in roleOptions"
             :key="item.value"
@@ -28,7 +28,7 @@
         </el-option>
       </el-select><br>
       <label>启用状态：</label>
-      <el-select v-model="status" placeholder="请选择" class="inpt">
+      <el-select v-model="editJson.status" placeholder="请选择" class="inpt">
         <el-option
             v-for="item in startOptions"
             :key="item.value"
@@ -50,37 +50,26 @@ export default {
   name: "EditAccount",
   data() {
     return {
-      sizeForm: {
-        name: '',
-        region: '',
-        date1: '',
-        date2: '',
-        delivery: false,
-        type: [],
-        resource: '',
-        desc: ''
-      },
-      //定义一个临时变量，用来存放状态
-      statusTemp:'',
-
+      //创建一个临时变量用来存放状态
+      tempStatus:'',
       departOptions: [],
-      depart:'',
-
       roleOptions: [],
-      role:'',
-
       startOptions: [{
-        value: '选项1',
+        value: '启用',
         label: '启用'
       }, {
-        value: '选项2',
+        value: '未启用',
         label: '未启用'
       }],
-      status: '',
-      userName:'',
-      phone:'',
-      pass:'********',
-
+      editJson:{
+        status: '',
+        username:'',
+        phone:'',
+        password:'********',
+        departmentId:'',
+        roleId:'',
+      },
+      id:this.$route.params.conlltion,
     };
   },
   created() {
@@ -89,9 +78,9 @@ export default {
     this.getDepartment();
   },
   methods: {
+    //初始化页面
     init(){
       let that = this;
-      console.log(this.$route.params.conlltion);
       this.$axios({
         url:'/user/queryUserById',
         method:'get',
@@ -101,17 +90,18 @@ export default {
       }).then((res)=>{
         if (res.status === 200){
           if (res.data.data){
+            let user = JSON.stringify(res.data.data);
+            sessionStorage.setItem('user',user);
             if (res.data.data.status == 0){
               res.data.data.status = '未启用';
             }else{
               res.data.data.status = '启用';
             }
+            if (res.data.data.password == null){
+              res.data.data.password = '********';
+            }
             //渲染页面
-            that.userName = res.data.data.username;
-            that.phone = res.data.data.phone;
-            that.depart = res.data.data.departmentName;
-            that.role = res.data.data.roleName;
-            that.status = res.data.data.status;
+            that.editJson = res.data.data;
           }else{
             alert('页面渲染失败')
           }
@@ -120,9 +110,6 @@ export default {
         alert(err);
       })
     },
-    onSubmit() {
-      console.log('submit!');
-    },
     //获取全部的职位
     getRole(){
       let that = this;
@@ -130,10 +117,8 @@ export default {
         url:'/role/queryAllRoleName',
         method:'get',
       }).then((res)=>{
-        console.log(res);
         if (res.status === 200){
           if (res.data.data.length >0){
-            console.log(res.data.data);
             (res.data.data).forEach(function (v,i){
               //用来临时存放全部的职位
               let roleJson = {};
@@ -156,7 +141,6 @@ export default {
         url:'/department/queryAllDepartmentName',
         method:'get',
       }).then((res)=>{
-        console.log(res);
         if (res.status === 200){
           if (res.data.data.length >0){
             (res.data.data).forEach(function (v,i){
@@ -166,7 +150,6 @@ export default {
               departJson.label = v.name;
               that.departOptions.push(departJson);
             })
-            console.log(that.departOptions);
           }else{
             alert('获取全部部门数据失败')
           }
@@ -177,24 +160,46 @@ export default {
     },
     //确认
     queRen(){
-      if (this.status == '启用'){
-        this.statusTemp = 1;
-      }else{
-        this.statusTemp = 0;
+      let userJson = JSON.parse(sessionStorage.getItem('user'));
+      if (typeof this.editJson.departmentId == "string"){
+        this.depart = userJson.departmentId;
+      }
+      if (typeof this.editJson.roleId == "string"){
+        this.role=userJson.roleId;
+      }
+      if (typeof this.editJson.status == "string"){
+        if (this.status == '未启用'){
+          this.tempStatus=0;
+        }else{
+          this.tempStatus=1;
+        }
       }
       this.$axios({
         url:'/user/updateUser',
         method:'post',
         data:{
-          username: this.userName,
-          phone:this.phone,
-          password:this.pass,
-          departmentId:this.depart,
-          roleId:this.role,
-          status:this.statusTemp,
+          username: this.editJson.username,
+          phone:this.editJson.phone,
+          password:this.editJson.password,
+          departmentId:this.editJson.departmentId,
+          roleId:this.editJson.roleId,
+          status:this.tempStatus,
+          id:this.id,
         }
       }).then((res)=>{
         console.log(res);
+        if (res.status == 200){
+          if (res.data.code == 0){
+            this.$message({
+              message: '修改成功！',
+              type: 'success'
+            });
+            //返回主页
+            this.$router.go(-1);
+          }
+        }else{
+            this.$message.error('修改失败！');
+        }
       }).catch((err)=>{
         console.log(err);
       })
@@ -235,5 +240,10 @@ export default {
       }
     }
   }
+}
+</style>
+<style lang="less">
+.myClass{
+  width: 300px!important;
 }
 </style>
