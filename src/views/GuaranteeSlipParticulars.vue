@@ -163,7 +163,28 @@
 
 <script>
 export default {
-
+    data() {
+        return {
+             id:this.$route.params.id
+        }
+    },
+    methods: {
+        beg(){
+            this.$axios({
+                url:'/policy/findId',
+                params:{
+                    'id':this.id
+                }
+            }).then((res)=>{
+                console.log(res);
+            }).catch((err)=>{
+                console.log(err);
+            })
+        }
+    },
+    mounted() {
+        this.beg()
+    },
 }
 </script>
 

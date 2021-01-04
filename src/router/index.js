@@ -22,7 +22,7 @@ const routes = [{
     },
     //保单详情接口
     {
-        path: '/guaranteeSlipParticulars',
+        path: '/guaranteeSlipParticulars/:id',
         name: 'GuaranteeSlipParticulars',
         component: GuaranteeSlipParticulars
     },
