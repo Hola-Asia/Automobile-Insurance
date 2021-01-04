@@ -53,7 +53,7 @@
       </el-col>
       <div class="block">
         <el-date-picker
-            v-model="value2"
+            v-model="value1"
             type="datetime"
             placeholder="选择日期时间">
         </el-date-picker>
@@ -74,7 +74,6 @@ export default {
       input1:'',
       textarea:'',
       value1:'',
-      value2:'',
       switch1:true
     }
   },
@@ -82,7 +81,16 @@ export default {
     back(){
       history.go(-1);
     },
+    open() {
+      this.$alert('内容不能为空', '提示', {
+        confirmButtonText: '确定',
+      });
+    },
     addProtocols(){
+      if (this.value1 === '' || this.textarea === '' || this.input1 === ''){
+        this.open();
+        return;
+      }
       this.$axios({
         url:'/protocols/add',
         data:{
@@ -90,6 +98,17 @@ export default {
         }
       })
     }
+  },
+  mounted() {
+    this.$axios({
+      url:'/protocols/query',
+      params:{
+        page:1,
+        limit:5
+      }
+    }).then((res)=>{
+      console.log(res)
+    })
   }
 }
 </script>

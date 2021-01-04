@@ -41,6 +41,7 @@
       <el-table
           :data="tableData"
           stripe
+          v-loading="loadingTable"
           :header-cell-style="{background:'#D7D7D7',color:'#000',fontWeight:'normal'}"
           style="width: 100%">
         <el-table-column
@@ -101,8 +102,8 @@
             @current-change="handleCurrentChange"
             background
             layout="prev, pager, next, sizes, jumper"
-            :page-sizes="[10, 20, 30, 50]"
-            :page-size="10"
+            :page-sizes="[5, 10, 20, 50]"
+            :page-size=pageSize
             :total=allData>
         </el-pagination>
       </div>
@@ -117,13 +118,14 @@ export default {
   data:function(){
     return {
       //下拉框数据
+      loadingTable:true,
       placeStr:'请选择筛选方式',
       allData:0,
       sel:'筛选方式',
       selArr:['订单编号','车主名称','手机号码','车架号','车牌号'],
       selName:'',
       datePic:'',
-      pageSize:10,
+      pageSize:5,
       currentPage4: 1,
       priceMin:'',
       priceMax:'',
@@ -165,11 +167,13 @@ export default {
     },
     //分页切换
     handleSizeChange(val) {
+      this.loadingTable = true;
       console.log(val)
       this.pageSize = val;
       this.getData();
     },
     handleCurrentChange(val) {
+      this.loadingTable = true;
       this.val = val;
       this.getData();
       console.log(`当前页: ${val}`);
@@ -211,6 +215,7 @@ export default {
           this.tableData[i].oder_time = this.timestampToTime(this.tableData[i].oder_time);
           this.tableData[i].oder_status = this.tableData[i].oder_status === 1 ? '已完成' : this.tableData[i].oder_status === 2 ? '待处理' : '已关闭';
         }
+        this.loadingTable = false;
       })
     }
   },
