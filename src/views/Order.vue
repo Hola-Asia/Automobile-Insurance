@@ -7,10 +7,7 @@
               <span>订单状态</span>
             </div>
             <div class="grid-content">
-              <el-button type="primary" plain v-focus>全部</el-button>
-              <el-button type="primary" plain>已完成</el-button>
-              <el-button type="primary" plain>待处理</el-button>
-              <el-button type="primary" plain>已关闭</el-button>
+              <el-button type="primary" v-for="(v,i) in btnArr" :plain="index !== i" @click="changeBtn(i)">{{v}}</el-button>
             </div>
         </el-row>
       </el-col>
@@ -27,11 +24,9 @@
       <el-input v-model="priceMax" class="inputPrice" placeholder = '保费金额-最大' prefix-icon="iconfont icon-iconmoney"></el-input>
       <div class="block">
         <el-date-picker
-            v-model="datePicStart"
-            type="daterange"
-            range-separator="至"
-            start-placeholder="开始日期"
-            end-placeholder="结束日期">
+            v-model="datePic"
+            type="date"
+            placeholder="选择日期">
         </el-date-picker>
       </div>
       <div class="checkBtn">
@@ -40,7 +35,7 @@
       </div>
     </el-row>
     <el-row>
-      <el-col :span="24" class="resultNum"><span>查询结果：共计4条数据</span></el-col>
+      <el-col :span="24" class="resultNum"><span v-cloak>查询结果：共计{{allData}}条数据</span></el-col>
     </el-row>
     <el-row>
       <el-table
@@ -50,30 +45,25 @@
           style="width: 100%">
         <el-table-column
             align="center"
-            prop="id"
+            prop="oder_number"
             label="订单编号"
             width="180">
         </el-table-column>
         <el-table-column
             align="center"
-            prop="license"
+            prop="car_number"
             label="车牌号码"
             width="180">
         </el-table-column>
         <el-table-column
             align="center"
-            prop="frame"
+            prop="chassis_number"
             label="车架号码">
         </el-table-column>
         <el-table-column
             align="center"
-            prop="price"
+            prop="amount"
             label="保费金额">
-        </el-table-column>
-        <el-table-column
-            align="center"
-            prop="type"
-            label="品牌型号">
         </el-table-column>
         <el-table-column
             align="center"
@@ -87,18 +77,18 @@
         </el-table-column>
         <el-table-column
             align="center"
-            prop="time"
+            prop="oder_time"
             label="订单完成时间">
         </el-table-column>
         <el-table-column
-            prop="status"
+            prop="oder_status"
             align="center"
             label="订单状态">
         </el-table-column>
         <el-table-column
             label="操作"
             align="center">
-            <router-link to="/details">
+            <router-link :to="{path:'/details',query:{id:1}}">
               <a href="javascript:" class="desc">订单详情</a>
             </router-link>
         </el-table-column>
@@ -107,11 +97,13 @@
     <el-row class="clearfix">
       <div class="block pageNav">
         <el-pagination
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
             background
             layout="prev, pager, next, sizes, jumper"
             :page-sizes="[10, 20, 30, 50]"
             :page-size="10"
-            :total="1000">
+            :total=allData>
         </el-pagination>
       </div>
     </el-row>
@@ -126,13 +118,18 @@ export default {
     return {
       //下拉框数据
       placeStr:'请选择筛选方式',
+      allData:0,
       sel:'筛选方式',
       selArr:['订单编号','车主名称','手机号码','车架号','车牌号'],
       selName:'',
-      datePicStart:'',
+      datePic:'',
+      pageSize:10,
       currentPage4: 1,
       priceMin:'',
       priceMax:'',
+      index:0,
+      val:1,
+      btnArr:['全部','已完成','待处理','已关闭'],
       pickerOptions: {
         shortcuts: [{
           onClick(picker) {
@@ -157,127 +154,7 @@ export default {
           }
         }]
       },
-      tableData: [{
-        id: 'CX4584121456',
-        license: '川A-XXXXX',
-        frame: 'LFGPB56521156XXXX',
-        price: '3829.6',
-        type: '雅阁HG7154CBMA轿车',
-        name: '王小X',
-        phone: '1315242XXXX',
-        time: '2020-09-11  19：08：09',
-        status: '已完成',
-      }, {
-        id: 'CX4584121456',
-        license: '川A-XXXXX',
-        frame: 'LFGPB56521156XXXX',
-        price: '3829.6',
-        type: '雅阁HG7154CBMA轿车',
-        name: '王小X',
-        phone: '1315242XXXX',
-        time: '2020-09-11  19：08：09',
-        status: '待处理',
-      }, {
-        id: 'CX4584121456',
-        license: '川A-XXXXX',
-        frame: 'LFGPB56521156XXXX',
-        price: '3829.6',
-        type: '雅阁HG7154CBMA轿车',
-        name: '王小X',
-        phone: '1315242XXXX',
-        time: '2020-09-11  19：08：09',
-        status: '已关闭',
-      }, {
-        id: 'CX4584121456',
-        license: '川A-XXXXX',
-        frame: 'LFGPB56521156XXXX',
-        price: '3829.6',
-        type: '雅阁HG7154CBMA轿车',
-        name: '王小X',
-        phone: '1315242XXXX',
-        time: '2020-09-11  19：08：09',
-        status: '已完成',
-      }, {
-        id: 'CX4584121456',
-        license: '川A-XXXXX',
-        frame: 'LFGPB56521156XXXX',
-        price: '3829.6',
-        type: '雅阁HG7154CBMA轿车',
-        name: '王小X',
-        phone: '1315242XXXX',
-        time: '2020-09-11  19：08：09',
-        status: '已完成',
-      }, {
-        id: 'CX4584121456',
-        license: '川A-XXXXX',
-        frame: 'LFGPB56521156XXXX',
-        price: '3829.6',
-        type: '雅阁HG7154CBMA轿车',
-        name: '王小X',
-        phone: '1315242XXXX',
-        time: '2020-09-11  19：08：09',
-        status: '已完成',
-      }, {
-        id: 'CX4584121456',
-        license: '川A-XXXXX',
-        frame: 'LFGPB56521156XXXX',
-        price: '3829.6',
-        type: '雅阁HG7154CBMA轿车',
-        name: '王小X',
-        phone: '1315242XXXX',
-        time: '2020-09-11  19：08：09',
-        status: '已完成',
-      }, {
-        id: 'CX4584121456',
-        license: '川A-XXXXX',
-        frame: 'LFGPB56521156XXXX',
-        price: '3829.6',
-        type: '雅阁HG7154CBMA轿车',
-        name: '王小X',
-        phone: '1315242XXXX',
-        time: '2020-09-11  19：08：09',
-        status: '已完成',
-      }, {
-        id: 'CX4584121456',
-        license: '川A-XXXXX',
-        frame: 'LFGPB56521156XXXX',
-        price: '3829.6',
-        type: '雅阁HG7154CBMA轿车',
-        name: '王小X',
-        phone: '1315242XXXX',
-        time: '2020-09-11  19：08：09',
-        status: '已完成',
-      }, {
-        id: 'CX4584121456',
-        license: '川A-XXXXX',
-        frame: 'LFGPB56521156XXXX',
-        price: '3829.6',
-        type: '雅阁HG7154CBMA轿车',
-        name: '王小X',
-        phone: '1315242XXXX',
-        time: '2020-09-11  19：08：09',
-        status: '已完成',
-      }, {
-        id: 'CX4584121456',
-        license: '川A-XXXXX',
-        frame: 'LFGPB56521156XXXX',
-        price: '3829.6',
-        type: '雅阁HG7154CBMA轿车',
-        name: '王小X',
-        phone: '1315242XXXX',
-        time: '2020-09-11  19：08：09',
-        status: '已完成',
-      }, {
-        id: 'CX4584121456',
-        license: '川A-XXXXX',
-        frame: 'LFGPB56521156XXXX',
-        price: '3829.6',
-        type: '雅阁HG7154CBMA轿车',
-        name: '王小X',
-        phone: '1315242XXXX',
-        time: '2020-09-11  19：08：09',
-        status: '已完成',
-      }]
+      tableData: []
     }
   },
   methods:{
@@ -288,27 +165,57 @@ export default {
     },
     //分页切换
     handleSizeChange(val) {
-      console.log(`每页 ${val} 条`);
+      console.log(val)
+      this.pageSize = val;
+      this.getData();
     },
     handleCurrentChange(val) {
+      this.val = val;
+      this.getData();
       console.log(`当前页: ${val}`);
     },
     reset(){
       this.sel = '筛选方式';
       this.placeStr = '请选择筛选方式';
       this.selName = '';
-      this.datePicStart = '';
+      this.datePic = '';
       this.priceMin = '';
       this.priceMax = '';
+    },
+    changeBtn(i){
+      this.index = i;
+    },
+    //日期格式化
+    timestampToTime(timestamp) {
+      let date = new Date(timestamp);
+      let Y = date.getFullYear() + '-';
+      let M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+      let D = date.getDate() + ' ';
+      let h = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':';
+      let m = (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()) + ':';
+      let s = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds();
+      return Y + M + D + h + m + s;
+    },
+    getData(){
+      this.$axios({
+        method:'post',
+        url:'/oder/allList',
+        data:{
+          pageSize:this.pageSize,
+          startIndex:this.pageSize*(this.val - 1)
+        }
+      }).then((res)=>{
+        this.allData = res.data.data.total;
+        this.tableData = res.data.data.list;
+        for (let i=0;i<this.tableData.length;i++){
+          this.tableData[i].oder_time = this.timestampToTime(this.tableData[i].oder_time);
+          this.tableData[i].oder_status = this.tableData[i].oder_status === 1 ? '已完成' : this.tableData[i].oder_status === 2 ? '待处理' : '已关闭';
+        }
+      })
     }
   },
-  directives: {
-    focus: {
-      // 指令的定义
-      inserted: function (el) {
-        el.focus()
-      }
-    }
+  mounted() {
+    this.getData();
   }
 }
 </script>
@@ -383,6 +290,11 @@ export default {
   }
   .el-table th.is-leaf{
     background-color: #409eff;
+  }
+  .el-button--primary:focus, .el-button--primary:hover {
+    background: #409EFF;
+    border-color: #409EFF;
+    color: #FFF;
   }
 </style>
 <style lang="less">

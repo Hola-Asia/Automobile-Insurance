@@ -7,7 +7,10 @@
         <span>车主信息</span>
       </el-row>
       <el-row>
+        <table class="user_info">
+        </table>
         <el-table
+            v-loading="loading"
             class="detail_tr"
             :data="tableData1"
             border
@@ -35,6 +38,7 @@
       </el-row>
       <el-row>
         <el-table
+            v-loading="loading"
             class="detail_tr"
             :data="tableData2"
             border
@@ -62,6 +66,7 @@
       </el-row>
       <el-row>
         <el-table
+            v-loading="loading"
             class="detail_tr"
             :data="tableData3"
             border
@@ -89,6 +94,7 @@
       </el-row>
       <el-row>
         <el-table
+            v-loading="loading"
             class="detail_tr"
             :data="tableData4"
             border
@@ -116,6 +122,7 @@
       </el-row>
       <el-row>
         <el-table
+            v-loading="loading"
             class="detail_tr"
             :data="tableData5"
             border
@@ -143,6 +150,7 @@
       </el-row>
       <el-row>
         <el-table
+            v-loading="loading"
             class="detail_tr"
             :data="tableData6"
             border
@@ -176,88 +184,89 @@ export default {
   name: "Details",
   data:function () {
     return {
+      loading:true,
       //表格数据1
       tableData1: [{
         text1: '车牌号',
-        name1: '川A-XXXXX',
+        name1: '',
         text2: '使用性质',
         name2: '非营运'
       }, {
         text1: '车架号',
-        name1: 'LVSHT*******5612',
+        name1: '',
         text2: '初登日期',
         name2: '2017-10-10'
       }, {
         text1: '发动机号',
-        name1: 'TL***5623',
+        name1: '',
         text2: '整备质量',
         name2: '1.85'
       }, {
         text1: '座位数',
-        name1: '5',
+        name1: '',
         text2: '厂牌型号',
         name2: '本田牌CAF5462轿车'
       }],
       //表格数据2
       tableData2: [{
         text1: '车主类型',
-        name1: '个人',
+        name1: '',
         text2: '证件号码',
-        name2: '320722199153232'
+        name2: ''
       }, {
         text1: '车主名称',
-        name1: '张三',
+        name1: '',
         text2: '手机号码',
-        name2: '17715142222'
+        name2: ''
       }, {
         text1: '证件类型',
-        name1: '身份证',
+        name1: '',
         text2: '—',
         name2: '—'
       }],
       //表格数据3
       tableData3: [{
         text1: '被保险人类型',
-        name1: '个人',
+        name1: '',
         text2: '证件号码',
-        name2: '320722199153232'
+        name2: ''
       }, {
         text1: '被保险人名称',
-        name1: '张三',
+        name1: '',
         text2: '手机号码',
-        name2: '17715142222'
+        name2: ''
       }, {
         text1: '证件类型',
-        name1: '身份证',
+        name1: '',
         text2: '联系地址',
-        name2: '江苏省苏州市相城区春申湖中路222号'
+        name2: ''
       }],
       //表格数据4
       tableData4: [{
         text1: '投保人类型',
-        name1: '个人',
+        name1: '',
         text2: '证件号码',
-        name2: '320722199153232'
+        name2: ''
       }, {
         text1: '投保人名称',
-        name1: '张三',
+        name1: '',
         text2: '手机号码',
-        name2: '17715142222'
+        name2: ''
       }, {
         text1: '证件类型',
-        name1: '身份证',
+        name1: '',
         text2: '联系地址',
-        name2: '江苏省苏州市相城区春申湖中路222号'
+        name2: ''
       }],
       //表格数据5
       tableData5: [{
         text1: '车损险',
-        name1: '145623.32',
+        name1: '',
         text2: '起保日期',
-        name2: '2018-10-11 00：00:00'
+        name2: ''
       }, {
         text1: '三者险',
-        name1: '150万',
+        name1: '',
         text2: '保单',
         name2: '查看保单'
       }],
@@ -266,7 +275,7 @@ export default {
         text1: '交强险',
         name1: '950',
         text2: '起保日期',
-        name2: '2018-10-11 00：00:00'
+        name2: '2018-10-11 00:00:00'
       }, {
         text1: '车船税',
         name1: '360',
@@ -278,7 +287,56 @@ export default {
   methods:{
     back(){
       history.go(-1);
+    },
+    //日期格式化
+    timestampToTime(timestamp) {
+      let date = new Date(timestamp);
+      let Y = date.getFullYear() + '-';
+      let M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+      let D = date.getDate() + ' ';
+      let h = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':';
+      let m = (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()) + ':';
+      let s = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds();
+      return Y + M + D + h + m + s;
     }
+  },
+  mounted() {
+    this.$axios({
+      url:'/oder/findId',
+      params:{
+        id:this.$route.query.id
+      }
+    }).then((res)=>{
+      console.log(res.data.data)
+      this.tableRes = res.data.data;
+      this.tableData1[0].name1 = this.tableRes[0].carNumber;
+      this.tableData1[1].name1 = this.tableRes[0].chassisNumber;
+      this.tableData1[2].name1 = this.tableRes[0].engine;
+      this.tableData1[3].name1 = this.tableRes[0].seat;
+      this.tableData2[0].name1 = this.tableRes[0].carType;
+      this.tableData2[0].name2 = this.tableRes[0].idCard;
+      this.tableData2[1].name1 = this.tableRes[0].holder;
+      this.tableData2[1].name2 = this.tableRes[0].cuPhone;
+      this.tableData2[2].name1 = this.tableRes[0].idType;
+      this.tableData3[0].name1 = this.tableRes[0].type;
+      this.tableData3[0].name2 = this.tableRes[0].idCard;
+      this.tableData3[1].name1 = this.tableRes[0].name;
+      this.tableData3[1].name2 = this.tableRes[0].phone;
+      this.tableData3[2].name1 = this.tableRes[0].idType;
+      this.tableData3[2].name2 = this.tableRes[0].cuAddress;
+      this.tableData4[0].name1 = this.tableRes[0].type;
+      this.tableData4[0].name2 = this.tableRes[0].idCard;
+      this.tableData4[1].name1 = this.tableRes[0].name;
+      this.tableData4[1].name2 = this.tableRes[0].phone;
+      this.tableData4[2].name1 = this.tableRes[0].idType;
+      this.tableData4[2].name2 = this.tableRes[0].cuAddress;
+      this.tableData5[0].name1 = this.tableRes[0].price;
+      this.tableData5[0].name2 = this.timestampToTime(this.tableRes[0].time);
+      this.tableData5[1].name1 = this.tableRes[1].price;
+      this.$nextTick(()=>{
+        this.loading = false;
+      })
+    })
   }
 }
 </script>
@@ -317,6 +375,19 @@ export default {
   .el-table--border{
     border: 1px solid #ccc;
   }
+  .user_info {
+    width: 100%;
+    tr{
+      td{
+        border: 1px solid #ccc;
+        margin: 0;
+      }
+      td:nth-of-type(2n+1){
+        background-color: #F2F2F2;
+      }
+    }
+  }
+
 </style>
 <style>
   .detail_tr {pointer-events: none;}

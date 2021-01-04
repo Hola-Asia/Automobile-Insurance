@@ -159,11 +159,6 @@ export default {
     }
   },
   methods:{
-    //下拉框选择
-    changeSel(i){
-      this.sel = this.selArr[i];
-      this.placeStr = `请输入${this.selArr[i]}`;
-    },
     //分页切换
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`);
@@ -178,6 +173,17 @@ export default {
       this.datePic2 = '';
       this.datePic3 = '';
     }
+  },
+  mounted() {
+    this.$axios({
+      url:'/protocols/query',
+      params:{
+        page:1,
+        limit:5
+      }
+    }).then((res)=>{
+      console.log(res);
+    })
   }
 }
 </script>

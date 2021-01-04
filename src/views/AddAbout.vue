@@ -27,6 +27,16 @@
     </el-row>
     <el-row>
       <el-col :span="2" class="title">
+        是否上架 :
+      </el-col>
+      <el-switch
+          v-model="switch1"
+          active-color="#13ce66"
+          inactive-color="#ff4949">
+      </el-switch>
+    </el-row>
+    <el-row v-show="!switch1">
+      <el-col :span="2" class="title">
         上架时间 :
       </el-col>
       <div class="block">
@@ -37,7 +47,7 @@
         </el-date-picker>
       </div>
     </el-row>
-    <el-row>
+    <el-row v-show="switch1">
       <el-col :span="2" class="title">
         下架时间 :
       </el-col>
@@ -50,7 +60,7 @@
       </div>
     </el-row>
     <el-row>
-      <el-button type="primary" class="aboutBtn">保存</el-button>
+      <el-button type="primary" class="aboutBtn" @click="addProtocols">保存</el-button>
       <el-button type="info" class="aboutBtn" @click="back">返回</el-button>
     </el-row>
   </div>
@@ -64,12 +74,21 @@ export default {
       input1:'',
       textarea:'',
       value1:'',
-      value2:''
+      value2:'',
+      switch1:true
     }
   },
   methods:{
     back(){
       history.go(-1);
+    },
+    addProtocols(){
+      this.$axios({
+        url:'/protocols/add',
+        data:{
+
+        }
+      })
     }
   }
 }
