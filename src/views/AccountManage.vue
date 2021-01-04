@@ -31,6 +31,7 @@
           </div>
           <div class="middle-middle">
           <el-table
+              v-loading="dialogLoading"
               :data="tableData"
               border
               style="width: 100%" :header-cell-style="{background:'#D7D7D7',fontSize:'14x',textAlign:'center'}"
@@ -130,43 +131,42 @@ export default {
   name: "AccountManage",
   data() {
     return {
-      //账号名称
-      username:'',
-      phone:'',
-      //用来控制模态框的显示与隐藏
-      dialogVisible: false,
-      dialogVisible1: false,
-
+      //搜索框里面的v-model
       formInline: {
         user: '',
         region: ''
       },
-      //用来存放启用/未启用状态的临时变量
-      tempStatus:0,
-      //账户表里面的总条数
-      totalAccount:0,
-      //渲染页面的数据
+      //渲染页面的初始化数据
+      //账号名称
+      username:'',
+      //密码
+      phone:'',
       //分页大小
       yeSize:5,
       //页数
       yeMa:1,
+      //渲染页面的数组
+      tableData: [],
+      //渲染页码
+      currentPage1: 1,
+      currentPage2: 2,
+      currentPage3: 3,
+      currentPage4: 4,
+      //账户表里面的总条数
+      totalAccount:0,
+      dialogLoading:false,
+      //用来控制模态框的显示与隐藏
+      dialogVisible: false,
+      dialogVisible1: false,
+
+      //用来存放启用/未启用状态的临时变量
+      tempStatus:0,
 
       //通过启用状态分页的数据
       //分页大小
       statusYeSize:5,
       //页数
       statusYeMa:1,
-
-      //用来存放获取的当前行的数据
-      editArr:[],
-      //用来存放操作里面的停用/启用按钮的内容
-      startOrStopBtn:'',
-      currentPage1: 1,
-      currentPage2: 2,
-      currentPage3: 3,
-      currentPage4: 4,
-      //渲染页面的数据
-      tableData: [],
     };
   },
   created(){
@@ -176,6 +176,7 @@ export default {
   methods: {
     //渲染页面
     init(limit,page){
+      this.dialogLoading=true;
       let that = this;
       this.$axios({
         url:'/user/list',
@@ -202,52 +203,13 @@ export default {
             alert('未查询到相关数据信息');
           }
         }
+        this.dialogLoading=false;
       }).catch((err)=>{
+        this.dialogLoading=false;
         alert(err);
       })
     },
-    //通过启用状态分页渲染数据
-    statusXuanRan(status,page,limit){
-      let that = this;
-      this.$axios({
-        url:'/user/queryUserByStatus',
-        method:'get',
-        params:{
-          status:status,
-          page:page,
-          limit:limit,
-        }
-      }).then((res)=>{
-        if (res.status === 200){
-          if (res.data.data.length > 0){
-            //渲染页面
-            //查询成功循环渲染页码和页面信息
-            that.totalAccount = res.data.count;
-            console.log(res.data.count);
-            //先置空
-            that.tableData = [];
-            //渲染数据
-            (res.data.data).forEach(function (v){
-              if(v.status === 0){
-                v.status = '未启用';
-              }else{
-                v.status = '启用';
-              }
-              that.tableData.push(v);
-            })
-          }else{
-            alert('未查询到相关数据信息');
-          }
-        }
-      }).catch((err)=>{
-        alert(err);
-      })
-    },
-    //跳转编辑页面
-    openEdit(index, row){
-      // console.log(index,row.id);
-      this.$router.push({name:'EditAccount',params:{ conlltion : row.id }});
-    },
+
     //点击搜索按钮
     onSubmit() {
       let that = this;
@@ -293,10 +255,57 @@ export default {
         }
       }else if(this.formInline.region && this.formInline.user == ''){
         //通过启用状态查询数据渲染页面
-          this.statusXuanRan(this.formInline.region,this.statusYeMa,this.statusYeSize);
+        this.statusXuanRan(this.formInline.region,this.statusYeMa,this.statusYeSize);
       }else{
         this.init(this.yeSize,this.yeMa);
       }
+    },
+
+    //通过启用状态分页渲染数据
+    statusXuanRan(status,page,limit){
+      this.dialogLoading=true;
+      let that = this;
+      this.$axios({
+        url:'/user/queryUserByStatus',
+        method:'get',
+        params:{
+          status:status,
+          page:page,
+          limit:limit,
+        }
+      }).then((res)=>{
+        if (res.status === 200){
+          if (res.data.data.length > 0){
+            //渲染页面
+            //查询成功循环渲染页码和页面信息
+            that.totalAccount = res.data.count;
+            console.log(res.data.count);
+            //先置空
+            that.tableData = [];
+            //渲染数据
+            (res.data.data).forEach(function (v){
+              if(v.status === 0){
+                v.status = '未启用';
+              }else{
+                v.status = '启用';
+              }
+              that.tableData.push(v);
+            })
+          }else{
+            alert('未查询到相关数据信息');
+          }
+        }
+        this.dialogLoading=false;
+      }).catch((err)=>{
+        this.dialogLoading=false;
+        alert(err);
+      })
+    },
+
+    //跳转编辑页面
+    openEdit(index, row){
+      // console.log(index,row.id);
+      this.$router.push({name:'EditAccount',params:{ conlltion : row.id }});
     },
 
     //弹出停用/启用的弹框
@@ -337,8 +346,8 @@ export default {
             //关闭弹框
             this.dialogVisible1=false;
             this.dialogVisible=false;
-            //刷新页面
-            this.$router.go(0);
+            //渲染页面
+            this.init(this.yeSize,this.yeMa);
           }
         }else{
           this.$message.error('修改失败！');
@@ -347,6 +356,8 @@ export default {
         alert(err);
       })
     },
+
+    //用来获取每页显示的条数
     handleSizeChange(val) {
       //判断是搜索的分页，还是最初的渲染页面
       if (this.formInline.region){
@@ -357,6 +368,7 @@ export default {
         this.init(this.yeSize,this.yeMa);
       }
     },
+    //用来获取当前点击的是哪一页
     handleCurrentChange(val) {
       if (this.formInline.region){
         this.statusYeMa = val;

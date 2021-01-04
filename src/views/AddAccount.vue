@@ -132,6 +132,7 @@ export default {
         alert('请输入正确的手机号码');
       }
     },
+    //点击确认按钮
     tiJiao(){
       this.$axios({
         url:'/user/addUser',

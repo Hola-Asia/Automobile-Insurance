@@ -33,6 +33,7 @@
       </div>
       <div class="middle-middle">
         <el-table
+            v-loading="loading"
             :data="tableData"
             border
             style="width: 100%" :header-cell-style="{background:'#D7D7D7',fontSize:'14x',textAlign:'center'}"
@@ -117,6 +118,7 @@
         </div>
         <div class="showTable">
           <el-table
+              v-loading="dialogLoading"
               :data="tableData1"
               style="width: 100%;height: 400px;overflow:scroll;overflow-x: hidden; overflow-y: auto;" :header-cell-style="{fontSize:'14x',textAlign:'center'}"
               :cell-style="{textAlign:'center',fontSize:'13x',padding:'0px'}"
@@ -220,7 +222,7 @@ export default {
   name: "DepartmentManage",
   data() {
     return {
-      //搜索
+      //搜索内容的v-model
       formInline:{
         depart:'',
         region:'',
@@ -267,6 +269,9 @@ export default {
       deleteId:'',
       //用来控制页码是否显示
       showYeMa:true,
+
+      loading:false,
+      dialogLoading:false,
     };
   },
   created(){
@@ -276,6 +281,7 @@ export default {
   methods: {
     //渲染页面
     init(limit,page){
+      this.loading=true;
       this.$axios({
         url:'/department/list',
         method:'get',
@@ -301,76 +307,11 @@ export default {
             alert('未查询到相关数据信息');
           }
         }
+        this.loading=false;
       }).catch((err)=>{
+        this.loading=false;
         alert(err);
       })
-    },
-    //当确定停用时
-    stopStatus(){
-      let stopJson = JSON.parse(sessionStorage.getItem('stopDepart'));
-      if (stopJson.status == '启用'){
-        stopJson.status = 1;
-      }else{
-        stopJson.status = 0;
-      }
-      this.$axios({
-        url:'/department/updateDepartmentByStatus',
-        method:'post',
-        data:{
-          id: stopJson.id,
-          status: stopJson.status,
-        }
-      }).then((res)=>{
-        if (res.status == 200){
-          if (res.data.code == 0){
-            this.$message({
-              message: '修改成功！',
-              type: 'success'
-            });
-            //关闭弹框
-            this.dialogVisible1=false;
-            this.dialogVisible=false;
-            //刷新页面
-            this.$router.go(0);
-          }
-        }else{
-          this.$message.error('修改失败！');
-        }
-      }).catch((err)=>{
-        alert(err);
-      })
-    },
-    //停用/启用的方法
-    handleStop(index, row) {
-      //渲染页面
-      sessionStorage.setItem('stopDepart',JSON.stringify(row));
-      if (row.status == '未启用'){
-        this.name = row.name;
-        this.dialogVisible1 = true;
-      }else{
-        this.name = row.name;
-        //判断该部门是否有账号存在
-        let that = this;
-        this.$axios({
-          url: '/department/queryAllUserByDepartmentId',
-          method: 'get',
-          params: {
-            id: row.id,
-          }
-        }).then((res) => {
-          if (res.status === 200) {
-            if (res.data.count > 0) {
-              //该部门还有人，不能进行停用
-              that.dialogVisible2 = true;
-            } else {
-              //可以进行停用
-              that.dialogVisible = true;
-            }
-          }
-        }).catch((err) => {
-          alert(err);
-        })
-      }
     },
     //搜索
     onSubmit() {
@@ -448,8 +389,100 @@ export default {
         this.showYeMa = true;
       }
     },
-    close1(){
-      this.show = !this.show;
+
+    //停用/启用页面的显示
+    handleStop(index, row) {
+      //渲染页面
+      sessionStorage.setItem('stopDepart',JSON.stringify(row));
+      if (row.status == '未启用'){
+        this.name = row.name;
+        this.dialogVisible1 = true;
+      }else{
+        this.name = row.name;
+        //判断该部门是否有账号存在
+        let that = this;
+        this.$axios({
+          url: '/department/queryAllUserByDepartmentId',
+          method: 'get',
+          params: {
+            id: row.id,
+          }
+        }).then((res) => {
+          if (res.status === 200) {
+            if (res.data.count > 0) {
+              //该部门还有人，不能进行停用
+              that.dialogVisible2 = true;
+            } else {
+              //可以进行停用
+              that.dialogVisible = true;
+            }
+          }
+        }).catch((err) => {
+          alert(err);
+        })
+      }
+    },
+    //当确定停用时
+    stopStatus(){
+      let stopJson = JSON.parse(sessionStorage.getItem('stopDepart'));
+      if (stopJson.status == '启用'){
+        stopJson.status = 1;
+      }else{
+        stopJson.status = 0;
+      }
+      this.$axios({
+        url:'/department/updateDepartmentStatus',
+        method:'post',
+        data:{
+          id: stopJson.id,
+          status: stopJson.status,
+        }
+      }).then((res)=>{
+        if (res.status == 200){
+          if (res.data.code == 0){
+            this.$message({
+              message: '修改成功！',
+              type: 'success'
+            });
+            //关闭弹框
+            this.dialogVisible1 = false;
+            this.dialogVisible = false;
+            //渲染页面
+            this.init(this.yeSize,this.yeMa);
+          }
+        }else{
+          this.$message.error('修改失败！');
+        }
+      }).catch((err)=>{
+        alert(err);
+      })
+    },
+
+    //显示删除部门的弹框
+    handleDelete(index, row) {
+      //需要判断当前部门是否还有人，有则不删除，并弹框
+      let that = this;
+      this.name = row.name;
+      this.$axios({
+        url: '/department/queryAllUserByDepartmentId',
+        method: 'get',
+        params: {
+          id: row.id,
+        }
+      }).then((res) => {
+        if (res.status === 200) {
+          if (res.data.count > 0) {
+            //该部门还有人，不能进行删除
+            this.dialogVisible4 = true;
+          } else {
+            //可以进行删除
+            that.deleteId = row.id;
+            this.dialogVisible3 = true;
+          }
+        }
+      }).catch((err) => {
+        alert(err);
+      })
     },
     //删除部门
     departDelete(){
@@ -468,43 +501,19 @@ export default {
               type: 'success'
             });
             this.dialogVisible3 = false;
-            //刷新页面
-            this.$router.go(0);
+            //渲染页面
+            this.init(this.yeSize,this.yeMa);
           }
         }else{
           this.$message.error('删除失败！');
         }
       })
     },
-    //显示删除部门的弹框
-    handleDelete(index, row) {
-      //需要判断当前部门是否还有人，有则不删除，并弹框
-      let that = this;
-      this.$axios({
-        url: '/department/queryAllUserByDepartmentId',
-        method: 'get',
-        params: {
-          id: row.id,
-        }
-      }).then((res) => {
-        if (res.status === 200) {
-          if (res.data.count > 0) {
-            //该部门还有人，不能进行删除
-            this.dialogVisible4 = true;
-          } else {
-            //可以进行删除
-            that.deleteId = row.id;
-            this.dialogVisible3 = true;
-            this.name = row.name;
-          }
-        }
-      }).catch((err) => {
-        alert(err);
-      })
-    },
+
+    //查看人员信息
     handleShow(index,row){
+      this.dialogLoading =true;
       this.show = !this.show;
-      console.log(index,row);
       //渲染页面
       this.$axios({
         url:'/department/queryAllUserByDepartmentId',
@@ -515,6 +524,7 @@ export default {
       }).then((res)=>{
         if (res.status === 200){
           if (res.data.data.length > 0){
+            this.totalPerson = res.data.count;
             //先置空
             this.tableData1 = [];
             this.tableData1 = res.data.data;
@@ -522,18 +532,29 @@ export default {
             alert('未查询到相关数据信息');
           }
         }
+        this.dialogLoading = false;
       }).catch((err)=>{
+        this.dialogLoading = false;
         alert(err);
       })
     },
+    //查看人员信息页面的关闭
+    close1(){
+      this.tableData1 = [];
+      this.show = !this.show;
+    },
+
+    //用来获取每页显示的条数
     handleSizeChange(val) {
       this.yeSize = val;
       this.init(this.yeSize,this.yeMa);
     },
+    //用来获取当前点击的是哪一页
     handleCurrentChange(val) {
       this.yeMa = val;
       this.init(this.yeSize,this.yeMa);
     },
+
     //添加弹框显示
     add(){
       this.dialogFormVisible=true;
@@ -547,6 +568,7 @@ export default {
       }).then((res)=>{
         console.log(res);
         if (res.status == 200){
+          console.log(res.data.code);
           if (res.data.code == 0){
             this.$message({
               message: '添加成功！',
@@ -554,7 +576,7 @@ export default {
             });
             this.dialogFormVisible = false;
             //刷新页面
-            this.$router.go(0);
+            this.init(this.yeSize,this.yeMa)
           }
         }else{
           this.$message.error('添加失败！');

@@ -57,7 +57,7 @@ export default {
       startOptions: [{
         value: '启用',
         label: '启用'
-      }, {
+      },{
         value: '未启用',
         label: '未启用'
       }],

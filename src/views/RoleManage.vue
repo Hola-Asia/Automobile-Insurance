@@ -31,6 +31,7 @@
       </div>
       <div class="middle-middle">
         <el-table
+            v-loading="initLoading"
             :data="tableData"
             border
             style="width: 100%" :header-cell-style="{background:'#D7D7D7',fontSize:'14x',textAlign:'center'}"
@@ -97,10 +98,11 @@
       <div class="lookKuang">
         <div class="s-top">
           <span class="title">人员明细</span>
-          <span class="total">共计11人</span>
+          <span class="total">共计{{ totalPerson }}人</span>
         </div>
         <div class="showTable">
           <el-table
+              v-loading="loading"
               :data="tableData1"
               style="width: 100%;height: 400px;overflow:scroll;overflow-x: hidden; overflow-y: auto;" :header-cell-style="{fontSize:'14x',textAlign:'center'}"
               :cell-style="{textAlign:'center',fontSize:'13x',padding:'0px'}"
@@ -204,11 +206,11 @@ export default {
   name: "RoleManage",
   data() {
     return {
+      //搜索框的v-model
       formInline: {
         role: '',
         region: ''
       },
-      addShow:false,
 
       //渲染页面的数据
       //分页大小
@@ -233,15 +235,19 @@ export default {
       dialogVisible2: false,
       dialogVisible3: false,
       dialogVisible4: false,
-      //查看
+
+      //控制查看的弹框
       show:false,
       //合计人数
       totalPerson:'',
       //用来控制是否显示页码
       showYeMa:true,
+      //用来存放弹框里面的内容
       name:'',
       //用来存放即将删除的角色id
       deleteId:'',
+      loading:false,
+      initLoading:false,
     };
   },
   created() {
@@ -251,6 +257,7 @@ export default {
   methods: {
     //渲染页面
     init(limit,page){
+      this.initLoading = true;
       this.$axios({
         url:'/role/list',
         method:'get',
@@ -276,7 +283,9 @@ export default {
             alert('未查询到角色管理相关数据信息');
           }
         }
+        this.initLoading = false;
       }).catch((err)=>{
+        this.initLoading = false;
         alert(err);
       })
     },
@@ -353,15 +362,16 @@ export default {
         this.init(this.yeSize,this.yeMa);
       }
     },
-    //查看里面用来关闭页面
-    close1(){
-      this.show = !this.show;
-    },
+
+    //跳转编辑页面
     openEdit(index, row){
       // console.log(index,row.id);
-      this.$router.push({name:'EditRole',params:{ conlltion :row.id }});
+      this.$router.push({name:'EditRole',params:{ conlltion : row.id }});
     },
+
+    //查看人员明细
     handleShow(index,row){
+      this.loading = true;
       this.show = !this.show;
       //渲染页面
       this.$axios({
@@ -373,42 +383,58 @@ export default {
       }).then((res)=>{
         if (res.status === 200){
           if (res.data.data.length > 0){
+            this.totalPerson = res.data.count;
             //先置空
             this.tableData1 = [];
             this.tableData1 = res.data.data;
           }else{
-            alert('未查询到人员信息');
+            this.totalPerson = 0;
+            this.tableData1 = [];
           }
         }
+        this.loading = false;
       }).catch((err)=>{
+        this.loading = false;
         alert(err);
       })
     },
 
-    //删除部门
-    departDelete(){
-      //删除该部门
-      this.$axios({
-        url: '/department/deleteDepartment',
-        method: 'get',
-        params: {
-          id: this.deleteId,
-        }
-      }).then((res) => {
-        if (res.status === 200){
-          if (res.data.code == 0){
-            this.$message({
-              message: '删除成功！',
-              type: 'success'
-            });
-            this.dialogVisible3 = false;
-            //刷新页面
-            this.$router.go(0);
+    //查看里面用来关闭页面
+    close1(){
+      this.tableData1 = [];
+      this.show = !this.show;
+    },
+
+    //控制停用/启用页面的显示
+    handleStop(index, row) {
+      this.name = row.roleName;
+      //渲染页面
+      sessionStorage.setItem('stopRole',JSON.stringify(row));
+      if (row.status == '未启用'){
+        this.dialogVisible1 = true;
+      }else{
+        //判断该部门是否有账号存在
+        let that = this;
+        this.$axios({
+          url: '/role/queryAllUserByRoleId',
+          method: 'get',
+          params: {
+            id: row.id,
           }
-        }else{
-          this.$message.error('删除失败！');
-        }
-      })
+        }).then((res) => {
+          if (res.status === 200) {
+            if (res.data.count > 0) {
+              //该部门还有人，不能进行停用
+              that.dialogVisible2 = true;
+            } else {
+              //可以进行停用
+              that.dialogVisible = true;
+            }
+          }
+        }).catch((err) => {
+          alert(err);
+        })
+      }
     },
     //确认启用或者停用
     roleStop(){
@@ -445,41 +471,35 @@ export default {
         alert(err);
       })
     },
-    //停用/启用的方法
-    handleStop(index, row) {
-      //渲染页面
-      sessionStorage.setItem('stopRole',JSON.stringify(row));
-      if (row.status == '未启用'){
-        this.name = row.name;
-        this.dialogVisible1 = true;
-      }else{
-        this.name = row.name;
-        //判断该部门是否有账号存在
-        let that = this;
-        this.$axios({
-          url: '/role/queryAllUserByRoleId',
-          method: 'get',
-          params: {
-            id: row.id,
+
+    //删除弹框显示
+    handleDelete(index, row) {
+      //需要判断当前部门是否还有人，有则不删除，并弹框
+      let that = this;
+      this.name = row.roleName;
+      this.$axios({
+        url: '/role/queryAllUserByRoleId',
+        method: 'get',
+        params: {
+          id: row.id,
+        }
+      }).then((res) => {
+        if (res.status === 200) {
+          if (res.data.count > 0) {
+            //该部门还有人，不能进行删除
+            this.dialogVisible4 = true;
+          } else {
+            //可以进行删除
+            that.deleteId = row.id;
+            this.dialogVisible3 = true;
           }
-        }).then((res) => {
-          if (res.status === 200) {
-            if (res.data.count > 0) {
-              //该部门还有人，不能进行停用
-              that.dialogVisible2 = true;
-            } else {
-              //可以进行停用
-              that.dialogVisible = true;
-            }
-          }
-        }).catch((err) => {
-          alert(err);
-        })
-      }
+        }
+      }).catch((err) => {
+        alert(err);
+      })
     },
     //删除角色
     roleDelete(){
-      //删除该部门
       let that = this;
       this.$axios({
         url: '/role/deleteRole',
@@ -505,47 +525,18 @@ export default {
         alert(err);
       })
     },
-    //删除弹框显示
-    handleDelete(index, row) {
-      //需要判断当前部门是否还有人，有则不删除，并弹框
-      let that = this;
-      this.name = row.name;
-      this.$axios({
-        url: '/role/queryAllUserByRoleId',
-        method: 'get',
-        params: {
-          id: row.id,
-        }
-      }).then((res) => {
-        if (res.status === 200) {
-          if (res.data.count > 0) {
-            //该部门还有人，不能进行删除
-            this.dialogVisible4 = true;
-          } else {
-            //可以进行删除
-            that.deleteId = row.id;
-            this.dialogVisible3 = true;
-          }
-        }
-      }).catch((err) => {
-        alert(err);
-      })
-    },
+
+
     handleSizeChange(val) {
       this.yeSize = val;
       this.init(this.yeSize,this.yeMa);
     },
+
     handleCurrentChange(val) {
       this.yeMa = val;
       this.init(this.yeSize,this.yeMa);
     },
 
-    add(){
-      this.addShow=!this.addShow;
-    },
-    clear(){
-      this.addShow=!this.addShow;
-    }
   }
 }
 </script>
