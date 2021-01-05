@@ -105,7 +105,7 @@
             </el-table-column>
             <el-table-column
               label="操作">
-            <template slot-scope="scope">
+            <template slot-scope="scope"  v-if="tableData">
               <router-link :to="{name:'GuaranteeSlipParticulars',params:{id:id}}">
               <el-button  type="text" size="small" @click="handleClick(scope.row)">查看保单</el-button>
               </router-link>
@@ -179,7 +179,7 @@ export default {
           //表格数据
           tableData: [],
           // 用户id
-          id:null,
+          id:0,
           // 时间插件
           pickerOptions: {
             shortcuts: [{
@@ -255,9 +255,7 @@ export default {
           this.currentPage4=1;
           //搜索时间段
           this.timer= null;
-          if(this.tableData.length<=0){
             this.beg();
-          }
       },
       //保单类型按钮
       guaranteeSlipTypeSet(i){
@@ -377,8 +375,9 @@ export default {
         let s = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds();
         return Y + M + D + h + m + s;
       },
+      // 传id
       handleClick(row) {
-        console.log(row.id);
+        // console.log(row.id);
         this.id=row.id;
       }
     },

@@ -60,10 +60,15 @@ export default {
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            alert('submit!');
+            this.beg();
           } else {
-            console.log('error submit!!');
-            this.open();
+            if(this.ruleForm.user==''&&this.ruleForm.password==''){
+              this.open1('账号和密码不能为空');
+            }else if(this.ruleForm.user==''){
+              this.open1('账号不能为空');
+            }else{
+              this.open1('密码不能为空');
+            }
             return false;
           }
         });
@@ -73,8 +78,36 @@ export default {
         this.$refs[formName].resetFields();
       },
       //提示框
-      open() {
-        this.$message('账号或密码输入错误');
+      open1(v) {
+        this.$message.error(v);
+      },
+      open2(v) {
+        this.$message({
+          message: v,
+          type: 'success'
+        });
+      },
+      // 请求接口
+      beg(){
+        this.$axios({
+          method:'post',
+          url:'/user/login',
+          data:{
+            'username':this.ruleForm.user,
+            'password':this.ruleForm.password
+          }
+        }).then((res)=>{
+          if(res.data.data==null){
+            this.open1('账号或密码错误')
+          }else if(res.data.data.token){
+            sessionStorage.token=res.data.data.token;
+            this.$router.push('/guaranteeSlipList');
+            this.open2('登录成功')
+          }
+          
+        }).catch((err)=>{
+          this.open1('服务器开小差去了(*￣︶￣)')
+        })
       }
     }
 }

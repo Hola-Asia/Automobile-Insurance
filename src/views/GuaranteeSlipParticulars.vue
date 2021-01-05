@@ -21,7 +21,7 @@
                 <span class="right">保单验真码: HQKrvHToBNfYyFXXXX</span>
             </p>
             <p class="clearfix">
-                <span class="left">行驶证车主:xxx</span><span class="right">保险单号:1450411390107155XXXX</span>
+                <span class="left">行驶证车主:{{name}}</span><span class="right">保险单号:{{number}}</span>
             </p>
             <p class="clearfix">
                 <span class="left">鉴于投保人已向保险人提出投保申请,并同意按约定交付保险费,保险人依照承保险种及其对应条款和特别约定承担赔偿责任。</span>
@@ -35,31 +35,31 @@
             <tr>
                 <td colspan="9">
                     <p class="clearfix">
-                        <span class="left">姓 名： 王小X</span><span class="center">证件类型： 身份证</span><span class="right">证件号码：
-                        32062419850216XXXX</span>
+                        <span class="left">姓 名： {{name}}</span><span class="center">证件类型： {{idType}}</span><span class="right">证件号码：
+                        {{idCard}}</span>
                     </p>
                     <p class="clearfix center">
-                        <span>性 别： 男</span><span class="right">联系电话： 1354562XXXX</span>
+                        <span>性 别： 男</span><span class="right">联系电话： {{phone}}</span>
                     </p>
                     <p class="clearfix">
-                        <span class="left">通讯地址：江苏省常州市武进区</span><span class="right">电子邮箱：47921637xxxx@qq.com</span>
+                        <span class="left">通讯地址：{{address}}</span><span class="right">电子邮箱：47921637xxxx@qq.com</span>
                     </p>
                 </td>
             </tr>
             <tr>
                 <td rowspan="3" colspan="2" class="center1">车辆<br>信息</td>
                 <td class="center1">车牌号码</td>
-                <td colspan="2">苏K-XXXXX</td>
+                <td colspan="2">{{carNumber}}</td>
                 <td class="center1">发动机号码</td>
-                <td colspan="2">7524122</td>
+                <td colspan="2">{{engine}}</td>
                 <td class="center1">车架号码</td>
-                <td colspan="2">LFGPB54U25154XXXX</td>
+                <td colspan="2">{{chassisNumber}}</td>
             </tr>
             <tr>
                 <td class="center1">核定载客</td>
-                <td colspan="2">5人</td>
+                <td colspan="2">{{seat}}人</td>
                 <td class="center1">初登日期</td>
-                <td colspan="2">2017-06-12</td>
+                <td colspan="2">{{timestampToTime(startTime)}}</td>
                 <td class="center1">厂牌型号</td>
                 <td colspan="2">锋范牌HG7154CBMA轿车</td>
             </tr>
@@ -77,7 +77,7 @@
             </tr>
             <tr>
                 <td colspan="3" class="thick">保险期间</td>
-                <td colspan="8">自2018年6月12日00时起至2019年6月11日24时止</td>
+                <td colspan="8">自{{timestampToTime(startTime)}}起至{{timestampToTime(endTime)}}止</td>
             </tr>
             <tr>
                 <td colspan="4" class="center1">承保险种</td>
@@ -118,9 +118,9 @@
                     <p class="clearfix"><span class="left">代理机构跟单销售人员姓名：XXX</span><span class="right">执业证号码：2101273200008000201902XXXX</span></p>
                     <p class="clearfix"><span class="center">银行流水号：CPC39020091700012679XXXX</span></p>
                     <p class="clearfix center1">
-                        <span class="left">收费确认时间：2018年6月10日10：24时</span>
-                        <span>投保确认时间：2018年6月10日10：24时</span>
-                        <span class="right">打印时间：2018年6月10日10：24时</span>
+                        <span class="left">收费确认时间：{{timestampToTime(startTime)}}</span>
+                        <span>投保确认时间：{{timestampToTime(startTime)}}</span>
+                        <span class="right">打印时间：{{timestampToTime(startTime)}}</span>
                     </p>
                 </td>
             </tr>
@@ -165,7 +165,37 @@
 export default {
     data() {
         return {
-             id:this.$route.params.id
+             id:this.$route.params.id,
+            //  车牌号码
+             carNumber:null,
+            //  车架号码 
+             chassisNumber:null,
+            //  保单结束时间
+             endTime:null,
+            //  险种
+             insuranceName:null,
+            //  开始时间
+             startTime:null,
+            //  保单状态 0为失效,1为退保,2为保障中 
+             status:null,
+            //  险种状态 0为交强险,1为商业险
+            type:null,
+            // 身份证
+            idCard:null,
+            // 电话号码
+            phone:null,
+            // 发动机号
+            engine:null,
+            // 座位
+            seat:null,
+            // 名字
+            name:null,
+            // 保单号码 
+            number:null,
+            // 证件类型
+            idType:null,
+            // 地址
+            address:null
         }
     },
     methods: {
@@ -176,14 +206,54 @@ export default {
                     'id':this.id
                 }
             }).then((res)=>{
-                console.log(res);
+                //  车牌号码
+             this.carNumber=res.data.data.carNumber;
+            //  车架号码 
+             this.chassisNumber=res.data.data.chassisNumber;
+            //  保单结束时间
+             this.endTime=res.data.data.endTime;
+            //  险种
+             this.insuranceName=res.data.data.insuranceName;
+            //  开始时间
+             this.startTime=res.data.data.startTime;
+            //  保单状态 0为失效,1为退保,2为保障中 
+             this.status=res.data.data.status;
+            //  险种状态 0为交强险,1为商业险
+            this.type=res.data.data.type;
+            // 身份证
+            this.idCard=res.data.data.idCard;
+            // 电话号码
+            this.phone=res.data.data.phone;
+            // 发动机号
+            this.engine=res.data.data.engine;
+            // 座位
+            this.seat=res.data.data.seat;
+            // 名字
+            this.name=res.data.data.name;
+            // 保单号码 
+            this.number=res.data.data.number;
+            // 证件类型
+            this.idType=res.data.data.idType;
+            // 地址
+            this.address=res.data.data.address;
             }).catch((err)=>{
                 console.log(err);
             })
-        }
+        },
+         //加工时间
+       timestampToTime(timestamp) {
+        let date = new Date(timestamp);
+        let Y = date.getFullYear() + '-';
+        let M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+        let D = date.getDate() + ' ';
+        let h = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':';
+        let m = (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()) + ':';
+        let s = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds();
+        return Y + M + D + h + m + s;
+      }
     },
     mounted() {
-        this.beg()
+        this.beg();
     },
 }
 </script>

@@ -105,7 +105,26 @@ export default {
     },
     // 下拉
     handleCommand(command) {
-      this.$message("click on item " + command);
+      
+      this.$axios({
+        url:'/user/logout',
+        params:{
+          'token':sessionStorage.token
+        }
+      }).then((res)=>{
+        this.$router.push('/login');
+        delete sessionStorage.token;
+        this.$message({
+          message: '您已成功退出登录',
+          type: 'success'
+        });
+      }).catch((err)=>{
+        this.$message({
+          message: '服务器开小差去了(*￣︶￣)',
+          type: 'success'
+        });
+      })
+      
     },
   },
   components: {},
