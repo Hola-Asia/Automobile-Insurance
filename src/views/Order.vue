@@ -30,7 +30,7 @@
         </el-date-picker>
       </div>
       <div class="checkBtn">
-        <el-button type="primary">查询</el-button>
+        <el-button type="primary" @click="search">查询</el-button>
         <el-button type="info" @click="reset">重置</el-button>
       </div>
     </el-row>
@@ -38,62 +38,68 @@
       <el-col :span="24" class="resultNum"><span v-cloak>查询结果：共计{{allData}}条数据</span></el-col>
     </el-row>
     <el-row>
-      <el-table
-          :data="tableData"
-          stripe
-          v-loading="loadingTable"
-          :header-cell-style="{background:'#D7D7D7',color:'#000',fontWeight:'normal'}"
-          style="width: 100%">
-        <el-table-column
-            align="center"
-            prop="oder_number"
-            label="订单编号"
-            width="180">
-        </el-table-column>
-        <el-table-column
-            align="center"
-            prop="car_number"
-            label="车牌号码"
-            width="180">
-        </el-table-column>
-        <el-table-column
-            align="center"
-            prop="chassis_number"
-            label="车架号码">
-        </el-table-column>
-        <el-table-column
-            align="center"
-            prop="amount"
-            label="保费金额">
-        </el-table-column>
-        <el-table-column
-            align="center"
-            prop="name"
-            label="车主名称">
-        </el-table-column>
-        <el-table-column
-            align="center"
-            prop="phone"
-            label="手机号码">
-        </el-table-column>
-        <el-table-column
-            align="center"
-            prop="oder_time"
-            label="订单完成时间">
-        </el-table-column>
-        <el-table-column
-            prop="oder_status"
-            align="center"
-            label="订单状态">
-        </el-table-column>
-        <el-table-column
-            label="操作"
-            align="center">
-            <router-link :to="{path:'/details',query:{id:1}}">
-              <a href="javascript:" class="desc">订单详情</a>
-            </router-link>
-        </el-table-column>
-      </el-table>
+        <el-table
+            :data="tableData"
+            stripe
+            v-loading="loadingTable"
+            :header-cell-style="{background:'#D7D7D7',color:'#000',fontWeight:'normal'}"
+            style="width: 100%">
+          <el-table-column
+              align="center"
+              prop="oder_number"
+              label="订单编号"
+              width="180">
+          </el-table-column>
+          <el-table-column
+              align="center"
+              prop="car_number"
+              label="车牌号码"
+              width="180">
+          </el-table-column>
+          <el-table-column
+              align="center"
+              prop="chassis_number"
+              label="车架号码">
+          </el-table-column>
+          <el-table-column
+              align="center"
+              prop="amount"
+              label="保费金额">
+          </el-table-column>
+          <el-table-column
+              align="center"
+              prop="name"
+              label="车主名称">
+          </el-table-column>
+          <el-table-column
+              align="center"
+              prop="phone"
+              label="手机号码">
+          </el-table-column>
+          <el-table-column
+              align="center"
+              prop="oder_time"
+              label="订单完成时间">
+          </el-table-column>
+          <el-table-column
+              prop="oder_status"
+              align="center"
+              label="订单状态">
+          </el-table-column>
+          <el-table-column
+              v-if=false
+              prop="id"
+              align="center"
+              label="ID">
+          </el-table-column>
+          <el-table-column
+              label="操作"
+              align="center">
+            <template slot-scope="scope">
+              <a href="javascript:" class="desc" @click="Clicklongin(scope.$index,scope.row)">订单详情</a>
+            </template>
+          </el-table-column>
+        </el-table>
     </el-row>
     <el-row class="clearfix">
       <div class="block pageNav">
@@ -118,6 +124,7 @@ export default {
   data:function(){
     return {
       //下拉框数据
+      id:0,
       loadingTable:true,
       placeStr:'请选择筛选方式',
       allData:0,
@@ -159,9 +166,9 @@ export default {
       tableData: []
     }
   },
-  methods:{
+  methods: {
     //下拉框选择
-    changeSel(i){
+    changeSel(i) {
       this.sel = this.selArr[i];
       this.placeStr = `请输入${this.selArr[i]}`;
     },
@@ -176,9 +183,8 @@ export default {
       this.loadingTable = true;
       this.val = val;
       this.getData();
-      console.log(`当前页: ${val}`);
     },
-    reset(){
+    reset() {
       this.sel = '筛选方式';
       this.placeStr = '请选择筛选方式';
       this.selName = '';
@@ -186,7 +192,7 @@ export default {
       this.priceMin = '';
       this.priceMax = '';
     },
-    changeBtn(i){
+    changeBtn(i) {
       this.index = i;
     },
     //日期格式化
@@ -200,23 +206,253 @@ export default {
       let s = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds();
       return Y + M + D + h + m + s;
     },
-    getData(){
+    getData() {
+      this.tableData = [];
       this.$axios({
         method:'post',
         url:'/oder/allList',
         data:{
           pageSize:this.pageSize,
-          startIndex:this.pageSize*(this.val - 1)
+          startIndex:this.pageSize*(this.val - 1),
         }
       }).then((res)=>{
         this.allData = res.data.data.total;
         this.tableData = res.data.data.list;
         for (let i=0;i<this.tableData.length;i++){
           this.tableData[i].oder_time = this.timestampToTime(this.tableData[i].oder_time);
-          this.tableData[i].oder_status = this.tableData[i].oder_status === 1 ? '已完成' : this.tableData[i].oder_status === 2 ? '待处理' : '已关闭';
+          this.tableData[i].oder_status = this.tableData[i].oder_status === 0 ? '已完成' : this.tableData[i].oder_status === 1 ? '待处理' : '已关闭';
         }
-        this.loadingTable = false;
+        this.$nextTick(()=>{
+          console.log(this.tableData)
+          this.loadingTable = false;
+        });
       })
+    },
+    search() {
+      let status = 0;
+      this.tableData = [];
+      switch (this.index){
+        case 0:
+          status = '';
+          break;
+        case 1:
+          status = 0;
+          break;
+        case 2:
+          status = 1;
+          break;
+        case 3:
+          status = 2;
+          break;
+        default:
+          status = '';
+          break;
+      }
+      switch (this.sel) {
+        case "订单编号":
+          this.$axios({
+            method:'post',
+            url:'/oder/allList',
+            data:{
+              pageSize:this.pageSize,
+              startIndex:0,
+              minAmount:this.priceMin,
+              maxAmount:this.priceMax,
+              oderTime:this.datePic,
+              oderNumber:this.selName,
+              oderStatus:status
+            }
+          }).then((res)=>{
+            if (res.data.data !== null){
+              this.allData = res.data.data.total;
+            }else {
+              this.allData = 0;
+              this.tableData = [];
+              this.open();
+              return;
+            }
+            this.tableData = res.data.data.list;
+            for (let i=0;i<this.tableData.length;i++){
+              this.tableData[i].oder_time = this.timestampToTime(this.tableData[i].oder_time);
+              this.tableData[i].oder_status = this.tableData[i].oder_status === 0 ? '已完成' : this.tableData[i].oder_status === 1 ? '待处理' : '已关闭';
+            }
+            this.$nextTick(()=>{
+              this.loadingTable = false;
+              this.open();
+            });
+          })
+          break;
+        case "车主名称":
+          this.$axios({
+            method:'post',
+            url:'/oder/allList',
+            data:{
+              pageSize:this.pageSize,
+              startIndex:0,
+              minAmount:this.priceMin,
+              maxAmount:this.priceMax,
+              oderTime:this.datePic,
+              masterName:this.selName,
+              oderStatus:status
+            }
+          }).then((res)=>{
+            if (res.data.data !== null){
+              this.allData = res.data.data.total;
+            }else {
+              this.allData = 0;
+              this.tableData = [];
+              this.open();
+              return;
+            }
+            this.tableData = res.data.data.list;
+            for (let i=0;i<this.tableData.length;i++){
+              this.tableData[i].oder_time = this.timestampToTime(this.tableData[i].oder_time);
+              this.tableData[i].oder_status = this.tableData[i].oder_status === 0 ? '已完成' : this.tableData[i].oder_status === 1 ? '待处理' : '已关闭';
+            }
+            this.$nextTick(()=>{
+              this.loadingTable = false;
+              this.open();
+            });
+          })
+          break;
+        case "手机号码":
+          this.$axios({
+            method:'post',
+            url:'/oder/allList',
+            data:{
+              pageSize:this.pageSize,
+              startIndex:0,
+              minAmount:this.priceMin,
+              maxAmount:this.priceMax,
+              oderTime:this.datePic,
+              phone:this.selName,
+              oderStatus:status
+            }
+          }).then((res)=>{
+            if (res.data.data !== null){
+              this.allData = res.data.data.total;
+            }else {
+              this.allData = 0;
+              this.tableData = [];
+              this.open();
+              return;
+            }
+            this.tableData = res.data.data.list;
+            for (let i=0;i<this.tableData.length;i++){
+              this.tableData[i].oder_time = this.timestampToTime(this.tableData[i].oder_time);
+              this.tableData[i].oder_status = this.tableData[i].oder_status === 0 ? '已完成' : this.tableData[i].oder_status === 1 ? '待处理' : '已关闭';
+            }
+            this.$nextTick(()=>{
+              this.loadingTable = false;
+              this.open();
+            });
+          })
+          break;
+        case "车架号":
+          this.$axios({
+            method:'post',
+            url:'/oder/allList',
+            data:{
+              pageSize:this.pageSize,
+              startIndex:0,
+              minAmount:this.priceMin,
+              maxAmount:this.priceMax,
+              oderTime:this.datePic,
+              carChassis:this.selName,
+              oderStatus:status
+            }
+          }).then((res)=>{
+            if (res.data.data !== null){
+              this.allData = res.data.data.total;
+            }else {
+              this.allData = 0;
+              this.tableData = [];
+              this.open();
+              return;
+            }
+            this.tableData = res.data.data.list;
+            for (let i=0;i<this.tableData.length;i++){
+              this.tableData[i].oder_time = this.timestampToTime(this.tableData[i].oder_time);
+              this.tableData[i].oder_status = this.tableData[i].oder_status === 0 ? '已完成' : this.tableData[i].oder_status === 1 ? '待处理' : '已关闭';
+            }
+            this.$nextTick(()=>{
+              this.loadingTable = false;
+              this.open();
+            });
+          })
+          break;
+        case "车牌号":
+          this.$axios({
+            method:'post',
+            url:'/oder/allList',
+            data:{
+              pageSize:this.pageSize,
+              startIndex:0,
+              minAmount:this.priceMin,
+              maxAmount:this.priceMax,
+              oderTime:this.datePic,
+              carNumber:this.selName,
+              oderStatus:status
+            }
+          }).then((res)=>{
+            if (res.data.data !== null){
+              this.allData = res.data.data.total;
+            }else {
+              this.allData = 0;
+              this.tableData = [];
+              this.open();
+              return;
+            }
+            this.tableData = res.data.data.list;
+            for (let i=0;i<this.tableData.length;i++){
+              this.tableData[i].oder_time = this.timestampToTime(this.tableData[i].oder_time);
+              this.tableData[i].oder_status = this.tableData[i].oder_status === 0 ? '已完成' : this.tableData[i].oder_status === 1 ? '待处理' : '已关闭';
+            }
+            this.$nextTick(()=>{
+              this.loadingTable = false;
+              this.open();
+            });
+          })
+          break;
+        default:
+          this.$axios({
+            method:'post',
+            url:'/oder/allList',
+            data:{
+              pageSize:this.pageSize,
+              startIndex:0,
+              minAmount:this.priceMin,
+              maxAmount:this.priceMax,
+              oderTime:this.datePic,
+              oderStatus:status
+            }
+          }).then((res)=>{
+            if (res.data.data !== null){
+              this.allData = res.data.data.total;
+            }else {
+              this.allData = 0;
+              this.tableData = [];
+              this.open();
+              return;
+            }
+            this.tableData = res.data.data.list;
+            for (let i=0;i<this.tableData.length;i++){
+              this.tableData[i].oder_time = this.timestampToTime(this.tableData[i].oder_time);
+              this.tableData[i].oder_status = this.tableData[i].oder_status === 0 ? '已完成' : this.tableData[i].oder_status === 1 ? '待处理' : '已关闭';
+            }
+            this.$nextTick(()=>{
+              this.loadingTable = false;
+              this.open();
+            });
+          })
+          break;
+      }
+    },
+    open() {
+      this.$message('查询成功');
+    },
+    Clicklongin(index,data){
+      this.$router.push('/details?id='+data.id);
     }
   },
   mounted() {
