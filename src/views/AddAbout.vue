@@ -86,29 +86,45 @@ export default {
         confirmButtonText: '确定',
       });
     },
+    info(msg) {
+      this.$alert(msg, '提示', {
+        confirmButtonText: '确定',
+      });
+    },
     addProtocols(){
       if (this.value1 === '' || this.textarea === '' || this.input1 === ''){
         this.open();
         return;
       }
+      let isStatus = 0;
+      let putTime = '';
+      let removeTime = '';
+      if (this.switch1){
+        isStatus = 1;
+        removeTime = this.value1;
+      }else {
+        isStatus = 0;
+        putTime = this.value1;
+      }
       this.$axios({
         url:'/protocols/add',
+        method:'post',
         data:{
-
+          content:this.textarea,
+          name:this.input1,
+          status:isStatus,
+          lasttime:new Date(),
+          puttime:putTime,
+          remoevetime:removeTime,
         }
+      }).then((res)=>{
+        console.log(res)
+        this.info(res.data.data);
       })
     }
   },
   mounted() {
-    this.$axios({
-      url:'/protocols/query',
-      params:{
-        page:1,
-        limit:5
-      }
-    }).then((res)=>{
-      console.log(res)
-    })
+
   }
 }
 </script>
