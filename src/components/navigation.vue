@@ -24,7 +24,7 @@
                 <span slot="title">订单管理</span>
               </el-menu-item>
             </router-link>
-            <router-link to="/">
+            <router-link to="/customer">
               <el-menu-item index="3">
                 <i class="el-icon-user-solid"></i>
                 <span slot="title">客户管理</span>
@@ -77,7 +77,7 @@
                 <i class="el-icon-arrow-down el-icon--right"></i>
               </span>
               <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item command="a">退出登录</el-dropdown-item></el-dropdown-item>
+                <el-dropdown-item command="a">退出登录</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
           </el-breadcrumb>

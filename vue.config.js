@@ -1,3 +1,5 @@
 module.exports = {
-    /*proxy:'localhost:8080'*/
+    devServer: {
+        proxy: 'http://121.4.119.166:8080/uubx'
+    }
 }
