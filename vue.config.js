@@ -1,3 +1,6 @@
 module.exports = {
-    /*proxy:'localhost:8080'*/
+    devServer:{
+        // port: 8080/uubx,
+        proxy: 'http://172.16.14.87:8080/uubx'
+    }
 }
