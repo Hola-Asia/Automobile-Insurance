@@ -1,3 +1,6 @@
 module.exports = {
-    /*proxy:'localhost:8080'*/
-}
+    // 选项...
+    devServer: {
+        proxy: 'http://121.4.119.166:8080/uubx'
+    }
+};
