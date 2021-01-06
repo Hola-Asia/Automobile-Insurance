@@ -4,10 +4,10 @@
       <div class="form">
         <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
           <el-form-item label=" " prop="user">
-            <el-input class="user" type="text" v-model="ruleForm.user" autocomplete="off" placeholder="请输入账号"></el-input>
+            <el-input class="user" type="text" v-model="ruleForm.user" autocomplete="off" placeholder="请输入账号" @keyup.enter.native="submitForm('ruleForm')"></el-input>
           </el-form-item>
           <el-form-item label=" " prop="password">
-            <el-input class="password" type="password" v-model="ruleForm.password" autocomplete="off" placeholder="请输入密码"></el-input>
+            <el-input class="password" type="password" v-model="ruleForm.password" autocomplete="off" placeholder="请输入密码"  @keyup.enter.native="submitForm('ruleForm')"></el-input>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="submitForm('ruleForm')">登陆</el-button>
