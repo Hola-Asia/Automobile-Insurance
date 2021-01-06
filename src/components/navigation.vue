@@ -12,7 +12,7 @@
             text-color="#fff"
             active-text-color="#ffd04b"
           >
-            <router-link to="/order">
+            <router-link to="/">
               <el-menu-item index="1">
                 <i class="el-icon-menu"></i>
                 <span slot="title"></span>
@@ -89,6 +89,7 @@
     </el-container>
   </div>
 </template>
+
 <script>
 export default {
   data() {

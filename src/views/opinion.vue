@@ -1,7 +1,7 @@
 <template>
   <!-- 资讯页面 -->
-  <div style="height: 100%">
-    <div style="padding: 20px; background: #fff; minheight: 93%">
+  <div style="height:100%;">
+    <div style="padding:20px;background:#fff;minHeight:93%">
       <!-- 分类按钮区 -->
       <div class="classify">
         <el-row class="newadd">
@@ -153,12 +153,7 @@
         <el-row class="newadd">
           <el-col :span="24">
             <div class="grid-content">
-              <button
-                class="operationbtn addcheck newaddbtn"
-                @click="adddellist"
-              >
-                + 新增
-              </button>
+              <button class="operationbtn addcheck newaddbtn">+ 新增</button>
             </div>
           </el-col>
         </el-row>
@@ -175,7 +170,7 @@
       <!-- 表身 -->
       <div class="infor-list">
         <!-- 表头栅格 -->
-        <el-row class="tablehead" style="background: #d7d7d7">
+        <el-row class="tablehead" style="background:#d7d7d7">
           <el-col :span="3">
             <div class="grid-content">反馈时间</div>
           </el-col>
@@ -198,12 +193,7 @@
             <div class="grid-content">备注</div>
           </el-col>
         </el-row>
-        <el-row
-          v-for="(v, i) in datalist"
-          :key="i"
-          class="bgcolor"
-          :class="[i % 2 != 0 ? 'active' : '']"
-        >
+        <el-row v-for="(v, i) in datalist" :key="i" class="bgcolor" :class="[i%2!=0?'active':'']">
           <el-col :span="3">
             <div class="grid-content">
               <div class="col-time">{{ v.createdate }}</div>
@@ -225,15 +215,14 @@
             <div class="grid-content">{{ v.status }}</div>
           </el-col>
           <el-col :span="3">
-            <div class="grid-content" style="position: relative">
+            <div
+              class="grid-content"
+              style="position: relative"
+            >
               <div class="operationbtn deldiv" v-show="v.status == '已处理'">
                 已完成
               </div>
-              <button
-                class="operationbtn delbtn"
-                v-show="v.status == '未处理'"
-                @click="delnote"
-              >
+              <button class="operationbtn delbtn" v-show="v.status == '未处理'">
                 处理
               </button>
             </div>
@@ -241,14 +230,10 @@
           <el-col :span="5">
             <div class="grid-content">
               <div class="btnwidth">
-                <button class="operationbtn operationbtn-left" @click="del">
-                  查看
-                </button>
+                <button class="operationbtn operationbtn-left">查看</button>
               </div>
               <div class="btnwidth">
-                <button class="operationbtn operationbtn-right" @click="del">
-                  编辑
-                </button>
+                <button class="operationbtn operationbtn-right">编辑</button>
               </div>
             </div>
           </el-col>
@@ -268,94 +253,6 @@
         </div>
       </div>
     </div>
-
-    <!-- 弹窗 -->
-    <div class="posfix" :class="posfixstatus == 0 ? 'active' : ''">
-      <div class="fixbox">
-        <div class="fontwid">{{ titlename }}</div>
-        <div class="infolump">
-          <div class="inlinetit">反馈时间：</div>
-          <div class="inlinediv">
-            <el-input
-              v-model="createtime"
-              placeholder="请输入内容"
-              :disabled="disablesta"
-            ></el-input>
-          </div>
-        </div>
-        <div class="infolump">
-          <div class="inlinetit">问题类型：</div>
-          <div class="inlinediv">
-            <el-input
-              v-model="category"
-              placeholder="请输入内容"
-              :disabled="disablesta"
-            ></el-input>
-          </div>
-        </div>
-        <div class="infolump">
-          <div class="inlinetit">提出者：</div>
-          <div class="inlinediv">
-            <el-input
-              v-model="presenter"
-              placeholder="请输入内容"
-              :disabled="disablesta"
-            ></el-input>
-          </div>
-        </div>
-        <div class="infolump">
-          <div class="inlinetit">手机号码：</div>
-          <div class="inlinediv">
-            <el-input
-              v-model="phone"
-              placeholder="请输入内容"
-              :disabled="disablesta"
-            ></el-input>
-          </div>
-        </div>
-        <div class="infolump">
-          <div class="inlinetit inlinetitpos">反馈内容：</div>
-          <div class="inlinediv">
-            <template>
-              <div class="fankuidetextarea">
-                <el-input
-                  type="textarea"
-                  :autosize="{ minRows: 2, maxRows: 4 }"
-                  placeholder="请输入内容"
-                  v-model="textarea2"
-                  style="resize: none"
-                  :disabled="disablesta"
-                >
-                </el-input>
-              </div>
-            </template>
-          </div>
-        </div>
-        <div class="infolump">
-          <div class="inlinetit inlinetitpos">处理方案：</div>
-          <div class="inlinediv">
-            <template>
-              <div class="fankuidetextarea">
-                <el-input
-                  type="textarea"
-                  :autosize="{ minRows: 2, maxRows: 4 }"
-                  placeholder="请输入内容"
-                  v-model="textarea2"
-                  style="resize: none" :disabled="deldisablesta"
-                >
-                </el-input>
-              </div>
-            </template>
-          </div>
-        </div>
-        <div class="infolump infolumpbtn">
-          <button class="operationbtnli formbtnli" @click="datadel">
-            保存
-          </button>
-          <button class="operationbtnli newbtnli" @click="clowin">取消</button>
-        </div>
-      </div>
-    </div>
   </div>
 </template>
 
@@ -363,7 +260,6 @@
 export default {
   data() {
     return {
-      textarea2: "",
       // 分类按钮
       btn1_active: "0",
       btn2_active: "0",
@@ -374,25 +270,6 @@ export default {
       currentPage2: 5,
       currentPage3: 5,
       currentPage4: 4,
-      // 弹窗
-      addlist: {
-        createtime: "",
-        category: "",
-        presenter: "",
-        resultcontent: "",
-        phone: "",
-        suggest: "",
-      },
-      posfixstatus: "0",
-      disablesta: false,
-      deldisablesta: false,
-      titlename: "",
-      createtime: "",
-      category: "",
-      presenter: "",
-      resultcontent: "",
-      phone: "",
-      suggest: "",
       // 查询
       numberValidateForm: {
         title: "",
@@ -470,45 +347,6 @@ export default {
       this.numberValidateForm.value1 = "";
       this.btn1_active = "0";
       this.btn2_active = "0";
-    },
-
-    // 弹窗
-
-    // 开弹窗
-    // 添加
-    adddellist() {
-      if (this.addlist.createtime == "") {
-        this.posfixstatus = "1";
-        this.disablesta = false;
-        this.deldisablesta = false;
-        this.titlename = "添加反馈";
-      }
-    },
-    // 处理
-    delnote() {
-      this.posfixstatus = "1";
-      this.disablesta = true;
-      this.deldisablesta = false;
-      this.titlename = "处理";
-    },
-    // 查看
-    del() {
-      this.posfixstatus = "1";
-      this.titlename = "查看";
-      this.disablesta = true;
-      this.deldisablesta = true;
-    },
-
-    // 关弹窗
-    // 保存
-    datadel() {
-      // if (addlist.createtime == "") {
-      this.posfixstatus = "0";
-      // }
-    },
-    // 取消
-    clowin() {
-      this.posfixstatus = "0";
     },
   },
   mounted() {
@@ -681,115 +519,5 @@ export default {
 // 分页 需要改全局样式
 .paging {
   margin-top: 15px;
-}
-// 弹窗
-.posfix {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(117, 117, 117, 0.5);
-  width: 100%;
-  height: 100%;
-  display: block;
-}
-.posfix.active {
-  display: none;
-}
-.fixbox {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  margin: auto;
-  width: 400px;
-  height: 500px;
-  background-color: #fff;
-  text-align: left;
-  padding: 30px;
-}
-.fontwid {
-  font-size: 18px;
-  font-weight: 700;
-}
-.infolump {
-  margin-top: 20px;
-}
-.infolumpbtn {
-  text-align: center;
-}
-.inlinetit {
-  width: 100px;
-  display: inline-block;
-}
-.inlinetitpos {
-  position: relative;
-  top: -35px;
-}
-.inlinediv {
-  width: 300px;
-  display: inline-block;
-}
-.textareacls {
-  display: block;
-  resize: vertical;
-  padding: 5px 15px;
-  line-height: 1.5;
-  box-sizing: border-box;
-  width: 100%;
-  font-size: inherit;
-  color: #606266;
-  background-color: #fff;
-  background-image: none;
-  border: 1px solid #dcdfe6;
-  border-radius: 4px;
-  transition: border-color 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
-  resize: none;
-  min-height: 54px;
-  height: 54px;
-}
-.inlinediv .el-textarea .el-textarea__inner {
-  resize: none !important;
-}
-.textareacls:focus {
-  outline: none;
-  border-color: #409eff;
-}
-.textareacls:disabled {
-  background-color: #f5f7fa;
-  border-color: #e4e7ed;
-  cursor: not-allowed;
-}
-.textareacls::placeholder {
-  color: #c0c4cc;
-  font-size: 15px;
-}
-.operationbtnli {
-  border: none;
-  outline: none;
-  color: #fff;
-  font-size: 14px;
-  padding: 8px 20px;
-  border-radius: 4px;
-}
-.formbtnli {
-  background-color: #409eff;
-  margin-right: 40px;
-}
-.newbtnli {
-  background-color: #c4c4c4;
-}
-.formbtn:hover {
-  background-color: #40a0ffb6;
-}
-.newbtn:hover {
-  background-color: #c4c4c4b6;
-}
-</style>
-<style lang="less">
-.fankuidetextarea textarea {
-  resize: none;
 }
 </style>

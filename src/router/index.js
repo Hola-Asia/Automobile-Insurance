@@ -10,7 +10,7 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '/',
-    redirect: {name: 'Order'},
+    redirect: {name: 'Navigation'},
   },
   {
     path: '/navigation',
