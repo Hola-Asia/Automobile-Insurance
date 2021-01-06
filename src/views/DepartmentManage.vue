@@ -120,7 +120,7 @@
           <el-table
               v-loading="dialogLoading"
               :data="tableData1"
-              style="width: 100%;height: 400px;overflow:scroll;overflow-x: hidden; overflow-y: auto;" :header-cell-style="{fontSize:'14x',textAlign:'center'}"
+              style="width: 100%;height: 400px;scrollbar-width: none;overflow:scroll;overflow-x: hidden; overflow-y: auto;" :header-cell-style="{fontSize:'14x',textAlign:'center'}"
               :cell-style="{textAlign:'center',fontSize:'13x',padding:'0px'}"
               :row-style="{height:'40px',border:'none'}"
               stripe>
@@ -153,6 +153,7 @@
     </div>
     <!--弹框停用-->
     <el-dialog
+        :center="true"
         title="账号启用/停用"
         :visible.sync="dialogVisible"
         width="30%"
@@ -166,6 +167,7 @@
     </el-dialog>
     <!--弹框启用-->
     <el-dialog
+        :center="true"
         title="账号启用/停用"
         :visible.sync="dialogVisible1"
         width="30%"
@@ -178,6 +180,7 @@
     </el-dialog>
     <!--弹框禁止停用-->
     <el-dialog
+        :center="true"
         title="账号启用/停用"
         :visible.sync="dialogVisible2"
         width="30%"
@@ -191,6 +194,7 @@
     </el-dialog>
     <!--弹框删除-->
     <el-dialog
+        :center="true"
         title="部门删除"
         :visible.sync="dialogVisible3"
         width="30%"
@@ -204,6 +208,7 @@
     </el-dialog>
     <!--弹框禁止删除-->
     <el-dialog
+        :center="true"
         title="部门删除"
         :visible.sync="dialogVisible4"
         width="30%"
@@ -529,7 +534,7 @@ export default {
             this.tableData1 = [];
             this.tableData1 = res.data.data;
           }else{
-            alert('未查询到相关数据信息');
+            console.log('未查询到相关数据信息');
           }
         }
         this.dialogLoading = false;

@@ -101,11 +101,13 @@
       </el-card>
       <!--弹框停用-->
       <el-dialog
+          :center="true"
           title="账号启用/停用"
           :visible.sync="dialogVisible"
           width="30%"
           height="100px">
-          <span>确定将{{username}}({{phone}})的账号停用吗？停用后，{{username}}将无法登录后台</span>
+          <span>确定将{{username}}({{phone}})的账号停用吗？</span><br>
+          <span>停用后，{{username}}将无法登录后台</span>
           <span slot="footer" class="dialog-footer">
             <el-button @click="dialogVisible = false">取 消</el-button>
             <el-button type="primary" @click="quDingStop">确 定</el-button>
@@ -113,6 +115,7 @@
       </el-dialog>
       <!--弹框启用-->
       <el-dialog
+          :center="true"
           title="账号启用/停用"
           :visible.sync="dialogVisible1"
           width="30%"
@@ -500,5 +503,8 @@ export default {
 .el-dialog__body {
   padding: 10px 20px!important;
   line-height: 27px;
+}
+.el-dialog--center .el-dialog__body {
+  text-align: center!important;
 }
 </style>

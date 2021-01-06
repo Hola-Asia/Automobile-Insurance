@@ -1,28 +1,23 @@
 <template>
+
   <div class="addRole">
     <el-card class="box-card">
-      <p class="header">添加角色</p>
+      <p class="header">编辑角色</p>
       <div class="content">
         <label for="roleName" class="c-label">角色：</label>
-        <el-input v-model="roleMsg" placeholder="超级管理员" id="roleName" class="inpt" :disabled="true"></el-input><br>
+        <el-input v-model="roleMsg" placeholder="请输入角色名" id="roleName" class="inpt"></el-input><br>
         <label class="c-label">设置权限：</label><br>
         <div class="duoXuan">
-          <el-checkbox :indeterminate="isIndeterminate1" v-model="checkAll1" @change="handleCheckAllChange1">订单管理</el-checkbox>
-          <el-checkbox-group v-model="checkedCities1" @change="handleCheckedCitiesChange1">
-            <el-checkbox  v-for="order in orders1" :label="order" :key="order" class="setCheck">{{order}}</el-checkbox>
-          </el-checkbox-group>
-          <el-checkbox :indeterminate="isIndeterminate2" v-model="checkAll2" @change="handleCheckAllChange2">客户管理</el-checkbox>
-          <el-checkbox-group v-model="checkedCities2" @change="handleCheckedCitiesChange2" >
-            <el-checkbox v-for="order in orders2" :label="order" :key="order" class="setCheck">{{order}}</el-checkbox>
-          </el-checkbox-group>
-          <el-checkbox :indeterminate="isIndeterminate3" v-model="checkAll3" @change="handleCheckAllChange3">咨讯管理</el-checkbox>
-          <el-checkbox-group v-model="checkedCities3" @change="handleCheckedCitiesChange3" >
-            <el-checkbox v-for="order in orders3" :label="order" :key="order" class="setCheck">{{order}}</el-checkbox>
-          </el-checkbox-group>
+          <div v-for="inx in Object.keys(orderMap)">
+            <el-checkbox :indeterminate="orderMap[inx].isIndeterminate" v-model="orderMap[inx].checkAll" @change="(val)=>{handleCheckAllChange(val,inx,arr1[inx])}">{{arr[inx]}}</el-checkbox>
+            <el-checkbox-group v-model="orderMap[inx].checkedCities" @change="(val)=>{handleCheckedCitiesChange(val,inx)}">
+              <el-checkbox  v-for="(value,i) in orderMap[inx].orders" :label="value.name" :key="i" class="setCheck" @change="jiShu(value.id)">{{value.name}}</el-checkbox>
+            </el-checkbox-group>
+          </div>
         </div>
         <div class="b-btn">
-          <el-button type="info" class="c-btn">取消</el-button>
-          <el-button type="primary" class="c-btn">确认</el-button>
+          <el-button type="info" class="c-btn" @click="clear">取消</el-button>
+          <el-button type="primary" class="c-btn" @click="quRen">确认</el-button>
         </div>
       </div>
     </el-card>
@@ -30,58 +25,139 @@
 </template>
 
 <script>
-const orderManage = ['查询', '重置', '返回', '订单详情', '查看保单'];
-const userManage = ['查询', '重置','订单详情', '查看保单'];
-const informationManage = ['查询', '重置', '新增', '下架', '编辑'];
 export default {
   name: "AddRole",
   data() {
     return {
-      //订单
+      //对应角色的v-model
       roleMsg:'',
-      checkAll1: false,
-      checkedCities1: ['返回', '订单详情', '查看保单'],
-      orders1: orderManage,
-      isIndeterminate1: true,
-      //客户
-      checkAll2: false,
-      checkedCities2: ['订单详情', '查看保单'],
-      orders2: userManage,
-      isIndeterminate2: true,
-    //  资讯
-      checkAll3: false,
-      checkedCities3: ['查询', '重置', '新增'],
-      orders3: informationManage,
-      isIndeterminate3: true,
+      orderMap: {
+        0:{
+          checkAll:false,
+          checkedCities:[],
+          orders:[],
+          orders1:[],
+          isIndeterminate:true
+        },
+        1:{
+          checkAll:false,
+          checkedCities:[],
+          orders:[],
+          orders1:[],
+          isIndeterminate:true
+        },
+        2:{
+          checkAll:false,
+          checkedCities:[],
+          orders:[],
+          orders1:[],
+          isIndeterminate:true
+        },
+        3:{
+          checkAll:false,
+          checkedCities:[],
+          orders:[],
+          orders1:[],
+          isIndeterminate:true
+        },
+      },//全部的项
+
+      daLei:[],
+      xiaoLei:[],
+      daLeiYu:[],
+      arr:[],
+      arr1:[],
+      permissions:[],
     };
   },
+  created() {
+    this.roleMsg = this.$route.params.conlltion;
+    let that = this;
+    this.$axios({
+      url:'/permission/queryAllPermission',
+      method:'get',
+    }).then((res)=>{
+      if(res.status == 200){
+        if(res.data.data.length > 0){
+          //取出一级菜单
+          that.daLei = (res.data.data).filter((v)=>{
+            return v.parentId == 0;
+          });
+          //循环取出大类中的name
+          for (let i=0;i<that.daLei.length;i++){
+            that.arr.push(that.daLei[i].name);
+          };
+          //循环取出大类中的id
+          for (let i=0;i<that.daLei.length;i++){
+            that.arr1.push(that.daLei[i].id);
+          }
+          //取出除过满足条件的一级菜单
+          that.daLeiYu = (res.data.data).filter((v)=>{
+            return v.parentId != 0;
+          });
+          //取出二级菜单
+          for (let i=0;i < that.daLei.length;i++){
+            that.orderMap[i].orders =that.daLeiYu.filter((v)=>{
+              return v.parentId == that.daLei[i].id;
+            })
+          }
+        }else{
+          alert('未查询到权限相关信息')
+        }
+      }
+    }).catch((err)=>{
+      alert(err);
+    })
+  },
   methods: {
-    handleCheckAllChange1(val) {
-      this.checkedCities1 = val ? orderManage : [];
-      this.isIndeterminate1 = false;
+    //判断是否选中大类
+    handleCheckAllChange(val,inx,num) {
+      console.log(num)
+      // this.permissions.push(num);
+      let arr = this.orderMap[inx].orders.map(function (v){
+        return v.name
+      })
+      this.orderMap[inx].checkedCities = val ? arr : [];
+      this.orderMap[inx].isIndeterminate = false;
     },
-    handleCheckedCitiesChange1(value) {
+    //判断小类的选中状态，控制大类是否选中
+    handleCheckedCitiesChange(value,inx) {
       let checkedCount = value.length;
-      this.checkAll1 = checkedCount === this.orders1.length;
-      this.isIndeterminate1 = checkedCount > 0 && checkedCount < this.orders1.length;
+      this.orderMap[inx].checkAll = checkedCount === this.orderMap[inx].orders.length;
+      this.orderMap[inx].isIndeterminate = checkedCount > 0 && checkedCount < this.orderMap[inx].orders.length;
     },
-    handleCheckAllChange2(val) {
-      this.checkedCities2 = val ? userManage : [];
-      this.isIndeterminate2 = false;
+    //用来计数
+    jiShu(count){
+      this.permissions.push(count);
     },
-    handleCheckedCitiesChange2(value) {
-      let checkedCount = value.length;
-      this.checkAll2 = checkedCount === this.orders2.length;
-      this.isIndeterminate2 = checkedCount > 0 && checkedCount < this.orders2.length;
+    clear(){
+      this.$router.go(-1);
     },
-    handleCheckAllChange3(val) {
-      this.checkedCities3 = val ? informationManage : [];
-      this.isIndeterminate3 = false;
-    },
-    handleCheckedCitiesChange3(value) {
-      let checkedCount = value.length;
-      this.checkAll3 = checkedCount === this.orders3.length;
-      this.isIndeterminate3 = checkedCount > 0 && checkedCount < this.orders3.length;
+    quRen(){
+      this.$axios({
+        url:'/role/addRole',
+        method:'post',
+        data:{
+          "permissions": this.permissions,
+          "roleName": this.roleMsg,
+        }
+      }).then((res)=>{
+        if (res.status == 200){
+          if (res.data.code == 0){
+            //添加成功
+            this.$message({
+              message: '添加成功！',
+              type: 'success'
+            });
+            //返回主页
+            this.$router.go(-1);
+          }else{
+            this.$message.error('添加失败！');
+          }
+        }
+      }).catch((err)=>{
+        alert(err);
+      })
     }
   }
 }
@@ -129,7 +205,7 @@ export default {
       }
     }
   }
-
 }
-
 </style>
+
+

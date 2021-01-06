@@ -27,7 +27,8 @@
             <el-button type="primary" @click="onSubmit">搜索</el-button>
           </el-form-item>
         </el-form>
-        <router-link to="AddRole" class="h-add el-icon-plus">添加角色</router-link>
+        <a href="javascript:;" class="h-add el-icon-plus" @click="addRole">添加角色</a>
+<!--        <router-link to="AddRole" class="h-add el-icon-plus">添加角色</router-link>-->
       </div>
       <div class="middle-middle">
         <el-table
@@ -104,7 +105,7 @@
           <el-table
               v-loading="loading"
               :data="tableData1"
-              style="width: 100%;height: 400px;overflow:scroll;overflow-x: hidden; overflow-y: auto;" :header-cell-style="{fontSize:'14x',textAlign:'center'}"
+              style="width: 100%;height: 400px;scrollbar-width: none;overflow:scroll;overflow-x: hidden; overflow-y: auto;" :header-cell-style="{fontSize:'14x',textAlign:'center'}"
               :cell-style="{textAlign:'center',fontSize:'13x',padding:'0px'}"
               :row-style="{height:'40px',border:'none'}"
               stripe>
@@ -137,6 +138,7 @@
     </div>
     <!--弹框停用-->
     <el-dialog
+        :center="true"
         title="账号启用/停用"
         :visible.sync="dialogVisible"
         width="30%"
@@ -150,6 +152,7 @@
     </el-dialog>
     <!--弹框启用-->
     <el-dialog
+        :center="true"
         title="账号启用/停用"
         :visible.sync="dialogVisible1"
         width="30%"
@@ -162,6 +165,7 @@
     </el-dialog>
     <!--弹框禁止停用-->
     <el-dialog
+        :center="true"
         title="账号启用/停用"
         :visible.sync="dialogVisible2"
         width="30%"
@@ -175,6 +179,7 @@
     </el-dialog>
     <!--弹框删除-->
     <el-dialog
+        :center="true"
         title="部门删除"
         :visible.sync="dialogVisible3"
         width="30%"
@@ -188,6 +193,7 @@
     </el-dialog>
     <!--弹框禁止删除-->
     <el-dialog
+        :center="true"
         title="部门删除"
         :visible.sync="dialogVisible4"
         width="30%"
@@ -248,6 +254,7 @@ export default {
       deleteId:'',
       loading:false,
       initLoading:false,
+      fullscreenLoading:false,
     };
   },
   created() {
@@ -362,11 +369,33 @@ export default {
         this.init(this.yeSize,this.yeMa);
       }
     },
-
     //跳转编辑页面
     openEdit(index, row){
+      const loading = this.$loading({
+        lock: false,
+        text: 'Loading',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      });
+      setTimeout(() => {
+        loading.close();
+      }, 1000);
       // console.log(index,row.id);
-      this.$router.push({name:'EditRole',params:{ conlltion : row.id }});
+      this.$router.push({name:'EditRole',params:{ roleName:row.roleName, id:row.id }});
+    },
+    //跳转添加页面
+    addRole(){
+      const loading = this.$loading({
+        lock: false,
+        text: 'Loading',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      });
+      setTimeout(() => {
+        loading.close();
+      }, 500);
+      // console.log(index,row.id);
+      this.$router.push({name:'addRole'});
     },
 
     //查看人员明细
@@ -462,7 +491,7 @@ export default {
             this.dialogVisible1=false;
             this.dialogVisible=false;
             //刷新页面
-            this.$router.go(0);
+            this.init(this.yeSize,this.yeMa);
           }
         }else{
           this.$message.error('修改失败！');
@@ -516,7 +545,7 @@ export default {
             });
             this.dialogVisible3 = false;
             //刷新页面
-            this.$router.go(0);
+            this.init(this.yeSize,this.yeMa);
           }
         }else{
           this.$message.error('删除失败！');
