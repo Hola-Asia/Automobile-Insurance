@@ -118,7 +118,7 @@
                 background
                 @size-change="handleSizeChange"
                 @current-change="handleCurrentChange"
-                :current-page="currentPage4"
+                :current-page="currentPage"
                 :page-sizes="[8,10,12]"
                 layout="total,prev,pager,next,jumper,sizes"
                 :total="total">
@@ -165,9 +165,11 @@ export default {
           // 车架号码 
           chassisNumber: null,
           //分页数据
-          currentPage4: 1,
+          currentPage: 1,
           // 分页大小
           pageSize: 10,
+          // 开始序号 不能这样用取不到数据
+          // startIndex:this.pageSize*(this.currentPage-1),
           // 数据总数
           total:0,
           //搜索时间段
@@ -252,7 +254,7 @@ export default {
           // 车架号码 
           this.chassisNumber= null;
           //分页数据
-          this.currentPage4=1;
+          this.currentPage=1;
           //搜索时间段
           this.timer= null;
             this.beg();
@@ -271,9 +273,10 @@ export default {
         this.beg();
       },
       handleCurrentChange(val) {
-        this.currentPage4=val;
+        this.currentPage=val;
         this.beg();
       },
+      //请求接口
       beg(){
           let e=null;
           let s=null;
@@ -316,6 +319,8 @@ export default {
               "carNumber": this.carNumber,
               // 车架号码 
               "chassisNumber": this.chassisNumber,
+              // 保单起始时间 
+              "startTime": s,
               // 保单结束时间 
               "endTime": e,
               // 车主姓名
@@ -327,9 +332,8 @@ export default {
               // 电话号码 
               "phone": this.phone,
               // 开始序号 
-              "startIndex": this.pageSize*(this.currentPage4-1),
-              // 保单起始时间 
-              "startTime": s,
+              "startIndex": this.pageSize*(this.currentPage-1),
+              // "startIndex": this.startIndex,
               // 险种状态 0为交强险,1为商业险
               "type": this.type,
               // 保单状态 0为失效,1为退保,2为保障中 
@@ -344,7 +348,7 @@ export default {
             this.total=res.data.data.total;
             this.tableData=res.data.data.list;
             for(let i=0;i<this.tableData.length;i++){
-              // 加工数据
+              // 加工响应数据
               switch(this.tableData[i].status){
                 case 0:
                   this.tableData[i].status='已失效'
@@ -377,7 +381,6 @@ export default {
       },
       // 传id
       handleClick(row) {
-        // console.log(row.id);
         this.id=row.id;
       }
     },

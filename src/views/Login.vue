@@ -101,8 +101,9 @@ export default {
             this.open1('账号或密码错误')
           }else if(res.data.data.token){
             sessionStorage.token=res.data.data.token;
+            sessionStorage.jurisdiction=JSON.stringify(res.data.data.menus);
             this.$router.push('/guaranteeSlipList');
-            this.open2('登录成功')
+            this.open2('登录成功');
           }
           
         }).catch((err)=>{
