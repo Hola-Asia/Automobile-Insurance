@@ -143,7 +143,7 @@ export default {
     //判断权限
     jurisdictionFn(){
       this.jurisdiction=sessionStorage.jurisdiction;
-      let json=JSON.parse(this.jurisdiction);
+      let json=JSON.parse(this.jurisdiction)||0;
       for (let i = 0; i < json.length; i++) {
         switch(json[i].menuName){
           case "订单管理":
