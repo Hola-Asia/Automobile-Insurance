@@ -95,7 +95,9 @@
         <el-form-item label="部门名称" :label-width="formLabelWidth">
           <el-input v-model="form.name" placeholder="请输入部门名称"></el-input>
         </el-form-item>
-        <el-form-item label="启用状态" :label-width="formLabelWidth" >
+
+        <el-form-item label="启用状态" :label-width="formLabelWidth" class="start">
+
           <el-select v-model="form.status" placeholder="请选择">
             <el-option label="启用" value="1"></el-option>
             <el-option label="未启用" value="0"></el-option>
@@ -287,6 +289,9 @@ export default {
       this.loading=true;
       this.$axios({
         url:'/department/list',
+        headers:{
+          'token':sessionStorage.token,
+        },
         method:'get',
         params:{
           limit:limit,
@@ -313,7 +318,7 @@ export default {
         this.loading=false;
       }).catch((err)=>{
         this.loading=false;
-        alert(err);
+        alert('未连接到接口，渲染页面失败');
       })
     },
     //搜索
@@ -322,6 +327,9 @@ export default {
       if (this.formInline.depart.trim()) {
         this.$axios({
           url: '/department/queryDepartmentByName',
+          headers:{
+            'token':sessionStorage.token,
+          },
           params: {
             name: this.formInline.depart.trim(),
           },
@@ -357,6 +365,9 @@ export default {
         //启用状态有值
         this.$axios({
           url: '/department/queryDepartmentByStatus',
+          headers:{
+            'token':sessionStorage.token,
+          },
           params: {
             status:this.formInline.region,
           },
@@ -407,6 +418,9 @@ export default {
         let that = this;
         this.$axios({
           url: '/department/queryAllUserByDepartmentId',
+          headers:{
+            'token':sessionStorage.token,
+          },
           method: 'get',
           params: {
             id: row.id,
@@ -436,6 +450,9 @@ export default {
       }
       this.$axios({
         url:'/department/updateDepartmentStatus',
+        headers:{
+          'token':sessionStorage.token,
+        },
         method:'post',
         data:{
           id: stopJson.id,
@@ -469,6 +486,9 @@ export default {
       this.name = row.name;
       this.$axios({
         url: '/department/queryAllUserByDepartmentId',
+        headers:{
+          'token':sessionStorage.token,
+        },
         method: 'get',
         params: {
           id: row.id,
@@ -493,6 +513,9 @@ export default {
       //删除该部门
       this.$axios({
         url: '/department/deleteDepartment',
+        headers:{
+          'token':sessionStorage.token,
+        },
         method: 'get',
         params: {
           id: this.deleteId,
@@ -521,6 +544,9 @@ export default {
       //渲染页面
       this.$axios({
         url:'/department/queryAllUserByDepartmentId',
+        headers:{
+          'token':sessionStorage.token,
+        },
         method:'get',
         params:{
           id:row.id,
@@ -568,6 +594,9 @@ export default {
     addQuRen(){
       this.$axios({
         url:'/department/addDepartment',
+        headers:{
+          'token':sessionStorage.token,
+        },
         method:'post',
         data: this.form,
       }).then((res)=>{
@@ -634,6 +663,9 @@ export default {
       }
     }
   }
+}
+.start{
+  width: 100%;
 }
 .box-card{
   width: 100%;
@@ -738,10 +770,11 @@ export default {
 .el-dialog {
   width: 32%!important;
 }
-.addBox{
+.addBox {
   .el-form-item__content {
-  width: 54%;
-}
+    width: 54%;
+  }
+
 }
 
 </style>

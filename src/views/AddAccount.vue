@@ -81,6 +81,9 @@ export default {
       let that = this;
       this.$axios({
         url:'/role/queryAllRoleName',
+        headers:{
+          'token':sessionStorage.token,
+        },
         method:'get',
       }).then((res)=>{
         if (res.status === 200){
@@ -105,6 +108,9 @@ export default {
       let that = this;
       this.$axios({
         url:'/department/queryAllDepartmentName',
+        headers:{
+          'token':sessionStorage.token,
+        },
         method:'get',
       }).then((res)=>{
         if (res.status === 200){
@@ -136,6 +142,9 @@ export default {
     tiJiao(){
       this.$axios({
         url:'/user/addUser',
+        headers:{
+          'token':sessionStorage.token,
+        },
         method:'post',
         data: this.addData,
       }).then((res)=>{
