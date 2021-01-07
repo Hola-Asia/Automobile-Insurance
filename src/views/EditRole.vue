@@ -61,6 +61,20 @@ export default {
           orders1:[],
           isIndeterminate:true
         },
+        4:{
+          checkAll:false,
+          checkedCities:[],
+          orders:[],
+          orders1:[],
+          isIndeterminate:true
+        },
+        5:{
+          checkAll:false,
+          checkedCities:[],
+          orders:[],
+          orders1:[],
+          isIndeterminate:true
+        },
       },//全部的项
 
       daLei:[],
@@ -86,6 +100,9 @@ export default {
     let that = this;
     this.$axios({
       url:'/permission/queryAllPermission',
+      headers:{
+        'token':sessionStorage.token,
+      },
       method:'get',
     }).then((res)=>{
       if(res.status == 200){
@@ -116,6 +133,9 @@ export default {
           //调用另一个渲染已点击的接口
           this.$axios({
             url:'/permission/queryRoleHavingPermission',
+            headers:{
+              'token':sessionStorage.token,
+            },
             method:'get',
             params:{
               name:this.$route.params.roleName
@@ -203,6 +223,9 @@ export default {
       }
       this.$axios({
         url:'/role/updateRole',
+        headers:{
+          'token':sessionStorage.token,
+        },
         method:'post',
         data:{
           "permissions": this.permissions,

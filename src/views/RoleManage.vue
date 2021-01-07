@@ -265,6 +265,9 @@ export default {
       this.initLoading = true;
       this.$axios({
         url:'/role/list',
+        headers:{
+          'token':sessionStorage.token,
+        },
         method:'get',
         params:{
           limit:limit,
@@ -291,7 +294,7 @@ export default {
         this.initLoading = false;
       }).catch((err)=>{
         this.initLoading = false;
-        alert(err);
+        alert('未连接到接口，渲染页面失败');
       })
     },
     //搜索
@@ -300,6 +303,9 @@ export default {
       if (this.formInline.role.trim()) {
         this.$axios({
           url: '/role/queryByName',
+          headers:{
+            'token':sessionStorage.token,
+          },
           params: {
             name: this.formInline.role.trim(),
           },
@@ -330,6 +336,9 @@ export default {
         //启用状态有值
         this.$axios({
           url: '/role/queryByStatus',
+          headers:{
+            'token':sessionStorage.token,
+          },
           params: {
             status:this.formInline.region,
           },
@@ -401,6 +410,9 @@ export default {
       //渲染页面
       this.$axios({
         url:'/role/queryAllUserByRoleId',
+        headers:{
+          'token':sessionStorage.token,
+        },
         method:'get',
         params:{
           id:row.id,
@@ -442,6 +454,9 @@ export default {
         let that = this;
         this.$axios({
           url: '/role/queryAllUserByRoleId',
+          headers:{
+            'token':sessionStorage.token,
+          },
           method: 'get',
           params: {
             id: row.id,
@@ -471,6 +486,9 @@ export default {
       }
       this.$axios({
         url:'/role/updateRoleStatus',
+        headers:{
+          'token':sessionStorage.token,
+        },
         method:'post',
         data:{
           id: stopJson.id,
@@ -504,6 +522,9 @@ export default {
       this.name = row.roleName;
       this.$axios({
         url: '/role/queryAllUserByRoleId',
+        headers:{
+          'token':sessionStorage.token,
+        },
         method: 'get',
         params: {
           id: row.id,
@@ -528,6 +549,9 @@ export default {
       let that = this;
       this.$axios({
         url: '/role/deleteRole',
+        headers:{
+          'token':sessionStorage.token,
+        },
         method: 'get',
         params: {
           id: this.deleteId,
