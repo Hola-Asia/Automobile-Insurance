@@ -54,7 +54,7 @@
                 <span slot="title">意见反馈</span>
               </el-menu-item>
             </router-link>
-            <router-link to="/">
+            <router-link to="accountManage">
               <el-menu-item index="8">
                 <i class="el-icon-s-tools"></i>
                 <span slot="title">权限管理</span>
