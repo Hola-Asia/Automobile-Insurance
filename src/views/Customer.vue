@@ -329,6 +329,4 @@ export default {
         padding-right: 20px;
     }
   }
- 
-  
 </style>
