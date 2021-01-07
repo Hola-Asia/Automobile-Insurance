@@ -142,7 +142,7 @@
         width="30%"
         height="100px">
       <span>确定将角色 {{name}} 停用吗？<br></span>
-      <span>停用后，所有账号将无法选择该部门</span>
+      <span>停用后，所有账号将无法选择该角色</span>
       <span slot="footer" class="dialog-footer">
             <el-button @click="dialogVisible = false">取 消</el-button>
             <el-button type="primary" @click="roleStop">确 定</el-button>
@@ -168,8 +168,8 @@
         :visible.sync="dialogVisible2"
         width="30%"
         height="100px">
-      <span class="forbidden">该部门仍存在人员，请将人员转移部门</span><br>
-      <span class="forbidden">后，才能停用该部门</span>
+      <span class="forbidden">该角色仍存在人员，请将人员转移角色</span><br>
+      <span class="forbidden">后，才能停用该角色</span>
       <span slot="footer" class="dialog-footer">
               <el-button @click="dialogVisible2 = false">取 消</el-button>
               <el-button type="primary" @click="dialogVisible2 = false">确 定</el-button>
@@ -182,8 +182,8 @@
         :visible.sync="dialogVisible3"
         width="30%"
         height="100px">
-      <span>确定将 {{name}} 删除吗？</span><br>
-      <span>删除后，所有账号将无法选择该部门</span>
+      <span>确定将角色 {{name}} 删除吗？</span><br>
+      <span>删除后，所有账号将无法选择该角色</span>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible3 = false">取 消</el-button>
         <el-button type="primary" @click="roleDelete">确 定</el-button>
@@ -196,8 +196,8 @@
         :visible.sync="dialogVisible4"
         width="30%"
         height="100px">
-      <span class="forbidden">该部门仍存在人员，请将人员转移部门</span><br>
-      <span class="forbidden">后，才能删除该部门</span>
+      <span class="forbidden">该角色仍存在人员，请将人员转移角色</span><br>
+      <span class="forbidden">后，才能删除该角色</span>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible4 = false">取 消</el-button>
         <el-button type="primary" @click="dialogVisible4 = false">确 定</el-button>

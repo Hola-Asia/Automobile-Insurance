@@ -91,12 +91,12 @@
     </el-card>
     <!--添加-->
     <el-dialog title="添加部门" :visible.sync="dialogFormVisible" class="addBox">
-      <el-form :model="form">
-        <el-form-item label="部门名称" :label-width="formLabelWidth">
+      <el-form :model="form" >
+        <el-form-item label="部门名称" label-width='150px' >
           <el-input v-model="form.name" placeholder="请输入部门名称"></el-input>
         </el-form-item>
 
-        <el-form-item label="启用状态" :label-width="formLabelWidth">
+        <el-form-item label="启用状态" label-width='150px' >
 
           <el-select v-model="form.status" placeholder="请选择">
             <el-option label="启用" value="1"></el-option>
@@ -105,8 +105,8 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="addQuRen">确 定</el-button>
+        <el-button @click="dialogFormVisible = false" class='btn-kuang'>取 消</el-button>
+        <el-button type="primary" @click="addQuRen" class='btn-kuang'>确 定</el-button>
       </div>
     </el-dialog>
     <!--查看-->
@@ -777,7 +777,9 @@ export default {
   .el-form-item__content {
     width: 54%;
   }
-
+  .btn-kuang{
+    margin-right: 46px;
+  }
 }
 
 </style>
