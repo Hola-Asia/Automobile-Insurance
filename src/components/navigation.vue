@@ -54,7 +54,7 @@
                 <span slot="title">意见反馈</span>
               </el-menu-item>
             </router-link>
-            <router-link v-if="jurisdictionAdministration||accountManagement||departmentManagement||gestionSectorielle" to="/">
+            <router-link v-if="jurisdictionAdministration||accountManagement||departmentManagement||gestionSectorielle" to="accountManage">
               <el-menu-item index="8">
                 <i class="el-icon-s-tools"></i>
                 <span slot="title">权限管理</span>
@@ -77,7 +77,7 @@
                 <i class="el-icon-arrow-down el-icon--right"></i>
               </span>
               <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item command="a">退出登录</el-dropdown-item></el-dropdown-item>
+                <el-dropdown-item command="a">退出登录</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
           </el-breadcrumb>
