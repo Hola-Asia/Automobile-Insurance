@@ -230,6 +230,9 @@ export default {
   created() {
     this.$axios({
       url:'/oder/findId',
+      headers:{
+        token:sessionStorage.token,
+      },
       params:{
         id:this.$route.query.id
       }

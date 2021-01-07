@@ -167,6 +167,9 @@ export default {
     viewInfo(index,data){
       this.$axios({
         url:'/protocols/queryById',
+        headers:{
+          token:sessionStorage.token,
+        },
         params:{
           id:data.id
         }
@@ -179,12 +182,18 @@ export default {
     changeStatus(index,data){
       this.$axios({
         url:'/protocols/queryById',
+        headers:{
+          token:sessionStorage.token,
+        },
         params:{
           id:data.id
         }
       }).then((res)=>{
         this.$axios({
           url:'/protocols/update',
+          headers:{
+            token:sessionStorage.token,
+          },
           method:'post',
           data:{
             status:res.data.data.status === '1'?'2':'1',
@@ -202,6 +211,9 @@ export default {
       console.log(this.datePic1[0])
       this.$axios({
         url:'/protocols/query',
+        headers:{
+          token:sessionStorage.token,
+        },
         method:'post',
         data:{
           name:this.selName,
@@ -263,6 +275,9 @@ export default {
     getData(){
       this.$axios({
         url:'/protocols/query',
+        headers:{
+          token:sessionStorage.token,
+        },
         method:'post',
         data:{
           pageSize:this.pageSize,

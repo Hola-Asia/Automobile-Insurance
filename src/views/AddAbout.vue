@@ -108,6 +108,9 @@ export default {
       }
       this.$axios({
         url:'/protocols/add',
+        headers:{
+          token:sessionStorage.token,
+        },
         method:'post',
         data:{
           content:this.textarea,

@@ -139,6 +139,9 @@ export default {
       this.$axios({
         url:'/protocols/update',
         method:'post',
+        headers:{
+          token:sessionStorage.token,
+        },
         data:{
           content:this.textarea,
           name:this.input1,
@@ -161,6 +164,9 @@ export default {
     this.id = this.$route.query.id;
     this.$axios({
       url:'/protocols/queryById',
+      headers:{
+        token:sessionStorage.token,
+      },
       params:{
         id:this.$route.query.id
       }

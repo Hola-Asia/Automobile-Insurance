@@ -209,6 +209,9 @@ export default {
       this.tableData = [];
       this.$axios({
         method:'post',
+        headers:{
+          token:sessionStorage.token,
+        },
         url:'/oder/allList',
         data:{
           pageSize:this.pageSize,
@@ -251,6 +254,9 @@ export default {
         case "订单编号":
           this.$axios({
             method:'post',
+            headers:{
+              token:sessionStorage.token,
+            },
             url:'/oder/allList',
             data:{
               pageSize:this.pageSize,
@@ -284,6 +290,9 @@ export default {
         case "车主名称":
           this.$axios({
             method:'post',
+            headers:{
+              token:sessionStorage.token,
+            },
             url:'/oder/allList',
             data:{
               pageSize:this.pageSize,
@@ -317,6 +326,9 @@ export default {
         case "手机号码":
           this.$axios({
             method:'post',
+            headers:{
+              token:sessionStorage.token,
+            },
             url:'/oder/allList',
             data:{
               pageSize:this.pageSize,
@@ -350,6 +362,9 @@ export default {
         case "车架号":
           this.$axios({
             method:'post',
+            headers:{
+              token:sessionStorage.token,
+            },
             url:'/oder/allList',
             data:{
               pageSize:this.pageSize,
@@ -383,6 +398,9 @@ export default {
         case "车牌号":
           this.$axios({
             method:'post',
+            headers:{
+              token:sessionStorage.token,
+            },
             url:'/oder/allList',
             data:{
               pageSize:this.pageSize,
@@ -416,6 +434,9 @@ export default {
         default:
           this.$axios({
             method:'post',
+            headers:{
+              token:sessionStorage.token,
+            },
             url:'/oder/allList',
             data:{
               pageSize:this.pageSize,
