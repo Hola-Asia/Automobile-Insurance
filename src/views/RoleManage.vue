@@ -19,6 +19,7 @@
           </el-form-item>
           <el-form-item label="启用状态" class="m-top-font">
             <el-select v-model="formInline.region" placeholder="请选择">
+              <el-option label="请选择" value=""></el-option>
               <el-option label="启用" value="1"></el-option>
               <el-option label="未启用" value="0"></el-option>
             </el-select>
@@ -309,19 +310,22 @@ export default {
         }).then((res) => {
           //查询成功有数据
           if (res.status === 200) {
-            if (res.data.data.length > 0) {
+            console.log(typeof res.data.data);
+            console.log(res);
+            if (typeof res.data.data === "object") {
               //页码不显示
               this.showYeMa=false;
               //先置空
               this.tableData = [];
               //渲染数据
-              (res.data.data).forEach(function (v) {
-                if (v.status === 0) {
-                  v.status = '未启用';
-                } else {
-                  v.status = '启用';
-                }
-              })
+              // (res.data.data).forEach(function (v) {
+              //   if (v.status === 0) {
+              //     v.status = '未启用';
+              //   } else {
+              //     v.status = '启用';
+              //   }
+              // })
+              if (res.data.data.status === 0 )
               this.tableData = res.data.data;
             } else {
               alert('未查询到角色名称数据信息');

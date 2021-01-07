@@ -19,6 +19,7 @@
           </el-form-item>
           <el-form-item label="启用状态" class="m-top-font">
             <el-select v-model="formInline.region" placeholder="请选择">
+              <el-option label="请选择" value=""></el-option>
               <el-option label="启用" value="1"></el-option>
               <el-option label="未启用" value="0"></el-option>
             </el-select>
@@ -329,6 +330,7 @@ export default {
           },
           method: "get",
         }).then((res) => {
+          console.log(res);
           //查询成功有数据
           if (res.status === 200) {
             if (res.data.data.length > 0) {
@@ -529,12 +531,13 @@ export default {
       }).then((res)=>{
         if (res.status === 200){
           if (res.data.data.length > 0){
+            console.log(res.data.count);
             this.totalPerson = res.data.count;
             //先置空
             this.tableData1 = [];
             this.tableData1 = res.data.data;
           }else{
-            console.log('未查询到相关数据信息');
+            this.totalPerson = 0;
           }
         }
         this.dialogLoading = false;

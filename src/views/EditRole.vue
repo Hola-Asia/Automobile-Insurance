@@ -4,7 +4,7 @@
       <p class="header">编辑角色</p>
       <div class="content">
         <label for="roleName" class="c-label">角色：</label>
-        <el-input v-model="roleMsg" placeholder="请输入角色名" id="roleName" class="inpt"></el-input><br>
+        <el-input v-model="roleMsg" placeholder="请输入角色名" id="roleName" class="inpt" :disabled="true"></el-input><br>
         <label class="c-label">设置权限：</label><br>
         <div class="duoXuan">
           <div v-for="inx in Object.keys(orderMap)">

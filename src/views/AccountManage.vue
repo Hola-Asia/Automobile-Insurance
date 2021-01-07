@@ -19,6 +19,7 @@
               </el-form-item>
               <el-form-item label="启用状态" class="m-top-font">
                 <el-select v-model="formInline.region" placeholder="请选择">
+                  <el-option label="请选择" value=""></el-option>
                   <el-option label="启用" value="1"></el-option>
                   <el-option label="未启用" value="0"></el-option>
                 </el-select>
@@ -246,6 +247,7 @@ export default {
                 })
                 //由于手机号码是唯一的，默认只有一条数据，手动修改
                 that.totalAccount=1;
+
               }else{
                 alert('未查询到手机号码信息');
               }
@@ -282,7 +284,6 @@ export default {
             //渲染页面
             //查询成功循环渲染页码和页面信息
             that.totalAccount = res.data.count;
-            console.log(res.data.count);
             //先置空
             that.tableData = [];
             //渲染数据
@@ -307,6 +308,15 @@ export default {
 
     //跳转编辑页面
     openEdit(index, row){
+      const loading = this.$loading({
+        lock: false,
+        text: 'Loading',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      });
+      setTimeout(() => {
+        loading.close();
+      }, 600);
       // console.log(index,row.id);
       this.$router.push({name:'EditAccount',params:{ conlltion : row.id }});
     },

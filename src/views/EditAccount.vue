@@ -6,7 +6,7 @@
       <label for="userName">账号名称：</label>
       <el-input v-model="editJson.username" placeholder="请输入1-16字的账号名称" id="userName" class="inpt"></el-input><br>
       <label for="phone">手机号码：</label>
-      <el-input v-model="editJson.phone" placeholder="请输入手机号" id="phone" class="inpt"></el-input><br>
+      <el-input v-model="editJson.phone" placeholder="请输入手机号" id="phone" class="inpt" @change="checkPhone"></el-input><br>
       <label for="pass">密码：</label>
       <el-input v-model="editJson.password" placeholder="请输入修改后密码" id="pass" class="inpt"></el-input><br>
       <label>归属部门：</label>
@@ -157,6 +157,14 @@ export default {
       }).catch((err)=>{
         alert(err);
       })
+    },
+    //验证手机号码
+    checkPhone(){
+      //用正则判断手机号是否符合要求
+      let reg = /^1[3-9]\d{9}$/;
+      if(!reg.test(this.editJson.phone.trim())){
+        alert('请输入正确的手机号码');
+      }
     },
     //确认
     queRen(){
