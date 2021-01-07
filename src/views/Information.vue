@@ -518,7 +518,7 @@ export default {
       newincreasedata: {
         lasttime: Date.now(),
         title: "",
-        number: "",
+        number: null,
         category: "",
         recommend: "",
         puttime: "",
@@ -529,7 +529,7 @@ export default {
       // 查询发送数据
       selectdata: {
         title: "",
-        number: "",
+        number: null,
         status: "",
         category: "",
         recommend: "",
@@ -545,7 +545,7 @@ export default {
         id: "",
         category: "",
         content: "",
-        number: "",
+        number: null,
         puttime: "",
         recommend: "",
         removetime: "",
@@ -663,7 +663,7 @@ export default {
               id: "",
               category: "",
               content: "",
-              number: "",
+              number: null,
               puttime: "",
               recommend: "",
               removetime: "",
@@ -684,7 +684,7 @@ export default {
       this.newincreasedata = {
         lasttime: Date.now(),
         title: "",
-        number: "",
+        number: null,
         category: "",
         recommend: "",
         puttime: "",
@@ -789,7 +789,7 @@ export default {
       //清空渲染要赋值的对象
       this.selectdata = {
         title: "",
-        number: "",
+        number: null,
         status: "",
         category: "",
         recommend: "",
@@ -1020,7 +1020,7 @@ export default {
             this.newincreasedata = {
               lasttime: Date.now(),
               title: "",
-              number: "",
+              number: null,
               category: "",
               recommend: "",
               puttime: "",
@@ -1057,7 +1057,7 @@ export default {
       this.newincreasedata = {
         lasttime: Date.now(),
         title: "",
-        number: "",
+        number: null,
         category: "",
         recommend: "",
         puttime: "",
@@ -1071,7 +1071,7 @@ export default {
     // 渲染页面
     (this.selectdata = {
       title: "",
-      number: "",
+      number: null,
       status: "",
       category: "",
       recommend: "",
