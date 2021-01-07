@@ -195,13 +195,18 @@ export default {
             // 证件类型
             idType:null,
             // 地址
-            address:null
+            address:null,
+            // token
+            token:sessionStorage.token,
         }
     },
     methods: {
         beg(){
             this.$axios({
                 url:'/policy/findId',
+                // headers:{
+                //   'token':this.token
+                //   },
                 params:{
                     'id':this.id
                 }
