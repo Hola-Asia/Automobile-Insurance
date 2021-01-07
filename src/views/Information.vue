@@ -658,7 +658,6 @@ export default {
         },
       })
         .then((res) => {
-          console.log(res.data.msg);
           if (res.data.code == 0) {
             this.updatefunobj = {
               id: "",
@@ -715,7 +714,6 @@ export default {
     },
     // 渲染分页axios
     applypage() {
-      console.log(this.selectdata);
       this.$axios({
         url: "/information/query",
         headers:{
@@ -1019,7 +1017,6 @@ export default {
           },
         })
           .then((res) => {
-            console.log(res.data.msg);
             this.newincreasedata = {
               lasttime: Date.now(),
               title: "",
@@ -1287,6 +1284,9 @@ export default {
   background-color: #fff;
   text-align: left;
   padding: 30px;
+}
+.el-select{
+  width: 100%;
 }
 .textareacls {
   display: block;

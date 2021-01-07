@@ -652,7 +652,6 @@ export default {
         },
       })
         .then((res) => {
-          console.log(res.data.msg);
           if (res.data.code == 0) {
             this.updatefunobj = {
               id: "",
@@ -872,7 +871,6 @@ export default {
           suggest: " ",
           resultcontent: this.newincreasedata.resultcontent,
         };
-        console.log(this.updatefunobj);
         this.titlename = "";
         this.updatefun();
       } else if (this.titlename == "反馈处理") {
@@ -887,7 +885,6 @@ export default {
           suggest: this.newincreasedata.suggest,
           resultcontent: this.newincreasedata.resultcontent,
         };
-        console.log(this.updatefunobj);
         this.titlename = "";
         this.updatefun();
       }
@@ -1130,6 +1127,9 @@ export default {
   text-align: left;
   padding: 30px;
   border-radius: 20px;
+}
+.el-select{
+  width: 100%;
 }
 .fontwid {
   font-size: 18px;
