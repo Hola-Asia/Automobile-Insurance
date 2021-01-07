@@ -182,6 +182,8 @@ export default {
           id:0,
           // token
           token:sessionStorage.token,
+          // 权限值
+          jurisdiction:sessionStorage.jurisdiction||null,
           // 时间插件
           pickerOptions: {
             shortcuts: [{
@@ -367,6 +369,8 @@ export default {
         }).catch((err)=>{
             console.log(err);
         })
+        
+          
       },
       //加工时间数据
       timestampToTime(timestamp) {
