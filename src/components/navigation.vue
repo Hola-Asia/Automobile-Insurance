@@ -24,11 +24,10 @@
                 <span slot="title">订单管理</span>
               </el-menu-item>
             </router-link>
-<<<<<<< HEAD
-            <router-link to="/customer">
-=======
-            <router-link v-if="clientsJurisdiction" to="/order">
->>>>>>> 010b761740b7d0513f38eea6c3683ea29a37e185
+
+
+            <router-link v-if="clientsJurisdiction" to="/customer">
+
               <el-menu-item index="3">
                 <i class="el-icon-user-solid"></i>
                 <span slot="title">客户管理</span>

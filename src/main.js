@@ -9,10 +9,7 @@ import axios from "axios";
 
 Vue.config.productionTip = false
 Vue.prototype.$axios = axios;
-<<<<<<< HEAD
-=======
 
->>>>>>> 010b761740b7d0513f38eea6c3683ea29a37e185
 Vue.use(ElementUI);
 
 new Vue({
