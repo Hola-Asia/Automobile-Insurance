@@ -60,6 +60,20 @@ export default {
           orders1:[],
           isIndeterminate:true
         },
+        4:{
+          checkAll:false,
+          checkedCities:[],
+          orders:[],
+          orders1:[],
+          isIndeterminate:true
+        },
+        5:{
+          checkAll:false,
+          checkedCities:[],
+          orders:[],
+          orders1:[],
+          isIndeterminate:true
+        },
       },//全部的项
 
       daLei:[],
@@ -75,6 +89,9 @@ export default {
     let that = this;
     this.$axios({
       url:'/permission/queryAllPermission',
+      headers:{
+        'token':sessionStorage.token,
+      },
       method:'get',
     }).then((res)=>{
       if(res.status == 200){
@@ -136,6 +153,9 @@ export default {
     quRen(){
       this.$axios({
         url:'/role/addRole',
+        headers:{
+          'token':sessionStorage.token,
+        },
         method:'post',
         data:{
           "permissions": this.permissions,

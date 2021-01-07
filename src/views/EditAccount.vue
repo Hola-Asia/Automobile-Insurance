@@ -84,6 +84,9 @@ export default {
       this.$axios({
         url:'/user/queryUserById',
         method:'get',
+        headers:{
+          'token':sessionStorage.token,
+        },
         params:{
           id:this.$route.params.conlltion,
         }
@@ -115,6 +118,9 @@ export default {
       let that = this;
       this.$axios({
         url:'/role/queryAllRoleName',
+        headers:{
+          'token':sessionStorage.token,
+        },
         method:'get',
       }).then((res)=>{
         if (res.status === 200){
@@ -139,6 +145,9 @@ export default {
       let that = this;
       this.$axios({
         url:'/department/queryAllDepartmentName',
+        headers:{
+          'token':sessionStorage.token,
+        },
         method:'get',
       }).then((res)=>{
         if (res.status === 200){
@@ -184,6 +193,9 @@ export default {
       }
       this.$axios({
         url:'/user/updateUser',
+        headers:{
+          'token':sessionStorage.token,
+        },
         method:'post',
         data:{
           username: this.editJson.username,
