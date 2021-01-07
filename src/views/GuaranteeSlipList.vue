@@ -396,7 +396,7 @@ export default {
 
 <style lang="less" scoped>
 </style>
-<style lang="less">
+<style lang="less" scoped>
      .box-card {
     width: 100%;
     height: 100%;

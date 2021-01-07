@@ -96,7 +96,7 @@
           <el-input v-model="form.name" placeholder="请输入部门名称"></el-input>
         </el-form-item>
         <el-form-item label="启用状态" :label-width="formLabelWidth">
-          <el-select v-model="form.status" placeholder="请选择">
+          <el-select v-model="form.status" placeholder="请选择" class="start">
             <el-option label="启用" value="1"></el-option>
             <el-option label="未启用" value="0"></el-option>
           </el-select>
@@ -604,6 +604,9 @@ export default {
   text-align: left;
   position: relative;
 }
+.start{
+  width: 100%;
+}
 .header {
   .container{
     width: 1110px;
@@ -740,5 +743,11 @@ export default {
 }
 .el-form-item__content {
   width: 54%;
+}
+.el-dialog__body {
+  padding: 10px 80px!important;
+}
+.el-dialog__footer {
+  text-align: center!important;
 }
 </style>
