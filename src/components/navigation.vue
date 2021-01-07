@@ -145,10 +145,7 @@ export default {
           type: 'success'
         });
       }).catch((err)=>{
-        this.$message({
-          message: '服务器开小差去了(*￣︶￣)',
-          type: 'success'
-        });
+        this.$message.error('服务器开小差去了(*￣︶￣)');
       })
     },
     //判断权限
