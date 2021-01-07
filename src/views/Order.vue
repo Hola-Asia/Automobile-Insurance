@@ -7,7 +7,7 @@
               <span>订单状态</span>
             </div>
             <div class="grid-content">
-              <el-button type="primary" v-for="(v,i) in btnArr" :plain="index !== i" @click="changeBtn(i)">{{v}}</el-button>
+              <el-button type="primary" :key="i" v-for="(v,i) in btnArr" :plain="index !== i" @click="changeBtn(i)">{{v}}</el-button>
             </div>
         </el-row>
       </el-col>
@@ -16,7 +16,7 @@
       <el-dropdown class="drop" trigger="click" @command="changeSel">
         <span class="el-dropdown-link">{{sel}}<i class="el-icon-arrow-down el-icon--right"></i></span>
         <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item v-for="(v,i) in selArr" :command = i>{{v}}</el-dropdown-item>
+          <el-dropdown-item :key="i" v-for="(v,i) in selArr" :command = i>{{v}}</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
       <el-input v-model="selName" class="inputName" :placeholder = placeStr></el-input>
