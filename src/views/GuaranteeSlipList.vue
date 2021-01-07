@@ -259,7 +259,7 @@ export default {
           this.currentPage=1;
           //搜索时间段
           this.timer= null;
-            this.beg();
+          this.beg();
       },
       //保单类型按钮
       guaranteeSlipTypeSet(i){
@@ -315,6 +315,9 @@ export default {
           //请求总接口
           this.$axios({
             url: '/policy/listWhere',
+            headers:{
+              'token':this.token
+            },
             method: 'post',
             data: {
               // 车牌号码 

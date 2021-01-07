@@ -197,6 +197,10 @@ export default {
             idType:null,
             // 地址
             address:null,
+<<<<<<< HEAD
+=======
+            // token
+>>>>>>> refs/remotes/origin/main
             token:sessionStorage.token,
         }
     },
