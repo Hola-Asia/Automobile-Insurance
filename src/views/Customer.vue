@@ -288,7 +288,7 @@ export default {
   } */
   .cus-sel{
     width: 120px;
-    // padding: 0 10px;
+    
   }
   .box-card{
       line-height: 42px;

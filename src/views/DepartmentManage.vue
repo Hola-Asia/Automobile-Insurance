@@ -96,7 +96,7 @@
           <el-input v-model="form.name" placeholder="请输入部门名称"></el-input>
         </el-form-item>
 
-        <el-form-item label="启用状态" :label-width="formLabelWidth" class="start">
+        <el-form-item label="启用状态" :label-width="formLabelWidth">
 
           <el-select v-model="form.status" placeholder="请选择">
             <el-option label="启用" value="1"></el-option>
@@ -664,7 +664,7 @@ export default {
     }
   }
 }
-.start{
+.el-select{
   width: 100%;
 }
 .box-card{
@@ -757,6 +757,9 @@ export default {
 .showTable th,.showTable td {
   border-bottom: none !important;
   padding-bottom: 0px!important;
+}
+.el-dialog__footer {
+  text-align: center!important;
 }
 ::-webkit-scrollbar {
   display: none;

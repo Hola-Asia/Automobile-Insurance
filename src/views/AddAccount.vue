@@ -37,7 +37,7 @@
           </el-option>
         </el-select><br>
         <div class="b-btn">
-          <el-button type="info" class="c-btn">取消</el-button>
+          <el-button type="info" class="c-btn" @click="clear">取消</el-button>
           <el-button type="primary" class="c-btn" @click="tiJiao">确认</el-button>
         </div>
       </div>
@@ -129,6 +129,9 @@ export default {
       }).catch((err)=>{
         alert(err);
       })
+    },
+    clear(){
+      this.$router.go(-1);
     },
     //正则验证手机号码
     checkPhone(){
