@@ -263,7 +263,11 @@ export default {
 }
 </script>
 
+<<<<<<< HEAD
+<style scoped>
+=======
 <style>
+>>>>>>> 010b761740b7d0513f38eea6c3683ea29a37e185
     .left{
         float: left;
         text-align: left;

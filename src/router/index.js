@@ -6,6 +6,7 @@ import Order from '../views/Order.vue';
 import Login from '../views/Login.vue';
 import GuaranteeSlipList from '../views/GuaranteeSlipList.vue';
 import GuaranteeSlipParticulars from '../views/GuaranteeSlipParticulars.vue';
+// 莉莉
 import AccountManage from '../views/AccountManage.vue'
 import DepartmentManage from '../views/DepartmentManage.vue'
 import RoleManage from '../views/RoleManage.vue'
@@ -13,7 +14,16 @@ import AddAccount from '../views/AddAccount.vue'
 import EditAccount from '../views/EditAccount.vue'
 import EditRole from "@/views/EditRole";
 import AddRole from "@/views/AddRole";
-
+// 李晏
+import Customer from '../views/Customer'
+import ViewDetails from '../views/ViewDetails'
+import ViewInfo from '../views/ViewInfo'
+import CarInfo from '../views/carInfo'
+import TaBankCar from '../views/TaBankCar'
+import ViewChit from '../views/ViewChit'
+import ViewOrder from '../views/ViewOrder'
+import Details from '@/views/Details'
+import Guarantee from '@/views/GuaranteeSlipParticulars'
 
 Vue.use(VueRouter)
 
@@ -48,6 +58,49 @@ const routes = [{
                 path: '/order',
                 name: 'Order',
                 component: Order
+            },
+            {
+                //客户管理
+                path: '/customer',
+                name: 'Customer',
+                component: Customer,
+            },
+            {
+                //查看详情
+                path: '/viewDetails/:id',
+                name: 'ViewDetails',
+                component: ViewDetails,
+                children: [{
+                    path: '/viewInfo/:id',
+                    name: 'ViewInfo',
+                    component: ViewInfo,
+                }, {
+                    path: '/carInfo/:id',
+                    name: 'CarInfo',
+                    component: CarInfo
+                }, {
+                    path: '/taBankCar/:id',
+                    name: 'TaBankCar',
+                    component: TaBankCar
+                }, {
+                    path: '/viewChit/:id',
+                    name: 'ViewChit',
+                    component: ViewChit
+                }, {
+                    path: '/viewOrder/:id',
+                    name: 'ViewOrder',
+                    component: ViewOrder
+                }, {
+                    // 订单详情
+                    path: '/details',
+                    name: 'Details',
+                    component: Details
+                }, {
+                    // 保单详情
+                    path: '/guarantee/:id',
+                    name: 'Guarantee',
+                    component: Guarantee
+                }]
             },
             //保单列表接口
             {

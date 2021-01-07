@@ -24,7 +24,10 @@
                 <span slot="title">订单管理</span>
               </el-menu-item>
             </router-link>
-            <router-link v-if="clientsJurisdiction" to="/order">
+
+
+            <router-link v-if="clientsJurisdiction" to="/customer">
+
               <el-menu-item index="3">
                 <i class="el-icon-user-solid"></i>
                 <span slot="title">客户管理</span>
@@ -209,7 +212,7 @@ export default {
   background-color: #f1f1f1;
   color: #333;
   text-align: center;
-  line-height: 160px;
+  /* line-height: 160px; */
 }
 
 body > .el-container {
