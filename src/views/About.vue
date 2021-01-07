@@ -7,7 +7,7 @@
             v-model="datePic1"
             type="daterange"
             range-separator="至"
-            start-placeholder="编辑时间"
+            start-placeholder="编辑时间1"
             end-placeholder="编辑时间">
         </el-date-picker>
       </div>
