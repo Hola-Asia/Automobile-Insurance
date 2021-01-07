@@ -184,6 +184,7 @@ export default {
       }
       .b-btn{
         margin-top: 60px;
+        margin-bottom: 30px;
         .c-btn{
           margin-right: 20px;
           margin-left: 78px;
