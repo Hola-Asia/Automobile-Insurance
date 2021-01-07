@@ -38,16 +38,14 @@
             border
             style="width: 100%" :header-cell-style="{background:'#D7D7D7',fontSize:'14x',textAlign:'center'}"
             :cell-style="{textAlign:'center',fontSize:'13x',padding:'0px'}"
-            :row-style="{height:'50px'}">
+            :row-style="{height:'70px'}">
           <el-table-column
               prop="roleName"
-              label="角色名称"
-              width="180">
+              label="角色名称">
           </el-table-column>
           <el-table-column
               prop="createTime"
-              label="创建时间"
-              width="240">
+              label="创建时间">
           </el-table-column>
           <el-table-column label="人员明细">
             <template slot-scope="scope">
@@ -56,8 +54,7 @@
           </el-table-column>
           <el-table-column
               prop="status"
-              label="启用状态"
-              width="180">
+              label="启用状态">
           </el-table-column>
           <el-table-column label="操作">
             <template slot-scope="scope">
@@ -578,7 +575,7 @@ export default {
 .header {
   .container{
     width: 1110px;
-    margin: 0 auto;
+    // margin: 0 auto;
     ul{
       width: 600px;
       height: 40px;

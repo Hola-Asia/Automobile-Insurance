@@ -37,38 +37,32 @@
               border
               style="width: 100%" :header-cell-style="{background:'#D7D7D7',fontSize:'14x',textAlign:'center'}"
               :cell-style="{textAlign:'center',fontSize:'13x',padding:'0px'}"
-              :row-style="{height:'50px'}">
+              :row-style="{height:'70px'}">
             <el-table-column
                 prop="username"
-                label="账号名称"
-                width="130">
+                label="账号名称">
             </el-table-column>
             <el-table-column
                 prop="phone"
-                label="手机号码"
-                width="130">
+                label="手机号码">
             </el-table-column>
             <el-table-column
                 prop="departmentName"
-                label="归属部门"
-                width="130">
+                label="归属部门">
             </el-table-column>
             <el-table-column
                 prop="createTime"
-                label="账号创建时间"
-                width="220">
+                label="账号创建时间">
             </el-table-column>
             <el-table-column
                 prop="roleName"
-                label="职位"
-                width="130">
+                label="职位">
             </el-table-column>
             <el-table-column
                 prop="status"
-                label="启用状态"
-                width="130">
+                label="启用状态">
             </el-table-column>
-            <el-table-column label="操作" width="220">>
+            <el-table-column label="操作">
               <template slot-scope="scope">
                 <el-button
                     size="mini"
@@ -402,7 +396,7 @@ export default {
 .header {
   .container{
     width: 1110px;
-    margin: 0 auto;
+    // margin: 0 auto;
     ul{
       width: 600px;
       height: 40px;
