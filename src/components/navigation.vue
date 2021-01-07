@@ -124,7 +124,10 @@ export default {
     },
     // 下拉
     handleCommand(command) {
-      
+      this.beg();
+    },
+    //请求退出接口
+    beg(){
       this.$axios({
         url:'/user/logout',
         params:{
@@ -144,7 +147,6 @@ export default {
           type: 'success'
         });
       })
-      
     },
     //判断权限
     jurisdictionFn(){
@@ -182,7 +184,7 @@ export default {
     }
   },
   mounted() {
-    this.jurisdictionFn();
+      this.jurisdictionFn();
   },
   components: {},
 };

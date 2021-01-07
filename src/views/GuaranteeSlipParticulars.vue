@@ -165,6 +165,7 @@
 export default {
     data() {
         return {
+            //接收id
              id:this.$route.params.id,
             //  车牌号码
              carNumber:null,
@@ -196,8 +197,6 @@ export default {
             idType:null,
             // 地址
             address:null,
-            // token
-            token:sessionStorage.token,
         }
     },
     methods: {
@@ -263,7 +262,7 @@ export default {
 }
 </script>
 
-<style>
+<style lang="less" scoped>
     .left{
         float: left;
         text-align: left;
