@@ -233,7 +233,7 @@
       <el-row class="searchnum">
         <el-col :span="24">
           <div class="grid-content bg-purple-dark">
-            查询结果：共计<span>111</span>条
+            查询结果：共计<span>{{splitepage.page}}</span>条
           </div>
         </el-col>
       </el-row>
@@ -558,9 +558,9 @@ export default {
       // 分页
       splitepage: {
         page: 0,
-        limit: 2,
+        limit: 5,
         currentPage: 1,
-        PageSizes: [2, 4, 8, 10],
+        PageSizes: [5, 10, 15, 20],
       },
       // 提示弹窗
       peompttext: "",
