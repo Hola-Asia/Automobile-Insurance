@@ -37,6 +37,7 @@ export default {
             id:'',
             // 客户信息
             userInfo:[],
+            token:sessionStorage.token
         }
     },
     methods:{
@@ -48,6 +49,9 @@ export default {
         getUsersInfo(){
              this.$axios({
                 url:'/customer/customerMessage',
+                headers:{
+                    'token':this.token
+                 },
                 params:{
                 id:this.id
             }

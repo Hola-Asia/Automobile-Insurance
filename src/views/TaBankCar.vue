@@ -68,6 +68,7 @@ export default {
             input:'',
             value1:'',
             id:'',
+            token:sessionStorage.token,
             // 用户银行卡信息
             userCard:[
                 {
@@ -97,15 +98,24 @@ export default {
      // 获取用户银行卡信息
              this.$axios({
                 url:'/customer/customerBank',
+                headers:{
+                    'token':this.token
+                },
                 params:{
                 id:this.id
             }
             }).then((res)=>{
+                console.log(res.data.data);
                 this.userCard=res.data.data;
             }).catch((err)=>{
                 console.log(err);
             });
     },
+   /*  watch:{
+        userCard:function(){
+
+        }
+    } */
 
 }
 </script>

@@ -190,6 +190,7 @@ export default {
       str4:'',
       str5:'',
       str6:'',
+      token:sessionStorage.token,
       tableRes:[{
         carNumber:'1',
         chassisNumber:'2',
@@ -230,6 +231,9 @@ export default {
   created() {
     this.$axios({
       url:'/oder/findId',
+      headers:{
+              'token':this.token
+      },
       params:{
         id:this.$route.query.id
       }

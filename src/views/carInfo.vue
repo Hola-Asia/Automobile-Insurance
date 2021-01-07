@@ -60,35 +60,6 @@
                     <el-input width='200' v-model="input" :placeholder="carInfo[1].seats_number" class="client-inp" :disabled="true"></el-input>
                 </div>
                   </div>
-                  <!-- <div class="client-info">
-                <div class="car-one">
-                    <div>车辆二</div>
-                </div>
-                <div class="client-name">
-                    <label for="">车牌号码：</label>
-                    <el-input width='200' v-model="input" placeholder="川A-XXX" class="client-inp" :disabled="true"></el-input>
-                </div>
-                 <div class="client-name">
-                    <label for="">发动机号：</label>
-                    <el-input width='200' v-model="input" placeholder="35176327313" class="client-inp" :disabled="true"></el-input>
-                </div>
-                 <div class="client-name">
-                    <label for="">品牌型号：</label>
-                    <el-input width='200' v-model="input" placeholder="雅鹿12312-dhks" class="client-inp" :disabled="true"></el-input>
-                </div>
-                <div class="client-name">
-                    <label for="">初登日期：</label>
-                    <el-input width='200' v-model="input" placeholder="2019-02-21" class="client-inp" :disabled="true"></el-input>
-                </div>
-                 <div class="client-name">
-                    <label for="">车辆性质：</label>
-                    <el-input width='200' v-model="input" placeholder="非营运" class="client-inp" :disabled="true"></el-input>
-                </div>
-                 <div class="client-name">
-                    <label for="">座位数：</label>
-                    <el-input width='200' v-model="input" placeholder="5" class="client-inp" :disabled="true"></el-input>
-                </div>
-                  </div> -->
              </div>
              <!-- 返回按钮 -->
                 <el-row class="back-row">
@@ -115,6 +86,7 @@ export default {
             ],
             // 时间
             registrationDate:[],
+            token:sessionStorage.token,
         }
     },
     methods:{
@@ -126,6 +98,9 @@ export default {
         getUsersCar(){
              this.$axios({
                 url:'/customer/customerCar',
+                headers:{
+                    'token':this.token
+                 },
                 params:{
                 id:this.id
             }
