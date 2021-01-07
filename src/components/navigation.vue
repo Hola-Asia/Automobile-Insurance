@@ -115,6 +115,8 @@ export default {
         departmentManagement:false,
         //部门管理
         gestionSectorielle:false,
+        // token
+        token:sessionStorage.token
     };
   },
   methods: {
@@ -134,7 +136,7 @@ export default {
       this.$axios({
         url:'/user/logout',
         params:{
-          'token':sessionStorage.token
+          'token':this.token
         }
       }).then((res)=>{
         this.$router.push('/login');
@@ -145,10 +147,7 @@ export default {
           type: 'success'
         });
       }).catch((err)=>{
-        this.$message({
-          message: '服务器开小差去了(*￣︶￣)',
-          type: 'success'
-        });
+        this.$message.error('服务器开小差去了(*￣︶￣)');
       })
     },
     //判断权限
