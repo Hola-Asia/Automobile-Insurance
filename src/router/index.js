@@ -3,6 +3,7 @@ import VueRouter from 'vue-router';
 import Navigation from '../components/navigation.vue';
 import Information from '../views/Information.vue';
 import Order from '../views/Order.vue';
+//LC
 import Login from '../views/Login.vue';
 import GuaranteeSlipList from '../views/GuaranteeSlipList.vue';
 import GuaranteeSlipParticulars from '../views/GuaranteeSlipParticulars.vue';
@@ -14,7 +15,7 @@ import AddAccount from '../views/AddAccount.vue'
 import EditAccount from '../views/EditAccount.vue'
 import EditRole from "@/views/EditRole";
 import AddRole from "@/views/AddRole";
-// 李晏
+// LJ
 import Customer from '../views/Customer'
 import ViewDetails from '../views/ViewDetails'
 import ViewInfo from '../views/ViewInfo'
