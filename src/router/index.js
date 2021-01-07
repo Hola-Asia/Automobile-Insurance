@@ -7,13 +7,14 @@ import Details from '../views/Details.vue'
 import About from '../views/About.vue'
 import AddAbout from '../views/AddAbout.vue'
 import EditAbout from "../views/EditAbout";
+import Opinion from '../views/opinion.vue'
 
 Vue.use(VueRouter)
 
 const routes = [
   {
     path: '/',
-    redirect: {name: 'Navigation'},
+    redirect: {name: 'Order'},
   },
   {
     path: '/navigation',
@@ -33,7 +34,13 @@ const routes = [
         component: Order
       },
       {
-        // 订单管理页接口
+        // 意见反馈页接口
+        path: '/opinion',
+        name: 'Opinion',
+        component: Opinion
+      },
+      {
+        // 订单详情页接口
         path: '/details',
         name: 'Details',
         component: Details
