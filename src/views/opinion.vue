@@ -1,7 +1,7 @@
 <template>
   <!-- 资讯页面 -->
-  <div style="height:100%;">
-    <div style="padding:20px;background:#fff;minHeight:93%">
+  <div style="height: 100%">
+    <div style="padding: 20px; background: #fff; minheight: 93%">
       <!-- 分类按钮区 -->
       <div class="classify">
         <el-row class="newadd">
@@ -170,7 +170,7 @@
       <!-- 表身 -->
       <div class="infor-list">
         <!-- 表头栅格 -->
-        <el-row class="tablehead" style="background:#d7d7d7">
+        <el-row class="tablehead" style="background: #d7d7d7">
           <el-col :span="3">
             <div class="grid-content">反馈时间</div>
           </el-col>
@@ -193,7 +193,12 @@
             <div class="grid-content">备注</div>
           </el-col>
         </el-row>
-        <el-row v-for="(v, i) in datalist" :key="i" class="bgcolor" :class="[i%2!=0?'active':'']">
+        <el-row
+          v-for="(v, i) in datalist"
+          :key="i"
+          class="bgcolor"
+          :class="[i % 2 != 0 ? 'active' : '']"
+        >
           <el-col :span="3">
             <div class="grid-content">
               <div class="col-time">{{ v.createdate }}</div>
@@ -215,10 +220,7 @@
             <div class="grid-content">{{ v.status }}</div>
           </el-col>
           <el-col :span="3">
-            <div
-              class="grid-content"
-              style="position: relative"
-            >
+            <div class="grid-content" style="position: relative">
               <div class="operationbtn deldiv" v-show="v.status == '已处理'">
                 已完成
               </div>
@@ -260,6 +262,8 @@
 export default {
   data() {
     return {
+      // token值储存
+      token: sessionStorage.token,
       // 分类按钮
       btn1_active: "0",
       btn2_active: "0",
@@ -339,14 +343,384 @@ export default {
     tab2(val) {
       this.btn2_active = val;
     },
-
-    // 查询
+    // 日期分割
+    timesplit(val) {
+      let date = new Date(val);
+      let Y = date.getFullYear() + "-";
+      let M =
+        (date.getMonth() + 1 < 10
+          ? "0" + (date.getMonth() + 1)
+          : date.getMonth() + 1) + "-";
+      let D = date.getDate() + " ";
+      let h =
+        (date.getHours() < 10 ? "0" + date.getHours() : date.getHours()) + ":";
+      let m =
+        (date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes()) +
+        ":";
+      let s =
+        date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+      let datetime = {
+        date: Y + M + D,
+        time: h + m + s,
+      };
+      return datetime;
+    },
+    // 计时器
+    prompttime() {
+      setTimeout(() => {
+        this.peompttext = "";
+      }, 2000);
+    },
+    // 分页
+    handleSizeChange(val) {
+      this.splitepage.limit = val;
+      this.splitepage.currentPage = 1;
+      this.applypage();
+    },
+    handleCurrentChange(val) {
+      this.splitepage.currentPage = val;
+      this.applypage();
+    },
+    // 正则
+    typeofnum(val) {
+      let str = val;
+      let reg1 = /\D/;
+      return str.search(reg1);
+    },
+    // new Date()转换为年月日时分秒
+    transfertime(val) {
+      let d = val;
+      d =
+        d.getFullYear() +
+        "-" +
+        (d.getMonth() + 1) +
+        "-" +
+        d.getDate() +
+        " " +
+        d.getHours() +
+        ":" +
+        d.getMinutes() +
+        ":" +
+        d.getSeconds();
+      return d;
+    },
+    // 渲染列表页面函数
+    applypage() {
+      this.$axios({
+        url: "/feedback/query",
+        headers: {
+          token: this.token,
+        },
+        method: "post",
+        data: {
+          pageNum: parseInt(this.splitepage.currentPage),
+          pageSize: parseInt(this.splitepage.limit),
+          category: this.selectdata.category,
+          presenter: this.selectdata.presenter,
+          status: this.selectdata.status,
+          phone: this.selectdata.phone,
+          createtimestart: this.selectdata.createtimestart,
+          createtimeend: this.selectdata.createtimeend,
+        },
+      })
+        .then((res) => {
+          if (res.data.msg == "") {
+            // 分页渲染
+            this.splitepage.page = res.data.data.total;
+            // 日期渲染
+            this.datalist = res.data.data.list;
+            let createtimes;
+            for (let i = 0; i < this.datalist.length; i++) {
+              // 处理状态转换
+              if (this.datalist[i].status == "1") {
+                this.datalist[i].status = "已处理";
+              } else if (this.datalist[i].status == "2") {
+                this.datalist[i].status = "未处理";
+              }
+              // 最后编辑时间
+              createtimes = this.timesplit(this.datalist[i].createtime);
+              this.datalist[i].createdate = createtimes.date;
+              this.datalist[i].createtime = createtimes.time;
+              createtimes = {
+                date: null,
+                time: null,
+              };
+            }
+          } else {
+            this.peompttext = res.data.msg;
+            this.prompttime();
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    // 修改函数
+    updatefun() {
+      this.$axios({
+        url: "/feedback/update",
+        headers: {
+          token: this.token,
+        },
+        method: "post",
+        data: {
+          id: this.updatefunobj.id,
+          status: this.updatefunobj.status,
+          presenter: this.updatefunobj.presenter,
+          phone: this.updatefunobj.phone,
+          category: this.updatefunobj.category,
+          suggest: this.updatefunobj.suggest,
+          createtime: this.updatefunobj.createtime,
+          resultcontent: this.updatefunobj.resultcontent,
+          // 1609867850517
+        },
+      })
+        .then((res) => {
+          console.log(res.data.msg);
+          if (res.data.code == 0) {
+            this.updatefunobj = {
+              id: "",
+              status: "",
+              presenter: "",
+              phone: "",
+              category: "",
+              suggest: "",
+              createtime: "",
+              resultcontent: "",
+            };
+            this.peompttext = "修改成功";
+            this.prompttime();
+            this.applypage();
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    // 重置
     resetForm(formName) {
       // 重置
       this.numberValidateForm.title = "";
       this.numberValidateForm.value1 = "";
       this.btn1_active = "0";
       this.btn2_active = "0";
+    },
+    // 查询
+    submitbtn() {
+      this.selectdata = {
+        category: "",
+        presenter: "",
+        phone: "",
+        status: "",
+        createtimestart: "",
+        createtimeend: "",
+      };
+      // 判断
+      // 问题分类
+      if (this.btn1_active == "1") {
+        this.selectdata.category = "功能异常";
+      } else if (this.btn1_active == "2") {
+        this.selectdata.category = "体验问题";
+      } else if (this.btn1_active == "3") {
+        this.selectdata.category = "修改建议";
+      } else {
+        this.selectdata.category = "";
+      }
+      // 处理状态
+      if (this.btn2_active != "0") {
+        this.selectdata.status = this.btn2_active;
+      } else {
+        this.selectdata.status = "";
+      }
+      // 时间转换
+      // 反馈时间
+      if (this.numberValidateForm.value1 != null) {
+        let starttime = this.numberValidateForm.value1[0];
+        let endtime = this.numberValidateForm.value1[1];
+        this.selectdata.createtimestart = starttime.getTime();
+        this.selectdata.createtimeend = endtime.getTime();
+      } else {
+        this.selectdata.createtimestart = "";
+        this.selectdata.createtimeend = "";
+      }
+      // 手机号和提出人判断
+      if (this.typeofnum(this.numberValidateForm.title) == -1) {
+        this.selectdata.phone = this.numberValidateForm.title;
+      } else {
+        this.selectdata.presenter = this.numberValidateForm.title;
+      }
+      this.splitepage.currentPage = 1;
+      this.applypage();
+    },
+    // 开弹窗
+    // 查看
+    checkmessage(val) {
+      this.titlename = "查看";
+      this.disablesta = true;
+      this.deldisablesta = true;
+      this.showbool = true;
+      this.savebtn = false;
+      this.newincreasedata = {
+        createtime:
+          this.datalist[val].createdate + " " + this.datalist[val].createtime,
+        category: this.datalist[val].category,
+        presenter: this.datalist[val].presenter,
+        phone: this.datalist[val].phone,
+        status: this.datalist[val].status,
+        suggest: this.datalist[val].suggest,
+        resultcontent: this.datalist[val].resultcontent,
+      };
+    },
+    // 添加
+    adddellist() {
+      this.disablesta = false;
+      this.deldisablesta = false;
+      this.titlename = "添加反馈";
+      this.showbool = false;
+      let newtime = new Date();
+      newtime = this.transfertime(newtime);
+      this.newincreasedata = {
+        id: "",
+        createtime: newtime,
+        category: "",
+        presenter: "",
+        phone: "",
+        status: "2",
+        suggest: "",
+        resultcontent: "",
+      };
+    },
+    // 处理
+    delnote(val) {
+      this.disablesta = true;
+      this.deldisablesta = false;
+      this.titlename = "反馈处理";
+      this.showbool = true;
+      (this.datalist[val].suggest = ""),
+        (this.newincreasedata = {
+          id: this.datalist[val].id,
+          createtime:
+            this.datalist[val].createdate + " " + this.datalist[val].createtime,
+          category: this.datalist[val].category,
+          presenter: this.datalist[val].presenter,
+          phone: this.datalist[val].phone,
+          status: this.datalist[val].status,
+          suggest: this.datalist[val].suggest,
+          resultcontent: this.datalist[val].resultcontent,
+        });
+    },
+    // 编辑
+    updatemessage(val) {
+      this.titlename = "编辑反馈";
+      this.disablesta = false;
+      this.deldisablesta = true;
+      this.showbool = false;
+      this.newincreasedata = {
+        id: this.datalist[val].id,
+        createtime:
+          this.datalist[val].createdate + " " + this.datalist[val].createtime,
+        category: this.datalist[val].category,
+        presenter: this.datalist[val].presenter,
+        phone: this.datalist[val].phone,
+        resultcontent: this.datalist[val].resultcontent,
+      };
+    },
+    // 关弹窗
+    // 保存
+    datadel() {
+      if (this.newincreasedata.category == "选项1") {
+        this.newincreasedata.category = "功能异常";
+      } else if (this.newincreasedata.category == "选项2") {
+        this.newincreasedata.category = "体验问题";
+      } else if (this.newincreasedata.category == "选项3") {
+        this.newincreasedata.category = "修改建议";
+      } else {
+        this.newincreasedata.category = "";
+      }
+      // 上架
+      if (this.newincreasedata.puttime == "选项1") {
+        this.newincreasedata.puttime = Date.now();
+        this.newincreasedata.status = "1";
+        this.newincreasedata.removetime = -62133115205000;
+      } else {
+        this.newincreasedata.puttime = -62133115205000;
+        this.newincreasedata.status = "2";
+        this.newincreasedata.removetime = Date.now();
+      }
+
+      if (this.titlename == "添加反馈") {
+        // 弹窗新增保存调用
+        this.titlename = "";
+        this.$axios({
+          url: "/feedback/add",
+          headers: {
+            token: this.token,
+          },
+          method: "post",
+          data: {
+            createtime: Date.now(),
+            category: this.newincreasedata.category,
+            presenter: this.newincreasedata.presenter,
+            phone: this.newincreasedata.phone,
+            status: "2",
+            resultcontent: this.newincreasedata.resultcontent,
+          },
+        })
+          .then((res) => {
+            this.newincreasedata = {
+              id: "",
+              createtime: "",
+              category: "",
+              presenter: "",
+              phone: "",
+              status: "",
+              suggest: "",
+              resultcontent: "",
+            };
+            // 掉一次渲染界面的axios
+            this.peompttext = "添加成功";
+            this.prompttime();
+            this.applypage();
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      } else if (this.titlename == "编辑反馈") {
+        // 弹窗编辑保存调用
+        this.updatefunobj = {
+          id: this.newincreasedata.id,
+          category: this.newincreasedata.category,
+          createtime: Date.now(),
+          presenter: this.newincreasedata.presenter,
+          phone: this.newincreasedata.phone,
+          status: "2",
+          suggest: " ",
+          resultcontent: this.newincreasedata.resultcontent,
+        };
+        console.log(this.updatefunobj);
+        this.titlename = "";
+        this.updatefun();
+      } else if (this.titlename == "反馈处理") {
+        // 弹窗编辑保存调用
+        this.updatefunobj = {
+          id: this.newincreasedata.id,
+          category: this.newincreasedata.category,
+          createtime: "",
+          presenter: this.newincreasedata.presenter,
+          phone: this.newincreasedata.phone,
+          status: "1",
+          suggest: this.newincreasedata.suggest,
+          resultcontent: this.newincreasedata.resultcontent,
+        };
+        console.log(this.updatefunobj);
+        this.titlename = "";
+        this.updatefun();
+      }
+    },
+    // 取消
+    clowin() {
+      this.titlename = "";
+      this.savebtn = true;
     },
   },
   mounted() {

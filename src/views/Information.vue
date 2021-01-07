@@ -348,6 +348,8 @@
 export default {
   data() {
     return {
+      // token值储存
+      token:sessionStorage.token,
       // 分类按钮
       btn1_active: "0",
       btn2_active: "0",
@@ -448,6 +450,461 @@ export default {
       this.btn1_active = "0";
       this.btn2_active = "0";
       this.btn3_active = "0";
+    },
+    // 日期分割
+    timesplit(val) {
+      let date = new Date(val);
+      let Y = date.getFullYear() + "-";
+      let M =
+        (date.getMonth() + 1 < 10
+          ? "0" + (date.getMonth() + 1)
+          : date.getMonth() + 1) + "-";
+      let D = date.getDate() + " ";
+      let h =
+        (date.getHours() < 10 ? "0" + date.getHours() : date.getHours()) + ":";
+      let m =
+        (date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes()) +
+        ":";
+      let s =
+        date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+      let datetime = {
+        date: Y + M + D,
+        time: h + m + s,
+      };
+      return datetime;
+    },
+    // 修改调用axios
+    updatefun() {
+      this.$axios({
+        url: "/information/update",
+        headers:{
+          'token':this.token
+        },
+        method: "post",
+        data: {
+          id: this.updatefunobj.id,
+          category: this.updatefunobj.category,
+          content: this.updatefunobj.content,
+          lasttime: Date.now(),
+          number: this.updatefunobj.number,
+          puttime: this.updatefunobj.puttime,
+          recommend: this.updatefunobj.recommend,
+          removetime: this.updatefunobj.removetime,
+          status: this.updatefunobj.status,
+          title: this.updatefunobj.title,
+        },
+      })
+        .then((res) => {
+          console.log(res.data.msg);
+          if (res.data.code == 0) {
+            this.updatefunobj = {
+              id: "",
+              category: "",
+              content: "",
+              number: "",
+              puttime: "",
+              recommend: "",
+              removetime: "",
+              status: "",
+              title: "",
+            };
+            this.peompttext = "修改成功";
+            this.prompttime();
+            this.applypage();
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    // 计时器
+    prompttime() {
+      this.newincreasedata = {
+        lasttime: Date.now(),
+        title: "",
+        number: "",
+        category: "",
+        recommend: "",
+        puttime: "",
+        removetime: "",
+        content: "",
+        status: "",
+      };
+      setTimeout(() => {
+        this.peompttext = "";
+      }, 2000);
+    },
+    // 正则
+    typeofnum(val) {
+      let str = val;
+      let reg1 = /\D/;
+      return str.search(reg1);
+    },
+    // 分页
+    handleSizeChange(val) {
+      this.splitepage.limit = val;
+      this.splitepage.currentPage = 1;
+      this.applypage();
+    },
+    handleCurrentChange(val) {
+      this.splitepage.currentPage = val;
+      this.applypage();
+    },
+    // 渲染分页axios
+    applypage() {
+      console.log(this.selectdata);
+      this.$axios({
+        url: "/information/query",
+        headers:{
+          'token':this.token
+        },
+        method: "post",
+        data: {
+          pageNum: parseInt(this.splitepage.currentPage),
+          pageSize: parseInt(this.splitepage.limit),
+          number: this.selectdata.number,
+          title: this.selectdata.title,
+          category: this.selectdata.category,
+          recommend: this.selectdata.recommend,
+          status: this.selectdata.status,
+          lasttimeend: this.selectdata.lasttimeend,
+          lattimestart: this.selectdata.lattimestart,
+          puttimeend: this.selectdata.puttimeend,
+          puttimestart: this.selectdata.puttimestart,
+          removetimeend: this.selectdata.removetimeend,
+          removetimestart: this.selectdata.removetimestart,
+        },
+      })
+        .then((res) => {
+          if ((res.data.msg == "")) {
+            // 分页渲染
+            this.splitepage.page = res.data.data.total;
+            // 日期渲染
+            this.datalist = res.data.data.list;
+            let puttimes, lasttimes, removetimes;
+            for (let i = 0; i < this.datalist.length; i++) {
+              // 最后编辑时间
+              lasttimes = this.timesplit(this.datalist[i].lasttime);
+              // res.data.data[i].lasttime.split('9');
+              this.datalist[i].lastdate = lasttimes.date;
+              this.datalist[i].lasttime = lasttimes.time;
+              lasttimes = {
+                date: null,
+                time: null,
+              };
+              // 上架时间
+              if (this.datalist[i].puttime != null) {
+                puttimes = this.timesplit(this.datalist[i].puttime);
+                this.datalist[i].putdate = puttimes.date;
+                this.datalist[i].puttime = puttimes.time;
+                puttimes = {
+                  date: null,
+                  time: null,
+                };
+              }
+              // 下架时间
+              if (this.datalist[i].removetime != null) {
+                removetimes = this.timesplit(this.datalist[i].removetime);
+                this.datalist[i].removedate = removetimes.date;
+                this.datalist[i].removetime = removetimes.time;
+                removetimes = {
+                  date: null,
+                  time: null,
+                };
+              }
+            }
+          }else {
+            this.peompttext = res.data.msg;
+            this.prompttime();
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    // 首次渲染
+    // 提交
+    submitbtn() {
+      //清空渲染要赋值的对象
+      this.selectdata = {
+        title: "",
+        number: "",
+        status: "",
+        category: "",
+        recommend: "",
+        redactstarttime: "",
+        redactendtime: "",
+        putstarttime: "",
+        putendtime: "",
+        removestarttime: "",
+        removeendtime: "",
+      };
+      // 判断
+      // 分类
+      if (this.btn1_active == "1") {
+        this.selectdata.category = "车险改革";
+      } else if (this.btn1_active == "2") {
+        this.selectdata.category = "用车养车";
+      } else {
+        this.selectdata.category = "";
+      }
+      // 推荐
+      if (this.btn2_active == "1") {
+        this.selectdata.recommend = "1";
+      } else if (this.btn2_active == "2") {
+        this.selectdata.recommend = "2";
+      } else {
+        this.selectdata.recommend = "";
+      }
+      // 上架
+      if (this.btn3_active == "1") {
+        this.selectdata.status = "1";
+      } else if (this.btn3_active == "2") {
+        this.selectdata.status = "2";
+      } else {
+        this.selectdata.status = "";
+      }
+      // 时间转换
+      // 最近编辑时间
+      if (this.numberValidateForm.value1 != null) {
+        let starttime = this.numberValidateForm.value1[0];
+        let endtime = this.numberValidateForm.value1[1];
+        this.selectdata.lattimestart = starttime.getTime();
+        this.selectdata.lasttimeend = endtime.getTime();
+      } else {
+        this.selectdata.lattimestart = "";
+        this.selectdata.lasttimeend = "";
+      }
+      // 上架时间
+      if (this.numberValidateForm.value2 != null) {
+        let starttime = this.numberValidateForm.value2[0];
+        let endtime = this.numberValidateForm.value2[1];
+        this.selectdata.puttimeend = endtime.getTime();
+        this.selectdata.puttimestart = starttime.getTime();
+      } else {
+        this.selectdata.puttimeend = "";
+        this.selectdata.puttimestart = "";
+      }
+      // 下架时间
+      if (this.numberValidateForm.value3 != null) {
+        let starttime = this.numberValidateForm.value3[0];
+        let endtime = this.numberValidateForm.value3[1];
+        this.selectdata.removetimeend = endtime.getTime();
+        this.selectdata.removetimestart = starttime.getTime();
+      } else {
+        this.selectdata.removetimeend = "";
+        this.selectdata.removetimestart = "";
+      }
+      if(this.typeofnum(this.numberValidateForm.title)==-1) {
+        this.selectdata.number = this.numberValidateForm.title;
+      }else {
+        this.selectdata.title = this.numberValidateForm.title;
+      }
+      this.splitepage.currentPage = 1
+      this.applypage();
+    },
+    // 点击新增按钮弹开弹窗
+    newincrease() {
+      this.wintitle = "新增";
+    },
+    // 推荐
+    recommendbtn(val) {
+      this.recommend_val = val;
+    },
+    recommended(val) {
+      this.$axios({
+        url: "/information/update",
+        headers:{
+          'token':this.token
+        },
+        method: "post",
+        data: {
+          id: this.datalist[val].id,
+          // lasttime: Date.now(),
+          recommend: this.recommend_val,
+        },
+      })
+        .then((res) => {
+          if (res.data.code == 0) {
+            this.peompttext = "修改成功";
+            this.prompttime();
+            this.applypage();
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    // 下架
+    putawaybtn(val) {
+      let datetime1 = new Date();
+      this.$axios({
+        url: "/information/update",
+        headers:{
+          'token':this.token
+        },
+        method: "post",
+        data: {
+          id: this.datalist[val].id,
+          recommend: "2",
+          removetime: Date.now(),
+          status: "2",
+        },
+      })
+        .then((res) => {
+          if (res.data.code == 0) {
+            this.peompttext = "修改成功";
+            this.prompttime();
+            this.applypage();
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    // 上架
+    soldoutbtn(val) {
+      let datetime2 = new Date();
+      this.$axios({
+        url: "/information/update",
+        headers:{
+          'token':this.token
+        },
+        method: "post",
+        data: {
+          id: this.datalist[val].id,
+          puttime: Date.now(),
+          recommend: "1",
+          removetime: -62133046674000,
+          status: "1",
+        },
+      })
+        .then((res) => {
+          if (res.data.code == 0) {
+            this.peompttext = "修改成功";
+            this.prompttime();
+            this.applypage();
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    // 点击编辑按钮弹开弹窗
+    compilebtn(val) {
+      this.wintitle = "编辑";
+      this.id = this.datalist[val].id;
+      // 推荐
+      if (this.datalist[val].recommend == "1") {
+        this.newincreasedata.recommend = "选项1";
+      } else if (this.datalist[val].recommend == "2") {
+        this.newincreasedata.recommend = "选项2";
+      }
+      // 上架
+      if (this.datalist[val].puttime != "1-01-30 20:11:08") {
+        this.newincreasedata.puttime = "选项1";
+      } else if (this.datalist[val].puttime == "1-01-30 20:11:08") {
+        this.newincreasedata.puttime = "选项2";
+      }
+      this.newincreasedata.title = this.datalist[val].title;
+      this.newincreasedata.category = this.datalist[val].category;
+      this.newincreasedata.content = this.datalist[val].content;
+      this.newincreasedata.number = this.datalist[val].number;
+    },
+    // 弹窗保存函数
+    datadel() {
+      if (this.newincreasedata.category == "选项1") {
+        this.newincreasedata.category = "车险改革";
+      } else {
+        this.newincreasedata.category = "用车养车";
+      }
+      // 推荐
+      if (this.newincreasedata.recommend == "选项1") {
+        this.newincreasedata.recommend = "1";
+      } else {
+        this.newincreasedata.recommend = "2";
+      }
+      // 上架
+      if (this.newincreasedata.puttime == "选项1") {
+        this.newincreasedata.puttime = Date.now();
+        this.newincreasedata.status = "1";
+        this.newincreasedata.removetime = -62133115205000;
+      } else {
+        this.newincreasedata.puttime = -62133115205000;
+        this.newincreasedata.status = "2";
+        this.newincreasedata.removetime = Date.now();
+      }
+
+      if (this.wintitle == "新增") {
+        // 弹窗新增保存调用
+        this.wintitle = "";
+        this.$axios({
+          url: "/information/add",
+          headers:{
+          'token':this.token
+        },
+          method: "post",
+          data: {
+            lasttime: this.newincreasedata.lasttime,
+            title: this.newincreasedata.title,
+            category: this.newincreasedata.category,
+            recommend: this.newincreasedata.recommend,
+            status: this.newincreasedata.status,
+            puttime: this.newincreasedata.puttime,
+            removetime: this.newincreasedata.removetime,
+            content: this.newincreasedata.content,
+          },
+        })
+          .then((res) => {
+            console.log(res.data.msg);
+            this.newincreasedata = {
+              lasttime: Date.now(),
+              title: "",
+              number: "",
+              category: "",
+              recommend: "",
+              puttime: "",
+              removetime: "",
+              content: "",
+            };
+            // 掉一次渲染界面的axios
+            this.peompttext = "添加成功";
+            this.prompttime();
+            this.applypage();
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      } else if (this.wintitle == "编辑") {
+        // 弹窗编辑保存调用
+        this.updatefunobj = {
+          id: this.id,
+          category: this.newincreasedata.category,
+          content: this.newincreasedata.content,
+          number: this.newincreasedata.number,
+          puttime: this.newincreasedata.puttime,
+          recommend: this.newincreasedata.recommend,
+          removetime: this.newincreasedata.removetime,
+          status: this.newincreasedata.status,
+          title: this.newincreasedata.title,
+        };
+        this.wintitle = "";
+        this.updatefun();
+      }
+    },
+    // 弹窗取消
+    cancelbtn() {
+      this.newincreasedata = {
+        lasttime: Date.now(),
+        title: "",
+        number: "",
+        category: "",
+        recommend: "",
+        puttime: "",
+        removetime: "",
+        content: "",
+      };
+      this.wintitle = "";
     },
   },
   mounted() {
