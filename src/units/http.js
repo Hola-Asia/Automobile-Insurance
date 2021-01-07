@@ -6,6 +6,7 @@ const http = axios.create({
         "Content-Type": "application/json"
     }
 });
+
 //axios请求前的拦截
 http.interceptors.request.use(req => {
     //从sessionStorage中获取token

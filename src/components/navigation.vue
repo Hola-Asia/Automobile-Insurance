@@ -12,7 +12,7 @@
             text-color="#fff"
             active-text-color="#ffd04b"
           >
-            <router-link to="/">
+            <router-link to="/order">
               <el-menu-item index="1">
                 <i class="el-icon-menu"></i>
                 <span slot="title"></span>
@@ -39,7 +39,7 @@
                 <span slot="title">资讯管理</span>
               </el-menu-item>
             </router-link>
-            <router-link to="/">
+            <router-link to="/about">
               <el-menu-item index="5">
                 <i class="el-icon-house"></i>
                 <span slot="title">关于我们</span>
@@ -51,7 +51,7 @@
                 <span slot="title">保单管理</span>
               </el-menu-item>
             </router-link>
-            <router-link to="/">
+            <router-link to="/opinion">
               <el-menu-item index="7">
                 <i class="el-icon-edit"></i>
                 <span slot="title">意见反馈</span>
@@ -145,7 +145,10 @@ export default {
           type: 'success'
         });
       }).catch((err)=>{
-        this.$message.error('服务器开小差去了(*￣︶￣)');
+        this.$message({
+          message: '服务器开小差去了(*￣︶￣)',
+          type: 'success'
+        });
       })
     },
     //判断权限

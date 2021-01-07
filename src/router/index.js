@@ -1,8 +1,6 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Navigation from '../components/navigation.vue';
-import Information from '../views/Information.vue';
-import Order from '../views/Order.vue';
 //LC
 import Login from '../views/Login.vue';
 import GuaranteeSlipList from '../views/GuaranteeSlipList.vue';
@@ -23,8 +21,15 @@ import CarInfo from '../views/carInfo'
 import TaBankCar from '../views/TaBankCar'
 import ViewChit from '../views/ViewChit'
 import ViewOrder from '../views/ViewOrder'
-import Details from '@/views/Details'
 import Guarantee from '@/views/GuaranteeSlipParticulars'
+//ZR && DHZ
+import Information from '../views/Information.vue'
+import Order from '../views/Order.vue'
+import Details from '../views/Details.vue'
+import About from '../views/About.vue'
+import AddAbout from '../views/AddAbout.vue'
+import EditAbout from "../views/EditAbout";
+import Opinion from '../views/opinion.vue'
 
 Vue.use(VueRouter)
 
@@ -65,6 +70,35 @@ const routes = [{
                 path: '/customer',
                 name: 'Customer',
                 component: Customer,
+            },{
+                // 意见反馈页接口
+                path: '/opinion',
+                name: 'Opinion',
+                component: Opinion
+            },
+            {
+                // 订单详情页接口
+                path: '/details',
+                name: 'Details',
+                component: Details
+            },
+            {
+                // 关于我们
+                path: '/about',
+                name: 'About',
+                component: About
+            },
+            {
+                // 关于我们新增
+                path: '/addabout',
+                name: 'AddAbout',
+                component: AddAbout
+            },
+            {
+                // 关于我们编辑
+                path: '/editabout',
+                name: 'EditAbout',
+                component: EditAbout
             },
             {
                 //查看详情
@@ -101,7 +135,7 @@ const routes = [{
                     path: '/guarantee/:id',
                     name: 'Guarantee',
                     component: Guarantee
-                }]
+                },]
             },
             //保单列表接口
             {
