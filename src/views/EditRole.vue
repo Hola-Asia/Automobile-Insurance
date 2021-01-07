@@ -88,7 +88,6 @@ export default {
       url:'/permission/queryAllPermission',
       method:'get',
     }).then((res)=>{
-
       if(res.status == 200){
         if(res.data.data.length > 0){
           //取出一级菜单
