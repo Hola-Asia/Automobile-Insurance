@@ -169,7 +169,7 @@
       <el-row class="searchnum">
         <el-col :span="24">
           <div class="grid-content bg-purple-dark">
-            查询结果：共计<span>{{ datalist.length }}</span
+            查询结果：共计<span>{{ splitepage.page }}</span
             >条
           </div>
         </el-col>
@@ -385,6 +385,8 @@
 export default {
   data() {
     return {
+      // token值储存
+      token:sessionStorage.token,
       // 分类按钮
       btn1_active: "0",
       btn2_active: "0",
@@ -483,9 +485,9 @@ export default {
       // 分页
       splitepage: {
         page: 0,
-        limit: 2,
+        limit: 5,
         currentPage: 1,
-        PageSizes: [2, 4, 8, 10],
+        PageSizes: [5, 10, 15, 20],
       },
       // 查询发送数据
       selectdata: {
@@ -582,6 +584,9 @@ export default {
     applypage() {
       this.$axios({
         url: "/feedback/query",
+        headers:{
+              'token':this.token
+            },
         method: "post",
         data: {
           pageNum: parseInt(this.splitepage.currentPage),
@@ -630,6 +635,9 @@ export default {
     updatefun() {
       this.$axios({
         url: "/feedback/update",
+        headers:{
+              'token':this.token
+            },
         method: "post",
         data: {
           id: this.updatefunobj.id,
@@ -644,7 +652,6 @@ export default {
         },
       })
         .then((res) => {
-          console.log(res.data.msg);
           if (res.data.code == 0) {
             this.updatefunobj = {
               id: "",
@@ -820,6 +827,9 @@ export default {
         this.titlename = "";
         this.$axios({
           url: "/feedback/add",
+          headers:{
+              'token':this.token
+            },
           method: "post",
           data: {
             createtime: Date.now(),
@@ -861,7 +871,6 @@ export default {
           suggest: " ",
           resultcontent: this.newincreasedata.resultcontent,
         };
-        console.log(this.updatefunobj);
         this.titlename = "";
         this.updatefun();
       } else if (this.titlename == "反馈处理") {
@@ -876,7 +885,6 @@ export default {
           suggest: this.newincreasedata.suggest,
           resultcontent: this.newincreasedata.resultcontent,
         };
-        console.log(this.updatefunobj);
         this.titlename = "";
         this.updatefun();
       }
@@ -1119,6 +1127,9 @@ export default {
   text-align: left;
   padding: 30px;
   border-radius: 20px;
+}
+.el-select{
+  width: 100%;
 }
 .fontwid {
   font-size: 18px;
