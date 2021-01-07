@@ -168,8 +168,6 @@ export default {
           currentPage: 1,
           // 分页大小
           pageSize: 10,
-          // 开始序号 不能这样用取不到数据
-          // startIndex:this.pageSize*(this.currentPage-1),
           // 数据总数
           total:0,
           //搜索时间段
@@ -182,6 +180,8 @@ export default {
           tableData: [],
           // 用户id
           id:0,
+          // token
+          token:sessionStorage.token,
           // 时间插件
           pickerOptions: {
             shortcuts: [{
@@ -373,7 +373,7 @@ export default {
         let date = new Date(timestamp);
         let Y = date.getFullYear() + '-';
         let M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
-        let D = date.getDate() + ' ';
+        let D = (date.getDate()< 10? '0'+date.getDate(): date.getDate()) + ' ';
         let h = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':';
         let m = (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()) + ':';
         let s = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds();

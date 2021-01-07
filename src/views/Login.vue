@@ -97,7 +97,9 @@ export default {
             'password':this.ruleForm.password
           }
         }).then((res)=>{
-          if(res.data.data==null){
+          if(res.data.msg=="账号未激活!"){
+            this.open1('账号未激活')
+          }else if(res.data.data==null){
             this.open1('账号或密码错误')
           }else if(res.data.data.token){
             sessionStorage.token=res.data.data.token;

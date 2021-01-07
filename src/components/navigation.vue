@@ -24,7 +24,7 @@
                 <span slot="title">订单管理</span>
               </el-menu-item>
             </router-link>
-            <router-link v-if="clientsJurisdiction" to="/">
+            <router-link v-if="clientsJurisdiction" to="/order">
               <el-menu-item index="3">
                 <i class="el-icon-user-solid"></i>
                 <span slot="title">客户管理</span>
@@ -54,7 +54,7 @@
                 <span slot="title">意见反馈</span>
               </el-menu-item>
             </router-link>
-            <router-link v-if="jurisdictionAdministration" to="/">
+            <router-link v-if="jurisdictionAdministration||accountManagement||departmentManagement||gestionSectorielle" to="/">
               <el-menu-item index="8">
                 <i class="el-icon-s-tools"></i>
                 <span slot="title">权限管理</span>
@@ -105,7 +105,13 @@ export default {
         //资讯管理权限
         informationJurisdiction:false,
         //权限管理
-        jurisdictionAdministration:false
+        jurisdictionAdministration:false,
+        //账号管理
+        accountManagement:false,
+        //角色管理
+        departmentManagement:false,
+        //部门管理
+        gestionSectorielle:false,
     };
   },
   methods: {
@@ -160,6 +166,15 @@ export default {
           break;
           case "权限管理":
             this.jurisdictionAdministration=true;
+          break;
+          case "账号管理":
+            this.accountManagement=true;
+          break;
+          case "角色管理":
+            this.departmentManagement=true;
+          break;
+          case "部门管理":
+            this.gestionSectorielle=true;
           break;
         }
         
