@@ -167,6 +167,7 @@ export default {
     viewInfo(index,data){
       this.$axios({
         url:'/protocols/queryById',
+        method:'post',
         headers:{
           token:sessionStorage.token,
         },
@@ -182,6 +183,7 @@ export default {
     changeStatus(index,data){
       this.$axios({
         url:'/protocols/queryById',
+        method:'post',
         headers:{
           token:sessionStorage.token,
         },
