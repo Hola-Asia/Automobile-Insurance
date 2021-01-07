@@ -1285,6 +1285,9 @@ export default {
   text-align: left;
   padding: 30px;
 }
+.el-select{
+  width: 100%;
+}
 .textareacls {
   display: block;
   resize: vertical;

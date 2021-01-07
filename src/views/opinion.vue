@@ -1128,6 +1128,9 @@ export default {
   padding: 30px;
   border-radius: 20px;
 }
+.el-select{
+  width: 100%;
+}
 .fontwid {
   font-size: 18px;
   font-weight: 700;
