@@ -169,7 +169,7 @@
       <el-row class="searchnum">
         <el-col :span="24">
           <div class="grid-content bg-purple-dark">
-            查询结果：共计<span>{{ datalist.length }}</span
+            查询结果：共计<span>{{ splitepage.page }}</span
             >条
           </div>
         </el-col>
@@ -485,9 +485,9 @@ export default {
       // 分页
       splitepage: {
         page: 0,
-        limit: 2,
+        limit: 5,
         currentPage: 1,
-        PageSizes: [2, 4, 8, 10],
+        PageSizes: [5, 10, 15, 20],
       },
       // 查询发送数据
       selectdata: {
@@ -652,7 +652,6 @@ export default {
         },
       })
         .then((res) => {
-          console.log(res.data.msg);
           if (res.data.code == 0) {
             this.updatefunobj = {
               id: "",
@@ -872,7 +871,6 @@ export default {
           suggest: " ",
           resultcontent: this.newincreasedata.resultcontent,
         };
-        console.log(this.updatefunobj);
         this.titlename = "";
         this.updatefun();
       } else if (this.titlename == "反馈处理") {
@@ -887,7 +885,6 @@ export default {
           suggest: this.newincreasedata.suggest,
           resultcontent: this.newincreasedata.resultcontent,
         };
-        console.log(this.updatefunobj);
         this.titlename = "";
         this.updatefun();
       }
