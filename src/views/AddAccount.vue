@@ -175,7 +175,7 @@ export default {
       .inpt{
         width: 300px;
         height: 40px;
-        margin-top: 14px;
+        margin-top: 32px;
       }
       label{
         display: inline-block;
@@ -183,7 +183,7 @@ export default {
         margin-top: 14px;
       }
       .b-btn{
-        margin-top: 20px;
+        margin-top: 60px;
         .c-btn{
           margin-right: 20px;
           margin-left: 78px;

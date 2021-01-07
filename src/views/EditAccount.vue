@@ -237,10 +237,10 @@ export default {
       label{
         display: inline-block;
         width: 100px;
-        margin-top: 14px;
+        margin-top: 32px;
       }
       .b-btn{
-        margin-top: 20px;
+        margin-top: 60px;
         .c-btn{
           margin-right: 20px;
           margin-left: 78px;
