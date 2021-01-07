@@ -385,6 +385,8 @@
 export default {
   data() {
     return {
+      // token值储存
+      token:sessionStorage.token,
       // 分类按钮
       btn1_active: "0",
       btn2_active: "0",
@@ -582,6 +584,9 @@ export default {
     applypage() {
       this.$axios({
         url: "/feedback/query",
+        headers:{
+              'token':this.token
+            },
         method: "post",
         data: {
           pageNum: parseInt(this.splitepage.currentPage),
@@ -630,6 +635,9 @@ export default {
     updatefun() {
       this.$axios({
         url: "/feedback/update",
+        headers:{
+              'token':this.token
+            },
         method: "post",
         data: {
           id: this.updatefunobj.id,
@@ -820,6 +828,9 @@ export default {
         this.titlename = "";
         this.$axios({
           url: "/feedback/add",
+          headers:{
+              'token':this.token
+            },
           method: "post",
           data: {
             createtime: Date.now(),

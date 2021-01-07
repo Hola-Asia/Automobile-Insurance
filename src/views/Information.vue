@@ -466,6 +466,8 @@
 export default {
   data() {
     return {
+      // token值储存
+      token:sessionStorage.token,
       // 分类按钮
       btn1_active: "0",
       btn2_active: "0",
@@ -638,6 +640,9 @@ export default {
     updatefun() {
       this.$axios({
         url: "/information/update",
+        headers:{
+              'token':this.token
+            },
         method: "post",
         data: {
           id: this.updatefunobj.id,
@@ -713,6 +718,9 @@ export default {
       console.log(this.selectdata);
       this.$axios({
         url: "/information/query",
+        headers:{
+              'token':this.token
+            },
         method: "post",
         data: {
           pageNum: parseInt(this.splitepage.currentPage),
@@ -869,6 +877,9 @@ export default {
     recommended(val) {
       this.$axios({
         url: "/information/update",
+        headers:{
+              'token':this.token
+            },
         method: "post",
         data: {
           id: this.datalist[val].id,
@@ -892,6 +903,9 @@ export default {
       let datetime1 = new Date();
       this.$axios({
         url: "/information/update",
+        headers:{
+              'token':this.token
+            },
         method: "post",
         data: {
           id: this.datalist[val].id,
@@ -916,6 +930,9 @@ export default {
       let datetime2 = new Date();
       this.$axios({
         url: "/information/update",
+        headers:{
+              'token':this.token
+            },
         method: "post",
         data: {
           id: this.datalist[val].id,
@@ -986,6 +1003,9 @@ export default {
         this.wintitle = "";
         this.$axios({
           url: "/information/add",
+          headers:{
+              'token':this.token
+            },
           method: "post",
           data: {
             lasttime: this.newincreasedata.lasttime,
