@@ -8,7 +8,7 @@
         <el-input v-model="roleMsg" placeholder="请输入角色名" id="roleName" class="inpt"></el-input><br>
         <label class="c-label">设置权限：</label><br>
         <div class="duoXuan">
-          <div v-for="inx in Object.keys(orderMap)">
+          <div :key="inx" v-for="inx in Object.keys(orderMap)">
             <el-checkbox :indeterminate="orderMap[inx].isIndeterminate" v-model="orderMap[inx].checkAll" @change="(val)=>{handleCheckAllChange(val,inx,arr1[inx])}">{{arr[inx]}}</el-checkbox>
             <el-checkbox-group v-model="orderMap[inx].checkedCities" @change="(val)=>{handleCheckedCitiesChange(val,inx)}">
               <el-checkbox  v-for="(value,i) in orderMap[inx].orders" :label="value.name" :key="i" class="setCheck" @change="jiShu(value.id)">{{value.name}}</el-checkbox>
