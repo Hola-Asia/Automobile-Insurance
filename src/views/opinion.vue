@@ -674,6 +674,14 @@ export default {
     },
     // 查询
     submitbtn() {
+      this.selectdata =  {
+        category: "",
+        presenter: "",
+        phone: "",
+        status: "",
+        createtimestart: "",
+        createtimeend: "",
+      };
       // 判断
       // 问题分类
       if (this.btn1_active == "1") {

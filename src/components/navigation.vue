@@ -48,7 +48,7 @@
                 <span slot="title">保单管理</span>
               </el-menu-item>
             </router-link>
-            <router-link to="/">
+            <router-link to="/opinion">
               <el-menu-item index="7">
                 <i class="el-icon-edit"></i>
                 <span slot="title">意见反馈</span>

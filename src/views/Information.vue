@@ -710,6 +710,7 @@ export default {
     },
     // 渲染分页axios
     applypage() {
+      console.log(this.selectdata);
       this.$axios({
         url: "/information/query",
         method: "post",
@@ -779,6 +780,20 @@ export default {
     // 首次渲染
     // 提交
     submitbtn() {
+      //清空渲染要赋值的对象
+      this.selectdata = {
+        title: "",
+        number: "",
+        status: "",
+        category: "",
+        recommend: "",
+        redactstarttime: "",
+        redactendtime: "",
+        putstarttime: "",
+        putendtime: "",
+        removestarttime: "",
+        removeendtime: "",
+      };
       // 判断
       // 分类
       if (this.btn1_active == "1") {
