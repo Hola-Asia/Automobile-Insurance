@@ -30,7 +30,7 @@
         </el-date-picker>
       </div>
       <div class="checkBtn">
-        <el-button type="primary">查询</el-button>
+        <el-button type="primary" @click="search">查询</el-button>
         <el-button type="info" @click="reset">重置</el-button>
       </div>
     </el-row>
@@ -40,10 +40,11 @@
       </router-link>
     </el-row>
     <el-row>
-      <el-col :span="24" class="resultNum"><span>查询结果：共计4条数据</span></el-col>
+      <el-col :span="24" class="resultNum"><span>查询结果：共计{{total}}条数据</span></el-col>
     </el-row>
     <el-row>
       <el-table
+          v-loading="loading"
           :data="tableData"
           stripe
           :header-cell-style="{background:'#D7D7D7',color:'#000',fontWeight:'normal'}"
@@ -59,7 +60,9 @@
             label="模块名称">
         </el-table-column>
         <el-table-column align="center" label="模块内容">
-          <a href="javascript:" class="text">查看</a>
+          <template slot-scope="scope">
+            <a href="javascript:" class="text" @click="viewInfo(scope.$index,scope.row)">查看</a>
+          </template>
         </el-table-column>
         <el-table-column
             align="center"
@@ -71,11 +74,17 @@
             prop="off"
             label="下架时间">
         </el-table-column>
-        <el-table-column align="center" label="操作">
-          <el-button type="primary" class="off">下架</el-button>
-          <router-link to="/EditAbout">
-            <el-button type="primary">编辑</el-button>
-          </router-link>
+        <el-table-column
+            v-if=false
+            prop="id"
+            align="center"
+            label="id">
+        </el-table-column>
+        <el-table-column align="center" prop="status" label="操作">
+          <template slot-scope="scope">
+            <el-button type="primary" class="off" @click="changeStatus(scope.$index,scope.row)">{{ scope.row.status }}</el-button>
+            <el-button type="primary" @click="edit(scope.$index,scope.row)">编辑</el-button>
+          </template>
         </el-table-column>
       </el-table>
     </el-row>
@@ -84,12 +93,23 @@
         <el-pagination
             background
             layout="prev, pager, next, sizes, jumper"
-            :page-sizes="[10, 20, 30, 50]"
-            :page-size="10"
-            :total="1000">
+            :page-sizes="[5, 10, 20, 50]"
+            :page-size=this.pageSize
+            :total=this.total
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange">
         </el-pagination>
       </div>
     </el-row>
+    <el-dialog
+        title="查看协议"
+        :visible.sync="dialogVisible"
+        width="30%">
+      <span>{{information}}</span>
+      <span slot="footer" class="dialog-footer">
+    <el-button @click="confirmBtn">确 定</el-button>
+  </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -100,12 +120,19 @@ export default {
   data:function(){
     return {
       //下拉框数据
+      loading:true,
+      total:0,
       placeStr:'模块名称',
       selName:'',
       datePic1:'',
       datePic2:'',
       datePic3:'',
+      pageSize:5,
+      val:1,
+      msg:'',
+      dialogVisible: false,
       currentPage4: 1,
+      information:'',
       pickerOptions: {
         shortcuts: [{
           onClick(picker) {
@@ -130,41 +157,97 @@ export default {
           }
         }]
       },
-      tableData: [{
-        recent: '2018-02-06 12:30:56',
-        title: '免责声明',
-        put: '2016-05-06 12:36:51',
-        off: '— —',
-      }, {
-        recent: '2018-02-06 12:30:56',
-        title: '免责声明',
-        put: '2016-05-06 12:36:51',
-        off: '— —',
-      }, {
-        recent: '2018-02-06 12:30:56',
-        title: '免责声明',
-        put: '2016-05-06 12:36:51',
-        off: '— —',
-      }, {
-        recent: '2018-02-06 12:30:56',
-        title: '免责声明',
-        put: '2016-05-06 12:36:51',
-        off: '— —',
-      }, {
-        recent: '2018-02-06 12:30:56',
-        title: '免责声明',
-        put: '2016-05-06 12:36:51',
-        off: '— —',
-      }]
+      tableData: []
     }
   },
   methods:{
+    openVn() {
+      this.$message(this.msg);
+    },
+    viewInfo(index,data){
+      this.$axios({
+        url:'/protocols/queryById',
+        params:{
+          id:data.id
+        }
+      }).then((res)=>{
+        this.information = res.data.data.content?res.data.data.content:'暂无内容';
+      });
+      this.dialogVisible = true;
+    },
+    //上下架切换
+    changeStatus(index,data){
+      this.$axios({
+        url:'/protocols/queryById',
+        params:{
+          id:data.id
+        }
+      }).then((res)=>{
+        this.$axios({
+          url:'/protocols/update',
+          method:'post',
+          data:{
+            status:res.data.data.status === '1'?'2':'1',
+            id:data.id
+          }
+        }).then((res)=>{
+          this.msg = res.data.code === 0?'操作成功':'操作失败，请稍后再试'
+          this.openVn();
+          this.getData();
+        })
+      })
+    },
+    //条件查询
+    search(){
+      console.log(this.datePic1[0])
+      this.$axios({
+        url:'/protocols/query',
+        method:'post',
+        data:{
+          name:this.selName,
+          lattimestart:this.datePic1[0]?this.datePic1[0].toISOString():'',
+          lasttimeend:this.datePic1[1]?this.datePic1[1].toISOString():'',
+          puttimestart:this.datePic2[0]?this.datePic2[0].toISOString():'',
+          puttimeend:this.datePic2[1]?this.datePic2[1].toISOString():'',
+          removetimestart:this.datePic3[0]?this.datePic3[0]:'',
+          removetimeend:this.datePic3[1]?this.datePic3[1].toISOString():'',
+          pageSize:this.pageSize,
+          pageNum:1
+        }
+      }).then((res)=>{
+        if (res.data.code === 50011){
+          this.msg = '无匹配数据';
+          this.openVn();
+          this.getData();
+        }else if (res.data.data.total){
+          this.tableData = [];
+          for (let i=0;i<res.data.data.list.length;i++){
+            this.tableData.push({
+              recent:this.timestampToTime(res.data.data.list[i].lasttime),
+              title:res.data.data.list[i].name,
+              put:res.data.data.list[i].puttime?this.timestampToTime(res.data.data.list[i].puttime):'— —',
+              off:res.data.data.list[i].removetime?this.timestampToTime(res.data.data.list[i].removetime):'— —',
+              id:res.data.data.list[i].id,
+              status:res.data.data.list[i].status === '1'?'下架':'上架',
+            })
+          }
+          this.total = res.data.data.total;
+          this.$nextTick(()=>{
+            this.loading = false;
+          })
+        }
+      })
+    },
     //分页切换
     handleSizeChange(val) {
-      console.log(`每页 ${val} 条`);
+      this.loading = true;
+      this.pageSize = val;
+      this.getData();
     },
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
+      this.loading = true;
+      this.val = val;
+      this.getData();
     },
     //重置按钮
     reset(){
@@ -172,18 +255,55 @@ export default {
       this.datePic1 = '';
       this.datePic2 = '';
       this.datePic3 = '';
+    },
+    confirmBtn(){
+      this.dialogVisible = false;
+      this.information = '';
+    },
+    getData(){
+      this.$axios({
+        url:'/protocols/query',
+        method:'post',
+        data:{
+          pageSize:this.pageSize,
+          pageNum:this.val
+        }
+      }).then((res)=>{
+        console.log(res)
+        this.tableData = [];
+        for (let i=0;i<res.data.data.list.length;i++){
+          this.tableData.push({
+            recent:this.timestampToTime(res.data.data.list[i].lasttime),
+            title:res.data.data.list[i].name,
+            put:res.data.data.list[i].puttime?this.timestampToTime(res.data.data.list[i].puttime):'— —',
+            off:res.data.data.list[i].removetime?this.timestampToTime(res.data.data.list[i].removetime):'— —',
+            id:res.data.data.list[i].id,
+            status:res.data.data.list[i].status === '1'?'下架':'上架',
+          })
+        }
+        this.total = res.data.data.total;
+        this.$nextTick(()=>{
+          this.loading = false;
+        })
+      })
+    },
+    //日期格式化
+    timestampToTime(timestamp) {
+      let date = new Date(timestamp);
+      let Y = date.getFullYear() + '-';
+      let M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+      let D = date.getDate() + ' ';
+      let h = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':';
+      let m = (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()) + ':';
+      let s = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds();
+      return Y + M + D + h + m + s;
+    },
+    edit(index,data){
+      this.$router.push('/editabout?id='+data.id);
     }
   },
   mounted() {
-    this.$axios({
-      url:'/protocols/query',
-      params:{
-        page:1,
-        limit:5
-      }
-    }).then((res)=>{
-      console.log(res);
-    })
+    this.getData();
   }
 }
 </script>

@@ -175,7 +175,6 @@ export default {
     //分页切换
     handleSizeChange(val) {
       this.loadingTable = true;
-      console.log(val)
       this.pageSize = val;
       this.getData();
     },

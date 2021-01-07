@@ -41,6 +41,7 @@
       </el-col>
       <div class="block">
         <el-date-picker
+            @change="isChange"
             v-model="value1"
             type="datetime"
             placeholder="选择日期时间">
@@ -53,6 +54,7 @@
       </el-col>
       <div class="block">
         <el-date-picker
+            @change="isChange"
             v-model="value1"
             type="datetime"
             placeholder="选择日期时间">
@@ -71,13 +73,27 @@ export default {
   name: "EditAbout",
   data:function () {
     return {
+      id:undefined,
       input1:'',
       textarea:'',
       value1:'',
-      switch1:true
+      switch1:true,
+      change:0,
+      msg:''
     }
   },
   methods:{
+    //日期格式化
+    timestampToTime(timestamp) {
+      let date = new Date(timestamp);
+      let Y = date.getFullYear() + '-';
+      let M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+      let D = date.getDate() + ' ';
+      let h = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':';
+      let m = (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()) + ':';
+      let s = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds();
+      return Y + M + D + h + m + s;
+    },
     back(){
       history.go(-1);
     },
@@ -86,10 +102,16 @@ export default {
         confirmButtonText: '确定',
       });
     },
+    isChange(){
+      this.change = 1;
+    },
     info(msg) {
       this.$alert(msg, '提示', {
         confirmButtonText: '确定',
       });
+    },
+    openVn() {
+      this.$message(this.msg);
     },
     addProtocols(){
       if (this.value1 === '' || this.textarea === '' || this.input1 === ''){
@@ -101,10 +123,18 @@ export default {
       let removeTime = '';
       if (this.switch1){
         isStatus = 1;
-        removeTime = this.value1;
+        if (this.change === 0){
+          removeTime = this.value1;
+        }else {
+          removeTime = this.value1.toISOString();
+        }
       }else {
         isStatus = 0;
-        putTime = this.value1;
+        if (this.change === 0){
+          putTime = this.value1;
+        }else {
+          putTime = this.value1.toISOString();
+        }
       }
       this.$axios({
         url:'/protocols/update',
@@ -112,15 +142,35 @@ export default {
         data:{
           content:this.textarea,
           name:this.input1,
-          status:isStatus,
-          lasttime:new Date(),
+          status:isStatus.toString(),
+          lasttime:new Date().toISOString(),
           puttime:putTime,
           remoevetime:removeTime,
+          id:this.id
         }
       }).then((res)=>{
-        console.log(res)
+        if (res.data.code === 0){
+          this.msg = '修改成功'
+          this.openVn();
+          this.$router.go(-1);
+        }
       })
     }
+  },
+  created() {
+    this.id = this.$route.query.id;
+    this.$axios({
+      url:'/protocols/queryById',
+      params:{
+        id:this.$route.query.id
+      }
+    }).then((res)=>{
+      console.log(res)
+      this.input1 = res.data.data.name;
+      this.textarea = res.data.data.content?res.data.data.content:'暂无内容';
+      this.switch1 = res.data.data.status === '1';
+      this.value1 = res.data.data.status === '1'?res.data.data.remoevetime:res.data.data.puttime;
+    })
   }
 }
 </script>
