@@ -92,7 +92,7 @@
              </div>
              <!-- 返回按钮 -->
                 <el-row class="back-row">
-                    <el-button type="primary" class="back-btn">返回</el-button>
+                    <el-button type="primary" class="back-btn" @click="back">返回</el-button>
                 </el-row>
         </el-card>
     </div> 
@@ -103,7 +103,7 @@ export default {
         return{
             input:'',
             value1:'',
-            id:'',
+            id:1,
             // 客户车辆信息
             carInfo:[
                 {
@@ -146,6 +146,10 @@ export default {
                 // console.log(err);
             })
         },
+        // 返回
+        back(){
+            this.$router.push('/customer');
+        }
     },
     created(){
         this.getId();

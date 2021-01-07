@@ -13,7 +13,7 @@
                  <!--搜索  -->
                 <el-col :span="8">
                      <el-form-item prop="input3">
-                       <el-input placeholder="请输入内容" v-model="numberValidateForm.input3" class="input-with-select" @focus="cusSearch">
+                       <el-input placeholder="请输入内容" v-model="numberValidateForm.input3" class="input-with-select">
                          <el-select class="cus-sel" v-model="select" slot="prepend" placeholder="请选择">
                            <el-option label="车主名称" value="1"></el-option>
                            <el-option label="手机号码" value="2"></el-option>
@@ -104,7 +104,7 @@ export default {
      userlist:[],
      total:20,
     //用户id
-    id:'',
+    id:1,
     }
   },
   created(){
@@ -120,26 +120,6 @@ export default {
           this.sel2='';
         }
       },
-      // 搜索框
-      cusSearch(){
-        // console.log(this.select);
-        /* switch (this.select){
-          case '':
-             console.log('请选择');
-             break;
-          case '1':
-            //  console.log('车主名称');
-            // 通过名字模糊查询
-            
-             break;
-          case '2':
-             console.log('手机号码');
-             break;
-          case '3':
-             console.log('证件号码');
-             break;
-        } */
-      },
       // 查询
       queryCusInfo(){
         switch (this.select){
@@ -150,9 +130,10 @@ export default {
             // 车主名称
              this.$axios({
               url:'/customer/queryCustomerByHolder',
-              params:{
-                page:this.queryInfo.page,
-                limit:this.queryInfo.limit,
+              method:'post',
+              data:{
+                startIndex:this.queryInfo.page,
+                pageSize:this.queryInfo.limit,
                 holder:this.numberValidateForm.input3,
                 authenticationId:this.sel2
               }
@@ -171,7 +152,7 @@ export default {
              this.$axios({
                url:'/customer/queryCustomerByPhone',
                method:'post',
-               params:{
+               data:{
                  phoneNumber:this.numberValidateForm.input3,
                  startIndex:this.queryInfo.page,
                  pageSize:this.queryInfo.limit,
@@ -192,7 +173,7 @@ export default {
             this.$axios({
                url:'/customer/queryCustomerByIdcard',
                method:'post',
-               params:{
+               data:{
                  idCardNumber:this.numberValidateForm.input3,
                  startIndex:this.queryInfo.page,
                  pageSize:this.queryInfo.limit,
@@ -229,7 +210,7 @@ export default {
         }).then((res)=>{
           this.tableData=res.data.data;
           // 判断是否实名认证
-         this.isRealName(res.data.data);
+          this.isRealName(res.data.data);
         }).catch((err)=>{
           console.log(err);
         });

@@ -5,97 +5,45 @@
             <div class="deal-row">
                 <span>订单状态：</span> 
                 <el-button :key="i" v-for="(v,i) in btnArr1" class="deal-btn" @click="fn(i)" :class="[sel==i?'active':'']">{{v}}</el-button>
-              
             </div>
-            <!--搜索 查询  -->
-            <!-- 4块     10 6 6 2 -->
-            <el-row :gutter="30" class="chit-query">
-                 <!--搜索  -->
-                <el-col :span="8">
-                     <div>
-                       <el-input placeholder="请输入内容"  v-model="input3" class="input-with-select">
-                         <el-select v-model="select" slot="prepend" placeholder="请选择">
-                           <el-option label="订单编号" value="1"></el-option>
-                           <el-option label="车主名称" value="2"></el-option>
-                           <el-option label="手机号码" value="3"></el-option>
-                           <el-option label="发动机号" value="4"></el-option>
-                         </el-select>
-                         <el-button slot="append" icon="el-icon-search"></el-button>
-                       </el-input>
-                     </div>
-                </el-col>
-                <!-- 订单数 -->
-                <el-col :span="6">
-                    <el-col :span="11">
-                        <el-input v-model="input1" placeholder="保险金额-最小"></el-input>
-                    </el-col>
-                     <el-col :span="2">
-                         <span>-</span>
-                     </el-col>
-                    <el-col :span="11">
-                        <el-input v-model="input2" placeholder="保险金额-最大"></el-input>
-                    </el-col>
-                </el-col>
-                <!-- 保费金额 -->
-                <el-col :span="6">
-                    <el-col :span="11">
-                        <el-input v-model="input1" placeholder="订单开始时间"></el-input>
-                    </el-col>
-                     <el-col :span="2">
-                         <span>至</span>
-                     </el-col>
-                    <el-col :span="11">
-                        <el-input v-model="input2" placeholder="订单完成时间"></el-input>
-                    </el-col>
-                </el-col>
-                <!-- 查询 重置 -->
-                <el-col :span="4">
-                     <el-col :span="12">
-                        <el-button type="primary" class="query-btn">查询</el-button>
-                    </el-col>
-                     <el-col :span="12">
-                        <el-button type="info" class="query-btn">重置</el-button>
-                    </el-col>
-                </el-col>
-            </el-row>
             <!-- 查询结果 -->
             <el-row>
                 <el-col :span="24">
-                    <div class="query-ending">查询结果：共计4条数据</div>
+                    <div class="query-ending">查询结果：共计{{queryPageInfo.total}}条数据</div>
                 </el-col>
             </el-row>
             <!-- 表格 -->
              <el-table border :data="tableData" stripe style="width: 100%" class="table-Cus-info" :header-cell-style="{background:'#D7D7D7',textAlign: 'center'}" :cell-style="{ textAlign: 'center' }">
-                <el-table-column prop="name" label="订单编号" width="150" class="bg-Cus">
+                <el-table-column prop="oder_number" label="订单编号" width="160" class="bg-Cus">
                 </el-table-column>
-                <el-table-column prop="name" label="车牌号码" width="100" class="bg-Cus">
+                <el-table-column prop="car_number" label="车牌号码" width="160" class="bg-Cus">
                 </el-table-column>
-                <el-table-column prop="name" label="发动机号" width="200" class="bg-Cus">
+                <el-table-column prop="chassis_number" label="发动机号" width="200" class="bg-Cus">
                 </el-table-column>
-                <el-table-column prop="name" label="保费金额" width="150" class="bg-Cus">
+                <el-table-column prop="amount" label="保费金额" width="150" class="bg-Cus">
                 </el-table-column>
-                <el-table-column prop="name" label="品牌型号" width="150" class="bg-Cus">
+               <!--  <el-table-column prop="oder_number" label="品牌型号" width="150" class="bg-Cus">
+                </el-table-column> -->
+                <el-table-column prop="name" label="车主名称" width="140" class="bg-Cus">
                 </el-table-column>
-                <el-table-column prop="name" label="车主名称" width="100" class="bg-Cus">
+                <el-table-column prop="phone" label="手机号码" width="200">
                 </el-table-column>
-                <el-table-column prop="tel" label="手机号码" width="100">
+                <!-- <el-table-column prop="o_id" label="关联保单数" width="120">
+                </el-table-column> -->
+                <el-table-column prop="oder_time" label="订单完成时间" width="280">
                 </el-table-column>
-                <el-table-column prop="idName" label="关联保单数" width="200">
-                </el-table-column>
-                <el-table-column prop="orderNum" label="订单完成时间" width="200">
-                </el-table-column>
-                <el-table-column prop="price" label="订单状态" width="100">
+                <el-table-column prop="oder_status" label="订单状态" width="120">
                 </el-table-column>
                 <el-table-column label="操作">
-                     <router-link to="/orderDetails">
-                        <el-button type="text" size="small">订单详情</el-button>
-                     </router-link>
+                     <!-- <router-link :to="{name:'Details',params:{id:id}}"> -->
+                        <el-button type="text" size="small" @click="detailsInfo">订单详情</el-button>
+                     <!-- </router-link> -->
                 </el-table-column>
             </el-table> 
             <!-- 分页 -->
-            <el-pagination class="pages-Cus" background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage4"
-            :page-sizes="[6, 8, 10, 15]" :page-size="10"
-             layout="  prev, pager, next,sizes, jumper" :total="60">
+            <el-pagination class="pages-Cus" background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="queryPageInfo.page"
+            :page-sizes="[1, 2, 3]" :page-size="queryPageInfo.limit"
+             layout="prev, pager, next,sizes, jumper" :total="queryPageInfo.total">
             </el-pagination>
       </el-card>
   </div>
@@ -108,77 +56,104 @@ export default {
     return {
       // 1、按钮 订单状态
       sel:0,
+      sel1:'',
       btnArr1:['全部','已完成','待处理','已关闭'],
-      input1: '',
-      input2: '',
-      input3: '',
-      input4: '',
-      input5: '',
-      select: '',
-    //   表格
-      tableData: [{
-          name: '王小虎',
-          tel:'18200209020',
-          idName:'511623199702455743',
-          orderNum: '1',
-          price:'2329.6',
-          realName:'已实名',
-          operate:'查看详情'
-        },{
-          name: '王小虎',
-          tel:'18200209020',
-          idName:'511623199702455743',
-          orderNum: '1',
-          price:'2329.6',
-          realName:'已实名',
-          operate:'查看详情'
-        },{
-          name: '王小虎',
-          tel:'18200209020',
-          idName:'511623199702455743',
-          orderNum: '1',
-          price:'2329.6',
-          realName:'已实名',
-          operate:'查看详情'
-        },{
-          name: '王小虎',
-          tel:'18200209020',
-          idName:'511623199702455743',
-          orderNum: '1',
-          price:'2329.6',
-          realName:'已实名',
-          operate:'查看详情'
-        },{
-          name: '王小虎',
-          tel:'18200209020',
-          idName:'511623199702455743',
-          orderNum: '1',
-          price:'2329.6',
-          realName:'已实名',
-          operate:'查看详情'
-        }],
-    // 分页
-     currentPage1: 5,
-     currentPage2: 5,
-     currentPage3: 5,
-     currentPage4: 4
+      // 表格
+      tableData: [],
+      // 分页
+      queryPageInfo:{
+      // 当前页
+      page:1,
+      // 当前每页显示多少条数据
+      limit:3,
+      // 总数
+      total:3,
+      },
+      id:'',
     }
   },
   methods: {
     // 1、按钮
       fn(val){
         this.sel=val;
+        if(this.sel==0){
+          this.sel1='';
+        }else{
+          this.sel1=this.sel-1;
+        }
+        // 发送axios
+        this.orderList();
       },
+     //2、获取用户id
+        getId(){
+         this.id=this.$route.params.id;
+        },
+     //3、渲染列表数据
+      orderList(){
+        this.$axios({
+          url:'/customer/queryCustomerOrder',
+          method:'post',
+          data:{
+            startIndex:(this.queryPageInfo.page-1)*this.queryPageInfo.limit,
+            pageSize:this.queryPageInfo.limit,
+            oderStatus:this.sel1,
+            id:this.id
+          }
+        }).then((res)=>{
+          this.tableData=res.data.data.list;
+          this.queryPageInfo.total=res.data.data.total;
+          for(var i=0;i<res.data.data.list.length;i++){
+             // 判断是否实名
+              switch(res.data.data.list[i].oder_status){
+                  case 0:
+                    res.data.data.list[i].oder_status='已完成';
+                    break;
+                    // 已完成 待处理 已关闭
+                  case 1:
+                    res.data.data.list[i].oder_status='待处理';
+                    break;
+                  case 2:
+                    res.data.data.list[i].oder_status='已关闭';
+                    break;
+              }
+              // 把时间戳转换为具体日期
+              // 转换为两位数字
+            function double(data){
+                return data>=10?data:'0'+data;
+            }
+            // 获取到时间戳，在把时间戳改为正常的格式
+               let b= res.data.data.list[i].oder_time;
+               let g=new Date(b);
+               let d=g.getFullYear() + '-' +double(g.getMonth() + 1) + '-'+double(g.getDate())  + ' ' +double(g.getHours())  + ':' +double(g.getMinutes())  + ':' +double(g.getSeconds());
+               res.data.data.list[i].oder_time=d;
+          }
+          
+          
+        }).catch((err)=>{
+          console.log(err);
+        })
+      },
+     // 4、分页
       handleSizeChange(val) {
         console.log(`每页 ${val} 条`);
+        this.queryPageInfo.limit=val;
+        this.orderList();
       },
       handleCurrentChange(val) {
+        this.queryPageInfo.page=val;
         console.log(`当前页: ${val}`);
+        this.orderList();
+
       },
-      viewDatails(){
-          alert(111);
+      // 5、订单状态
+      detailsInfo(){
+        this.$router.push('/details?id='+this.id);
       }
     },
+    created(){
+      this.getId();
+      this.orderList();
+    }
 }
 </script>
 

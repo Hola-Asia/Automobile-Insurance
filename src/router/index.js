@@ -10,6 +10,8 @@ import CarInfo from '../views/carInfo'
 import TaBankCar from '../views/TaBankCar'
 import ViewChit from '../views/ViewChit'
 import ViewOrder from '../views/ViewOrder'
+import Details from '@/views/Details'
+import Guarantee from '@/views/GuaranteeSlipParticulars'
 
 Vue.use(VueRouter)
 
@@ -64,6 +66,16 @@ const routes = [{
                     path: '/viewOrder/:id',
                     name: 'ViewOrder',
                     component: ViewOrder
+                }, {
+                    // 订单详情
+                    path: '/details',
+                    name: 'Details',
+                    component: Details
+                }, {
+                    // 保单详情
+                    path: '/guarantee/:id',
+                    name: 'Guarantee',
+                    component: Guarantee
                 }]
             }
         ]

@@ -21,7 +21,7 @@
                 </div>
                 <!-- 返回按钮 -->
                 <el-row class="back-row">
-                    <el-button type="primary" class="back-btn">返回</el-button>
+                    <el-button type="primary" class="back-btn" @click='back'>返回</el-button>
                 </el-row>
                 
             </div>
@@ -36,14 +36,13 @@ export default {
             input:'',
             id:'',
             // 客户信息
-            userInfo:[]
+            userInfo:[],
         }
     },
     methods:{
         //获取用户id
         getId(){
             this.id=this.$route.params.id;
-            // console.log(this.id);
         },
         // 获取当前客户资料
         getUsersInfo(){
@@ -53,13 +52,20 @@ export default {
                 id:this.id
             }
             }).then((res)=>{
-                // console.log(res.data.data);
                 this.userInfo=res.data.data;
-                // console.log(this.userInfo);
+                if(res.data.data.authentication==1){
+                    res.data.data.authentication='已实名'
+                 }else{
+                     res.data.data.authentication='未实名'
+                 }
             }).catch((err)=>{
                 console.log(err);
             })
         },
+        // 返回
+        back(){
+            this.$router.push('/customer');
+        }
     },
     created(){
         this.getId();

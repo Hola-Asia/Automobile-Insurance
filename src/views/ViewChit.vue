@@ -13,12 +13,13 @@
             </div>
             <!--搜索 查询  -->
             <!-- 4块     10 6 6 2 -->
-            <el-row :gutter="30" class="chit-query">
+            <el-form :model="ruleForm" ref="ruleForm">
+              <el-row :gutter="30" class="chit-query">
                  <!--搜索  -->
                 <el-col :span="8">
-                     <div>
-                       <el-input placeholder="请输入内容"  v-model="input3" class="input-with-select">
-                         <el-select v-model="select" slot="prepend" placeholder="请选择">
+                  <el-form-item prop="input3">
+                       <el-input placeholder="请输入内容"  v-model="ruleForm.input3" class="input-with-select">
+                         <el-select class="cus-sel" v-model="ruleForm.select" slot="prepend" placeholder="请选择">
                            <el-option label="保单号码" value="1"></el-option>
                            <el-option label="车主名称" value="2"></el-option>
                            <el-option label="车架号" value="3"></el-option>
@@ -26,72 +27,65 @@
                          </el-select>
                          <el-button slot="append" icon="el-icon-search"></el-button>
                        </el-input>
-                     </div>
+                  </el-form-item>
                 </el-col>
-                <!-- 订单数 -->
-                <el-col :span="6">
-                    <el-col :span="11">
-                        <el-input v-model="input1" placeholder="保险起始时间"></el-input>
-                    </el-col>
-                     <el-col :span="2">
-                         <span>至</span>
-                     </el-col>
-                    <el-col :span="11">
-                        <el-input v-model="input2" placeholder="保险结束时间"></el-input>
-                    </el-col>
+                <!-- 日期 -->
+                <el-col :span="8">
+                    <div class="block">
+                      <el-date-picker v-model="value1" type="daterange" range-separator="至"
+                        start-placeholder="开始日期" end-placeholder="结束日期">
+                      </el-date-picker>
+                </div>
                 </el-col>
-                <!-- 保费金额 -->
-                <el-col :span="6">
-                   
-                </el-col>
-                <!-- 查询 重置 -->
+                <!-- 查询、重置 -->
                 <el-col :span="4">
                      <el-col :span="12">
-                        <el-button type="primary" class="query-btn">查询</el-button>
+                        <el-button type="primary" class="query-btn" @click="insuranceTime">查询</el-button>
                     </el-col>
                      <el-col :span="12">
-                        <el-button type="info" class="query-btn">重置</el-button>
+                        <el-button type="info" class="query-btn" @click="resetForm('ruleForm')">重置</el-button>
                     </el-col>
                 </el-col>
-            </el-row>
+                <el-col :span="4"></el-col>
+              </el-row>
+            </el-form>
             <!-- 查询结果 -->
             <el-row>
                 <el-col :span="24">
-                    <div class="query-ending">查询结果：共计4条数据</div>
+                    <div class="query-ending">查询结果：共计{{pageList.total}}条数据</div>
                 </el-col>
             </el-row>
             <!-- 表格 -->
              <el-table border :data="tableData" stripe style="width: 100%" class="table-Cus-info" :header-cell-style="{background:'#D7D7D7',textAlign: 'center'}" :cell-style="{ textAlign: 'center' }">
-                <el-table-column prop="name" label="保单号码" width="150" class="bg-Cus">
+                <el-table-column prop="number" label="保单号码" width="160" class="bg-Cus">
                 </el-table-column>
-                <el-table-column prop="name" label="车牌号码" width="100" class="bg-Cus">
+                <el-table-column prop="car_number" label="车牌号码" width="160" class="bg-Cus">
                 </el-table-column>
-                <el-table-column prop="name" label="车架号码" width="200" class="bg-Cus">
+                <el-table-column prop="chassis_number" label="车架号码" width="180" class="bg-Cus">
                 </el-table-column>
-                <el-table-column prop="name" label="险种" width="150" class="bg-Cus">
-                </el-table-column>
-                <el-table-column prop="name" label="品牌型号" width="150" class="bg-Cus">
+                <el-table-column prop="type" label="险种" width="150" class="bg-Cus">
                 </el-table-column>
                 <el-table-column prop="name" label="车主名称" width="100" class="bg-Cus">
                 </el-table-column>
-                <el-table-column prop="tel" label="手机号码" width="100">
+                <el-table-column prop="phone" label="手机号码" width="180">
                 </el-table-column>
-                <el-table-column prop="idName" label="保险起始时间" width="200">
+                <el-table-column prop="plicy_start_time" label="保险起始时间" width="240">
                 </el-table-column>
-                <el-table-column prop="orderNum" label="保险结束时间" width="200">
+                <el-table-column prop="plicy_end_time" label="保险结束时间" width="240">
+                  
                 </el-table-column>
-                <el-table-column prop="price" label="保单状态" width="100">
+                <el-table-column prop="status" label="保单状态" width="100">
                 </el-table-column>
                 <el-table-column label="操作">
-                     <router-link to="/viewDetails">
+                     <router-link :to="{name:'Guarantee',params:{id:id}}">
                         <el-button type="text" size="small">查看保单</el-button>
                      </router-link>
                 </el-table-column>
             </el-table> 
             <!-- 分页 -->
-            <el-pagination class="pages-Cus" background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage4"
-            :page-sizes="[6, 8, 10, 15]" :page-size="10"
-             layout="  prev, pager, next,sizes, jumper" :total="60">
+            <el-pagination class="pages-Cus" background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="pageList.page"
+            :page-sizes="[1, 2, 3]" :page-size="pageList.limit"
+             layout="prev, pager, next,sizes, jumper" :total="pageList.total">
             </el-pagination>
       </el-card>
   </div>
@@ -105,61 +99,46 @@ export default {
       // 1.按钮 保单类型
       sel:0,
       btnArr1:['全部','交强险','商业险'],
+      // 要改的保单类型数据
+      sel2:'',
+      // 保单状态
       sel1:0,
+      // 要改得保单状态
+      sel3:'',
       btnArr2:['全部','已失效','已退保','保障中'],
-      input1: '',
-      input2: '',
-      input3: '',
-      input4: '',
-      input5: '',
-      select: '',
+      // 用户id
+      id:'',
+      // 查询
+      // 表单
+      ruleForm:{
+          input3:'',
+          select:'',
+      },
+      // 选择查询
+      chooseQuery:{
+        // 保单号码
+        policyNumber:'',
+        // 车主名称
+        carName:'',
+        // 车架号
+        vin:'',
+        // 车牌号
+        licenseNumber:''
+      },
+      // 获取的时间
+      value1:'',
+      //要传的时间戳 
+      value2:[],
     //   表格
-      tableData: [{
-          name: '王小虎',
-          tel:'18200209020',
-          idName:'511623199702455743',
-          orderNum: '1',
-          price:'2329.6',
-          realName:'已实名',
-          operate:'查看详情'
-        },{
-          name: '王小虎',
-          tel:'18200209020',
-          idName:'511623199702455743',
-          orderNum: '1',
-          price:'2329.6',
-          realName:'已实名',
-          operate:'查看详情'
-        },{
-          name: '王小虎',
-          tel:'18200209020',
-          idName:'511623199702455743',
-          orderNum: '1',
-          price:'2329.6',
-          realName:'已实名',
-          operate:'查看详情'
-        },{
-          name: '王小虎',
-          tel:'18200209020',
-          idName:'511623199702455743',
-          orderNum: '1',
-          price:'2329.6',
-          realName:'已实名',
-          operate:'查看详情'
-        },{
-          name: '王小虎',
-          tel:'18200209020',
-          idName:'511623199702455743',
-          orderNum: '1',
-          price:'2329.6',
-          realName:'已实名',
-          operate:'查看详情'
-        }],
+      tableData: [],
     // 分页
-     currentPage1: 5,
-     currentPage2: 5,
-     currentPage3: 5,
-     currentPage4: 4
+    pageList:{
+      // 当前页数
+      page:1,
+      limit:3,
+      // 总条数
+      total:2,
+    },
     }
   },
   methods: {
@@ -170,28 +149,196 @@ export default {
       fn1(val){
         this.sel1=val;
       },
+      // 分页
       handleSizeChange(val) {
         console.log(`每页 ${val} 条`);
+        this.pageList.limit=val;
+        this.policyList();
       },
       handleCurrentChange(val) {
         console.log(`当前页: ${val}`);
+        this.pageList.page=val;
+        this.policyList();
       },
-      viewDatails(){
-          alert(111);
-      }
+      // 重置
+       resetForm(formName){
+        this.$refs[formName].resetFields();
+        this.sel1=0;
+        this.sel=0;
+        this.ruleForm.select='';
+        this.ruleForm.input3='';
+        this.value1=[];
+        this.value2=[];
+        this.chooseQuery.policyNumber='';
+        this.chooseQuery.carName='';
+        this.chooseQuery.vin='';
+        this.chooseQuery.licenseNumber='';
+        
+        // this.policyList();
+        this.insuranceTime();
+      },
+      // 获取id
+       getId(){
+         this.id=this.$route.params.id;
+        },
+      // 查询
+      insuranceTime(){
+        // 把时间转换为时间戳
+        function double(data){
+          return data>=10?data:'0'+data;
+        };
+        for(var i=0;i<this.value1.length;i++){
+           let g=new Date(this.value1[i]);
+           let d=g.getFullYear() + '-' +double(g.getMonth() + 1) + '-'+double(g.getDate());
+            this.value2.push(d);
+        }
+        // 根据保单类型进行查询
+         switch (this.sel){
+           case 0:
+             this.sel2='';
+             break;
+           case 1:
+             this.sel2=0;
+             break;
+           case 2:
+             this.sel2=1;
+             break;
+         };
+        // 根据保险状态进行查询
+        switch (this.sel1){
+          case 0:
+             this.sel3='';
+             break;
+           case 1:
+             this.sel3=0;
+             break;
+           case 2:
+             this.sel3=1;
+             break;
+           case 3:
+             this.sel3=2;
+             break; 
+        };
+        // 判断选择状态
+        switch(this.ruleForm.select){
+           case '':
+              // this.$message.error('请选择查询方式哦！');
+              this.ruleForm.input3='';
+              console.log('空');
+              break;
+           case '1':
+            console.log('保单号码');
+            this.chooseQuery.policyNumber=this.ruleForm.input3;
+             break;
+           case '2':
+            console.log('车主名称');
+            this.chooseQuery.carName=this.ruleForm.input3;
+             break;
+           case '3':
+            console.log('车架号');
+            this.chooseQuery.vin=this.ruleForm.input3;
+             break;
+           case '4':
+            console.log('车牌号');
+            this.chooseQuery.licenseNumber=this.ruleForm.input3;
+             break;
+        };
+        // 保单开始时间，结束时间
+        this.policyList();
+        this.value2=[];
+      },
+      // 渲染列表
+      policyList(){
+          this.$axios({
+            url:'/customer/queryPolicy',
+            method:'post',
+            data:{
+              // 车牌号码
+                "carNumber": this.chooseQuery.licenseNumber,
+                // 车架号码
+                "chassisNumber": this.chooseQuery.vin,
+                // 保单结束时间
+                "endTime": this.value2[1],
+                // 客户id
+                "id":this.id,
+                // 险种
+                "insuranceName": "",
+                // 车主名字
+                "name": this.chooseQuery.carName,
+                // 保单号码
+                "number": this.chooseQuery.policyNumber,
+                // 分页大小
+                "pageSize": this.pageList.limit,
+                // 电话号码
+                "phone": "",
+                // 开始序号
+                "startIndex": (this.pageList.page-1)*this.pageList.limit,
+                // 保单起始时间
+                "startTime": this.value2[0],
+                // 保单状态
+                "status": this.sel3,
+                // 险种状态
+                "type": this.sel2
+            }
+          }).then((res)=>{
+            this.tableData=res.data.data.list;
+            this.pageList.total=res.data.data.total;
+            for(var i=0;i<this.tableData.length;i++){
+                // 判断险种
+                if(res.data.data.list[i].type=='0'){
+                    res.data.data.list[i].type='交强险';
+                }else{
+                    res.data.data.list[i].type='商业险';
+                }
+                // 判断保单状态
+                switch(res.data.data.list[i].status){
+                    case 0:
+                      res.data.data.list[i].status='已失效';
+                      break;
+                    case 1:
+                      res.data.data.list[i].status='已退保';
+                      break;
+                    case 2:
+                      res.data.data.list[i].status='保障中';
+                      break;
+                }
+                   
+                function double(data){
+                    return data>=10?data:'0'+data;
+                }
+
+                 // 获取到时间戳，在把时间戳改为正常的格式
+                 // 判断保单起始时间
+                       let b= res.data.data.list[i].plicy_start_time;
+                       let g=new Date(b);
+                       let d=g.getFullYear() + '-' +double(g.getMonth() + 1) + '-'+double(g.getDate())  + ' ' +double(g.getHours())  + ':' +double(g.getMinutes())  + ':' +double(g.getSeconds());
+                       res.data.data.list[i].plicy_start_time=d;
+                // 判断保单结束时间
+                       let b1= res.data.data.list[i].plicy_end_time;
+                       let g1=new Date(b1);
+                       let d1=g1.getFullYear() + '-' +double(g1.getMonth() + 1) + '-'+double(g1.getDate())  + ' ' +double(g1.getHours())  + ':' +double(g1.getMinutes())  + ':' +double(g1.getSeconds());
+                       res.data.data.list[i].plicy_end_time=d1;
+            }
+            
+
+          }).catch((err)=>{
+            console.log(err);
+          })
+      },
     },
+    created(){
+      this.getId();
+      this.policyList();
+    }
 }
 </script>
 
 <style lang="less"  scoped>
-
   .letter{
     float: left;
   }
-  .clearfix{
-    content: '';
-    display: block;
-    clear: both;
+ .cus-sel{
+    width: 120px;
   }
   .chit-query{
       margin-top: 30px;

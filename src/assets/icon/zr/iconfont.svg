@@ -1,0 +1,32 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" >
+<!--
+2013-9-30: Created.
+-->
+<svg>
+<metadata>
+Created by iconfont
+</metadata>
+<defs>
+
+<font id="iconfont" horiz-adv-x="1024" >
+  <font-face
+    font-family="iconfont"
+    font-weight="500"
+    font-stretch="normal"
+    units-per-em="1024"
+    ascent="896"
+    descent="-128"
+  />
+    <missing-glyph />
+    
+    <glyph glyph-name="iconmoney" unicode="&#58930;" d="M958.057333 831.387615l-164.85323 0-185.357328-249.481452c-49.432885-67.61016-79.667985-112.55149-90.7073-134.823989l-3.15566 0c-32.609691 54.160279-124.625704 182.258429-276.066827 384.305441l-174.316014 0 324.180206-406.776805L121.968801 424.61081l0-89.881061 311.559762 0 0-123.878011L121.968801 210.851739l0-91.034279 311.559762 0 0-180.341928 154.594585 0L588.123149 119.81726l300.518249 0 0 91.034279L588.125547 210.851539l0 123.878011 300.518249 0 0 89.881061L630.721467 424.61061 958.057333 831.387615z"  horiz-adv-x="1024" />
+
+    
+    <glyph glyph-name="biaoqian" unicode="&#58893;" d="M853.333333-128l-341.333333 273.066667-341.333333-273.066667V896h682.666666v-1024z"  horiz-adv-x="1024" />
+
+    
+
+
+  </font>
+</defs></svg>

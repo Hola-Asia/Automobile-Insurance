@@ -26,7 +26,6 @@
                     <label for="">证件号码：</label>
                     <el-input width='200' :disabled="true" v-model="input" :placeholder="userCard[0].idcard_number" class="client-inp"></el-input>
                 </div>
-                
                   </div>
                   <div class="client-info">
                 <div class="car-one">
@@ -54,35 +53,10 @@
                 </div>
                 
                   </div>
-                  <!-- <div class="client-info">
-                <div class="car-one">
-                    <div>银行卡二</div>
-                </div>
-                <div class="client-name">
-                    <label for="">银行卡号：</label>
-                    <el-input width='200' :disabled="true" v-model="input" placeholder="4792741741" class="client-inp"></el-input>
-                </div>
-                 <div class="client-name">
-                    <label for="">开户银行：</label>
-                    <el-input width='200' :disabled="true" v-model="input" placeholder="四川农业银行" class="client-inp"></el-input>
-                </div>
-                 <div class="client-name">
-                    <label for="">预留号码：</label>
-                    <el-input width='200' :disabled="true" v-model="input" placeholder="46281320110" class="client-inp"></el-input>
-                </div>
-                <div class="client-name">
-                    <label for="">账户信息：</label>
-                    <el-input width='200' :disabled="true" v-model="input" placeholder="王小波" class="client-inp"></el-input>
-                </div>
-                 <div class="client-name">
-                    <label for="">证件号码：</label>
-                    <el-input width='200' :disabled="true" v-model="input" placeholder="649829471" class="client-inp"></el-input>
-                </div>
-                  </div> -->
              </div>
              <!-- 返回按钮 -->
                 <el-row class="back-row">
-                    <el-button type="primary" class="back-btn">返回</el-button>
+                    <el-button type="primary" class="back-btn" @click="back">返回</el-button>
                 </el-row>
         </el-card>
     </div> 
@@ -110,7 +84,10 @@ export default {
         getId(){
          this.id=this.$route.params.id;
         }, 
-       
+       // 返回
+        back(){
+            this.$router.push('/customer');
+        }
     },
     computed:{
         
