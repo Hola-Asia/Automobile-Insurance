@@ -139,6 +139,8 @@ export default {
       // 总条数
       total:2,
     },
+   token:sessionStorage.token,
+
     }
   },
   methods: {
@@ -252,6 +254,9 @@ export default {
           this.$axios({
             url:'/customer/queryPolicy',
             method:'post',
+            headers:{
+              'token':this.token
+            },
             data:{
               // 车牌号码
                 "carNumber": this.chooseQuery.licenseNumber,
