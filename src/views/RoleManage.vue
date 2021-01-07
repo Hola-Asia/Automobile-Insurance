@@ -310,23 +310,18 @@ export default {
         }).then((res) => {
           //查询成功有数据
           if (res.status === 200) {
-            console.log(typeof res.data.data);
-            console.log(res);
             if (typeof res.data.data === "object") {
               //页码不显示
               this.showYeMa=false;
               //先置空
               this.tableData = [];
               //渲染数据
-              // (res.data.data).forEach(function (v) {
-              //   if (v.status === 0) {
-              //     v.status = '未启用';
-              //   } else {
-              //     v.status = '启用';
-              //   }
-              // })
-              if (res.data.data.status === 0 )
-              this.tableData = res.data.data;
+              if (res.data.data.status === 0 ){
+                res.data.data.status = '未启用';
+              }else{
+                res.data.data.status = '启用';
+              }
+              this.tableData.push(res.data.data);
             } else {
               alert('未查询到角色名称数据信息');
             }
