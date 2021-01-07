@@ -18,19 +18,23 @@
                 <span slot="title"></span>
               </el-menu-item>
             </router-link>
-            <router-link to="/order">
+            <router-link v-if="ordreJurisdiction" to="/order">
               <el-menu-item index="2">
                 <i class="el-icon-document"></i>
                 <span slot="title">订单管理</span>
               </el-menu-item>
             </router-link>
+<<<<<<< HEAD
             <router-link to="/customer">
+=======
+            <router-link v-if="clientsJurisdiction" to="/order">
+>>>>>>> 010b761740b7d0513f38eea6c3683ea29a37e185
               <el-menu-item index="3">
                 <i class="el-icon-user-solid"></i>
                 <span slot="title">客户管理</span>
               </el-menu-item>
             </router-link>
-            <router-link to="/information">
+            <router-link v-if="informationJurisdiction" to="/information">
               <el-menu-item index="4">
                 <i class="el-icon-chat-line-square"></i>
                 <span slot="title">资讯管理</span>
@@ -42,7 +46,7 @@
                 <span slot="title">关于我们</span>
               </el-menu-item>
             </router-link>
-            <router-link to="/">
+            <router-link v-if="politiqueJurisdiction" to="/guaranteeSlipList">
               <el-menu-item index="6">
                 <i class="el-icon-s-check"></i>
                 <span slot="title">保单管理</span>
@@ -54,7 +58,7 @@
                 <span slot="title">意见反馈</span>
               </el-menu-item>
             </router-link>
-            <router-link to="/">
+            <router-link v-if="jurisdictionAdministration||accountManagement||departmentManagement||gestionSectorielle" to="accountManage">
               <el-menu-item index="8">
                 <i class="el-icon-s-tools"></i>
                 <span slot="title">权限管理</span>
@@ -93,20 +97,96 @@
 <script>
 export default {
   data() {
-    return {};
+    return {
+        // 权限值
+        jurisdiction:sessionStorage.jurisdiction||null,
+        //订单管理权限
+        ordreJurisdiction:false,
+        // 保单管理权限
+        politiqueJurisdiction:false,
+        //客户管理权限
+        clientsJurisdiction:false,
+        //资讯管理权限
+        informationJurisdiction:false,
+        //权限管理
+        jurisdictionAdministration:false,
+        //账号管理
+        accountManagement:false,
+        //角色管理
+        departmentManagement:false,
+        //部门管理
+        gestionSectorielle:false,
+    };
   },
   methods: {
     // 导航
     handleOpen(key, keyPath) {
-      console.log(key, keyPath);
+      // console.log(key, keyPath);
     },
     handleClose(key, keyPath) {
-      console.log(key, keyPath);
+      // console.log(key, keyPath);
     },
     // 下拉
     handleCommand(command) {
-      this.$message("click on item " + command);
+      
+      this.$axios({
+        url:'/user/logout',
+        params:{
+          'token':sessionStorage.token
+        }
+      }).then((res)=>{
+        this.$router.push('/login');
+        delete sessionStorage.token;
+        delete sessionStorage.jurisdiction;
+        this.$message({
+          message: '您已成功退出登录',
+          type: 'success'
+        });
+      }).catch((err)=>{
+        this.$message({
+          message: '服务器开小差去了(*￣︶￣)',
+          type: 'success'
+        });
+      })
+      
     },
+    //判断权限
+    jurisdictionFn(){
+      this.jurisdiction=sessionStorage.jurisdiction;
+      let json=JSON.parse(this.jurisdiction)||0;
+      for (let i = 0; i < json.length; i++) {
+        switch(json[i].menuName){
+          case "订单管理":
+            this.ordreJurisdiction=true;
+          break;
+          case "保单管理":
+            this.politiqueJurisdiction=true;
+          break;
+          case "客户管理":
+            this.clientsJurisdiction=true;
+          break;
+          case "资讯管理":
+            this.informationJurisdiction=true;
+          break;
+          case "权限管理":
+            this.jurisdictionAdministration=true;
+          break;
+          case "账号管理":
+            this.accountManagement=true;
+          break;
+          case "角色管理":
+            this.departmentManagement=true;
+          break;
+          case "部门管理":
+            this.gestionSectorielle=true;
+          break;
+        }
+        
+      }
+    }
+  },
+  mounted() {
+    this.jurisdictionFn();
   },
   components: {},
 };
