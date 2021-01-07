@@ -106,7 +106,7 @@ export default {
           }else{
             sessionStorage.token=res.data.data.token;
             sessionStorage.jurisdiction=JSON.stringify(res.data.data.menus);
-            this.$router.push('/guaranteeSlipList');
+            this.$router.push('/order');
             this.open2('登录成功');
           }
         }).catch((err)=>{
