@@ -1,7 +1,9 @@
 <template>
     <div class="background">
-      <h1>汽 车 保 险 后 台 管 理 系 统</h1>
+        
+      
       <div class="form">
+        <h1>汽 车 保 险 后 台 管 理 系 统</h1>
         <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
           <el-form-item label=" " prop="user">
             <el-input class="user" type="text" v-model="ruleForm.user" autocomplete="off" placeholder="请输入账号" @keyup.enter.native="submitForm('ruleForm')"></el-input>
@@ -130,11 +132,11 @@ export default {
     color: #fff;
     text-align: center;
     font-size: 36px;
-    margin-top: 400px;
+    margin-bottom: 50px;
   }
 .form{
   background: #00A0C3;
-  width: 400px;
+  width: 500px;
   height: 300px;
   margin: 0px 0 0 -242px;
   position: absolute;
@@ -146,6 +148,9 @@ export default {
     height: 40px;
     color: #fff;
     text-align: center;
+  }
+  input{
+    margin: 0 auto;
   }
 }
 </style>
