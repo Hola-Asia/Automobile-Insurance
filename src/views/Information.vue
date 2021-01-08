@@ -233,7 +233,7 @@
       <el-row class="searchnum">
         <el-col :span="24">
           <div class="grid-content bg-purple-dark">
-            查询结果：共计<span>111</span>条
+            查询结果：共计<span>{{splitepage.page}}</span>条
           </div>
         </el-col>
       </el-row>
@@ -466,6 +466,8 @@
 export default {
   data() {
     return {
+      // token值储存
+      token:sessionStorage.token,
       // 分类按钮
       btn1_active: "0",
       btn2_active: "0",
@@ -516,7 +518,7 @@ export default {
       newincreasedata: {
         lasttime: Date.now(),
         title: "",
-        number: "",
+        number: null,
         category: "",
         recommend: "",
         puttime: "",
@@ -527,7 +529,7 @@ export default {
       // 查询发送数据
       selectdata: {
         title: "",
-        number: "",
+        number: null,
         status: "",
         category: "",
         recommend: "",
@@ -543,7 +545,7 @@ export default {
         id: "",
         category: "",
         content: "",
-        number: "",
+        number: null,
         puttime: "",
         recommend: "",
         removetime: "",
@@ -556,9 +558,9 @@ export default {
       // 分页
       splitepage: {
         page: 0,
-        limit: 2,
+        limit: 5,
         currentPage: 1,
-        PageSizes: [2, 4, 8, 10],
+        PageSizes: [5, 10, 15, 20],
       },
       // 提示弹窗
       peompttext: "",
@@ -638,6 +640,9 @@ export default {
     updatefun() {
       this.$axios({
         url: "/information/update",
+        headers:{
+              'token':this.token
+            },
         method: "post",
         data: {
           id: this.updatefunobj.id,
@@ -653,13 +658,12 @@ export default {
         },
       })
         .then((res) => {
-          console.log(res.data.msg);
           if (res.data.code == 0) {
             this.updatefunobj = {
               id: "",
               category: "",
               content: "",
-              number: "",
+              number: null,
               puttime: "",
               recommend: "",
               removetime: "",
@@ -680,7 +684,7 @@ export default {
       this.newincreasedata = {
         lasttime: Date.now(),
         title: "",
-        number: "",
+        number: null,
         category: "",
         recommend: "",
         puttime: "",
@@ -710,9 +714,11 @@ export default {
     },
     // 渲染分页axios
     applypage() {
-      console.log(this.selectdata);
       this.$axios({
         url: "/information/query",
+        headers:{
+              'token':this.token
+            },
         method: "post",
         data: {
           pageNum: parseInt(this.splitepage.currentPage),
@@ -783,7 +789,7 @@ export default {
       //清空渲染要赋值的对象
       this.selectdata = {
         title: "",
-        number: "",
+        number: null,
         status: "",
         category: "",
         recommend: "",
@@ -869,6 +875,9 @@ export default {
     recommended(val) {
       this.$axios({
         url: "/information/update",
+        headers:{
+              'token':this.token
+            },
         method: "post",
         data: {
           id: this.datalist[val].id,
@@ -892,6 +901,9 @@ export default {
       let datetime1 = new Date();
       this.$axios({
         url: "/information/update",
+        headers:{
+              'token':this.token
+            },
         method: "post",
         data: {
           id: this.datalist[val].id,
@@ -916,6 +928,9 @@ export default {
       let datetime2 = new Date();
       this.$axios({
         url: "/information/update",
+        headers:{
+              'token':this.token
+            },
         method: "post",
         data: {
           id: this.datalist[val].id,
@@ -986,6 +1001,9 @@ export default {
         this.wintitle = "";
         this.$axios({
           url: "/information/add",
+          headers:{
+              'token':this.token
+            },
           method: "post",
           data: {
             lasttime: this.newincreasedata.lasttime,
@@ -999,11 +1017,10 @@ export default {
           },
         })
           .then((res) => {
-            console.log(res.data.msg);
             this.newincreasedata = {
               lasttime: Date.now(),
               title: "",
-              number: "",
+              number: null,
               category: "",
               recommend: "",
               puttime: "",
@@ -1040,7 +1057,7 @@ export default {
       this.newincreasedata = {
         lasttime: Date.now(),
         title: "",
-        number: "",
+        number: null,
         category: "",
         recommend: "",
         puttime: "",
@@ -1054,7 +1071,7 @@ export default {
     // 渲染页面
     (this.selectdata = {
       title: "",
-      number: "",
+      number: null,
       status: "",
       category: "",
       recommend: "",
@@ -1267,6 +1284,9 @@ export default {
   background-color: #fff;
   text-align: left;
   padding: 30px;
+}
+.el-select{
+  width: 100%;
 }
 .textareacls {
   display: block;

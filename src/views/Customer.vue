@@ -89,6 +89,7 @@ export default {
         // 搜索框
         input3: '',
       },
+      token:sessionStorage.token,
       // 下拉框
       select: '',
     //   表格
@@ -131,6 +132,9 @@ export default {
              this.$axios({
               url:'/customer/queryCustomerByHolder',
               method:'post',
+              headers:{
+              'token':this.token
+            },
               data:{
                 startIndex:this.queryInfo.page,
                 pageSize:this.queryInfo.limit,
@@ -152,6 +156,9 @@ export default {
              this.$axios({
                url:'/customer/queryCustomerByPhone',
                method:'post',
+               headers:{
+                  'token':this.token
+                },
                data:{
                  phoneNumber:this.numberValidateForm.input3,
                  startIndex:this.queryInfo.page,
@@ -173,6 +180,9 @@ export default {
             this.$axios({
                url:'/customer/queryCustomerByIdcard',
                method:'post',
+               headers:{
+                  'token':this.token
+                },
                data:{
                  idCardNumber:this.numberValidateForm.input3,
                  startIndex:this.queryInfo.page,
@@ -203,6 +213,9 @@ export default {
       userList(){
         this.$axios({
           url:'/customer/list',
+          headers:{
+              'token':this.token
+            },
           params:{
             startIndex:this.queryInfo.page,
             pageSize:this.queryInfo.limit
@@ -219,6 +232,9 @@ export default {
       userlistTotal(){
         this.$axios({
           url:'/customer/listAll',
+          headers:{
+              'token':this.token
+            },
         }).then((res)=>{
           this.total=res.data.data.length;
         }).catch((err)=>{
@@ -272,7 +288,7 @@ export default {
   } */
   .cus-sel{
     width: 120px;
-    // padding: 0 10px;
+    
   }
   .box-card{
       line-height: 42px;

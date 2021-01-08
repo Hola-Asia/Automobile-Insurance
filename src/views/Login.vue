@@ -100,13 +100,13 @@ export default {
           if(res.data.msg=="账号未激活!"){
             this.open1('账号未激活')
           }else if(res.data.msg=="该账户已经登入"){
-          this.open1('该账号已在其他地方登陆')
+            this.open1('该账号已在其他地方登陆');
           }else if(res.data.data==null){
             this.open1('账号或密码错误')
           }else{
             sessionStorage.token=res.data.data.token;
             sessionStorage.jurisdiction=JSON.stringify(res.data.data.menus);
-            this.$router.push('/guaranteeSlipList');
+            this.$router.push('/order');
             this.open2('登录成功');
           }
         }).catch((err)=>{

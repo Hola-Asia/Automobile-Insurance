@@ -37,7 +37,7 @@
         </el-option>
       </el-select><br>
       <div class="b-btn">
-        <el-button type="info" class="c-btn">取消</el-button>
+        <el-button type="info" class="c-btn" @click="clear">取消</el-button>
         <el-button type="primary" class="c-btn" @click="queRen">确认</el-button>
       </div>
     </div>
@@ -84,6 +84,9 @@ export default {
       this.$axios({
         url:'/user/queryUserById',
         method:'get',
+        headers:{
+          'token':sessionStorage.token,
+        },
         params:{
           id:this.$route.params.conlltion,
         }
@@ -115,6 +118,9 @@ export default {
       let that = this;
       this.$axios({
         url:'/role/queryAllRoleName',
+        headers:{
+          'token':sessionStorage.token,
+        },
         method:'get',
       }).then((res)=>{
         if (res.status === 200){
@@ -134,11 +140,17 @@ export default {
         alert(err);
       })
     },
+    clear(){
+      this.$router.go(-1);
+    },
     //获取全部的部门
     getDepartment(){
       let that = this;
       this.$axios({
         url:'/department/queryAllDepartmentName',
+        headers:{
+          'token':sessionStorage.token,
+        },
         method:'get',
       }).then((res)=>{
         if (res.status === 200){
@@ -184,6 +196,9 @@ export default {
       }
       this.$axios({
         url:'/user/updateUser',
+        headers:{
+          'token':sessionStorage.token,
+        },
         method:'post',
         data:{
           username: this.editJson.username,

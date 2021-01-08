@@ -179,6 +179,9 @@ export default {
       this.$axios({
         url:'/user/list',
         method:'get',
+        headers:{
+          'token':sessionStorage.token,
+        },
         params:{
           limit:limit,
           page:page,
@@ -204,7 +207,7 @@ export default {
         this.dialogLoading=false;
       }).catch((err)=>{
         this.dialogLoading=false;
-        alert(err);
+        alert('未连接到接口，渲染页面失败');
       })
     },
 
@@ -221,6 +224,9 @@ export default {
             url:'/user/queryUserByPhone',
             params:{
               phone: this.formInline.user.trim(),
+            },
+            headers:{
+              'token':sessionStorage.token,
             },
             method:"get",
           }).then((res)=>{
@@ -267,11 +273,14 @@ export default {
       this.$axios({
         url:'/user/queryUserByStatus',
         method:'get',
+        headers:{
+          'token':sessionStorage.token,
+        },
         params:{
           status:status,
           page:page,
           limit:limit,
-        }
+        },
       }).then((res)=>{
         if (res.status === 200){
           if (res.data.data.length > 0){
@@ -338,6 +347,9 @@ export default {
       console.log(stopJson.status);
       this.$axios({
         url:'/user/updateUserByStatus',
+        headers:{
+          'token':sessionStorage.token,
+        },
         method:'get',
         params:{
           id:stopJson.id,

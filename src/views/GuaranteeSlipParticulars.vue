@@ -197,15 +197,17 @@ export default {
             idType:null,
             // 地址
             address:null,
+            // token
+            token:sessionStorage.token,
         }
     },
     methods: {
         beg(){
             this.$axios({
                 url:'/policy/findId',
-                // headers:{
-                //   'token':this.token
-                //   },
+                headers:{
+                  'token':this.token
+                  },
                 params:{
                     'id':this.id
                 }

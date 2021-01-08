@@ -70,6 +70,7 @@ export default {
       total:3,
       },
       id:'',
+      token:sessionStorage.token
     }
   },
   methods: {
@@ -93,6 +94,9 @@ export default {
         this.$axios({
           url:'/customer/queryCustomerOrder',
           method:'post',
+          headers:{
+              'token':this.token
+            },
           data:{
             startIndex:(this.queryPageInfo.page-1)*this.queryPageInfo.limit,
             pageSize:this.queryPageInfo.limit,

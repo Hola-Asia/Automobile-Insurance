@@ -37,7 +37,7 @@
           </el-option>
         </el-select><br>
         <div class="b-btn">
-          <el-button type="info" class="c-btn">取消</el-button>
+          <el-button type="info" class="c-btn" @click="clear">取消</el-button>
           <el-button type="primary" class="c-btn" @click="tiJiao">确认</el-button>
         </div>
       </div>
@@ -81,6 +81,9 @@ export default {
       let that = this;
       this.$axios({
         url:'/role/queryAllRoleName',
+        headers:{
+          'token':sessionStorage.token,
+        },
         method:'get',
       }).then((res)=>{
         if (res.status === 200){
@@ -105,6 +108,9 @@ export default {
       let that = this;
       this.$axios({
         url:'/department/queryAllDepartmentName',
+        headers:{
+          'token':sessionStorage.token,
+        },
         method:'get',
       }).then((res)=>{
         if (res.status === 200){
@@ -124,6 +130,9 @@ export default {
         alert(err);
       })
     },
+    clear(){
+      this.$router.go(-1);
+    },
     //正则验证手机号码
     checkPhone(){
       let reg = /^1[3-9]\d{9}$/;
@@ -136,6 +145,9 @@ export default {
     tiJiao(){
       this.$axios({
         url:'/user/addUser',
+        headers:{
+          'token':sessionStorage.token,
+        },
         method:'post',
         data: this.addData,
       }).then((res)=>{
