@@ -91,20 +91,22 @@
     </el-card>
     <!--添加-->
     <el-dialog title="添加部门" :visible.sync="dialogFormVisible" class="addBox">
-      <el-form :model="form">
-        <el-form-item label="部门名称" :label-width="formLabelWidth">
+      <el-form :model="form" >
+        <el-form-item label="部门名称" label-width='150px' >
           <el-input v-model="form.name" placeholder="请输入部门名称"></el-input>
         </el-form-item>
-        <el-form-item label="启用状态" :label-width="formLabelWidth">
-          <el-select v-model="form.status" placeholder="请选择" class="start">
+
+        <el-form-item label="启用状态" label-width='150px' >
+
+          <el-select v-model="form.status" placeholder="请选择">
             <el-option label="启用" value="1"></el-option>
             <el-option label="未启用" value="0"></el-option>
           </el-select>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="addQuRen">确 定</el-button>
+        <el-button @click="dialogFormVisible = false" class='btn-kuang'>取 消</el-button>
+        <el-button type="primary" @click="addQuRen" class='btn-kuang'>确 定</el-button>
       </div>
     </el-dialog>
     <!--查看-->
@@ -287,6 +289,9 @@ export default {
       this.loading=true;
       this.$axios({
         url:'/department/list',
+        headers:{
+          'token':sessionStorage.token,
+        },
         method:'get',
         params:{
           limit:limit,
@@ -313,7 +318,7 @@ export default {
         this.loading=false;
       }).catch((err)=>{
         this.loading=false;
-        alert(err);
+        alert('未连接到接口，渲染页面失败');
       })
     },
     //搜索
@@ -322,6 +327,9 @@ export default {
       if (this.formInline.depart.trim()) {
         this.$axios({
           url: '/department/queryDepartmentByName',
+          headers:{
+            'token':sessionStorage.token,
+          },
           params: {
             name: this.formInline.depart.trim(),
           },
@@ -357,6 +365,9 @@ export default {
         //启用状态有值
         this.$axios({
           url: '/department/queryDepartmentByStatus',
+          headers:{
+            'token':sessionStorage.token,
+          },
           params: {
             status:this.formInline.region,
           },
@@ -407,6 +418,9 @@ export default {
         let that = this;
         this.$axios({
           url: '/department/queryAllUserByDepartmentId',
+          headers:{
+            'token':sessionStorage.token,
+          },
           method: 'get',
           params: {
             id: row.id,
@@ -436,6 +450,9 @@ export default {
       }
       this.$axios({
         url:'/department/updateDepartmentStatus',
+        headers:{
+          'token':sessionStorage.token,
+        },
         method:'post',
         data:{
           id: stopJson.id,
@@ -469,6 +486,9 @@ export default {
       this.name = row.name;
       this.$axios({
         url: '/department/queryAllUserByDepartmentId',
+        headers:{
+          'token':sessionStorage.token,
+        },
         method: 'get',
         params: {
           id: row.id,
@@ -493,6 +513,9 @@ export default {
       //删除该部门
       this.$axios({
         url: '/department/deleteDepartment',
+        headers:{
+          'token':sessionStorage.token,
+        },
         method: 'get',
         params: {
           id: this.deleteId,
@@ -521,6 +544,9 @@ export default {
       //渲染页面
       this.$axios({
         url:'/department/queryAllUserByDepartmentId',
+        headers:{
+          'token':sessionStorage.token,
+        },
         method:'get',
         params:{
           id:row.id,
@@ -568,6 +594,9 @@ export default {
     addQuRen(){
       this.$axios({
         url:'/department/addDepartment',
+        headers:{
+          'token':sessionStorage.token,
+        },
         method:'post',
         data: this.form,
       }).then((res)=>{
@@ -637,6 +666,9 @@ export default {
       }
     }
   }
+}
+.el-select{
+  width: 100%;
 }
 .box-card{
   width: 100%;
@@ -729,6 +761,9 @@ export default {
   border-bottom: none !important;
   padding-bottom: 0px!important;
 }
+.el-dialog__footer {
+  text-align: center!important;
+}
 ::-webkit-scrollbar {
   display: none;
 }
@@ -741,8 +776,13 @@ export default {
 .el-dialog {
   width: 32%!important;
 }
-.el-form-item__content {
-  width: 54%;
+.addBox {
+  .el-form-item__content {
+    width: 54%;
+  }
+  .btn-kuang{
+    margin-right: 46px;
+  }
 }
 .el-dialog__body {
   padding: 10px 80px!important;

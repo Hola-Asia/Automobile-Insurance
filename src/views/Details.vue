@@ -190,6 +190,7 @@ export default {
       str4:'',
       str5:'',
       str6:'',
+      token:sessionStorage.token,
       tableRes:[{
         carNumber:'1',
         chassisNumber:'2',
