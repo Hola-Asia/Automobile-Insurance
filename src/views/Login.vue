@@ -138,7 +138,7 @@ export default {
   background: #00A0C3;
   width: 500px;
   height: 300px;
-  margin: 0px 0 0 -242px;
+  margin: -80px 0 0 -242px;
   position: absolute;
   left: 50%;
   top: 50%;
