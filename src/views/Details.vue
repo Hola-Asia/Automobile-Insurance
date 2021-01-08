@@ -335,8 +335,8 @@ export default {
         }, {
           text1: '三者险',
           name1: this.str6,
-          text2: '保单',
-          name2: '查看保单'
+          text2: '-',
+          name2: '-'
         }];
         this.tableData6 = [{
           text1: '交强险',
@@ -346,8 +346,8 @@ export default {
         }, {
           text1: '车船税',
           name1: this.str2,
-          text2: '保单',
-          name2: this.str4
+          text2: '-',
+          name2: '-'
         }]
       }
     }

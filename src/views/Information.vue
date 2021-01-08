@@ -962,9 +962,9 @@ export default {
         this.newincreasedata.recommend = "选项2";
       }
       // 上架
-      if (this.datalist[val].puttime != "1-01-30 20:11:08") {
+      if (this.datalist[val].putdate != "1-01-30 ") {
         this.newincreasedata.puttime = "选项1";
-      } else if (this.datalist[val].puttime == "1-01-30 20:11:08") {
+      } else if (this.datalist[val].putdate == "1-01-30 ") {
         this.newincreasedata.puttime = "选项2";
       }
       this.newincreasedata.title = this.datalist[val].title;
@@ -976,13 +976,13 @@ export default {
     datadel() {
       if (this.newincreasedata.category == "选项1") {
         this.newincreasedata.category = "车险改革";
-      } else {
+      } else if(this.newincreasedata.category == "选项2") {
         this.newincreasedata.category = "用车养车";
       }
       // 推荐
       if (this.newincreasedata.recommend == "选项1") {
         this.newincreasedata.recommend = "1";
-      } else {
+      } else if (this.newincreasedata.recommend == "选项2") {
         this.newincreasedata.recommend = "2";
       }
       // 上架
@@ -990,7 +990,7 @@ export default {
         this.newincreasedata.puttime = Date.now();
         this.newincreasedata.status = "1";
         this.newincreasedata.removetime = -62133115205000;
-      } else {
+      } else if (this.newincreasedata.puttime == "选项2") {
         this.newincreasedata.puttime = -62133115205000;
         this.newincreasedata.status = "2";
         this.newincreasedata.removetime = Date.now();
