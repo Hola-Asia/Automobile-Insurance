@@ -101,10 +101,10 @@ export default {
       let removeTime = '';
       if (this.switch1){
         isStatus = 1;
-        removeTime = this.value1.getTime();
+        removeTime = this.value1.toISOString();
       }else {
         isStatus = 0;
-        putTime = this.value1.getTime();
+        putTime = this.value1.toISOString();
       }
       this.$axios({
         url:'/protocols/add',
@@ -116,7 +116,7 @@ export default {
           content:this.textarea,
           name:this.input1,
           status:isStatus.toString(),
-          lasttime:new Date().getTime(),
+          lasttime:new Date().toISOString(),
           puttime:putTime,
           remoevetime:removeTime,
         }

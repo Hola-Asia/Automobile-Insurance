@@ -164,6 +164,7 @@ export default {
     this.id = this.$route.query.id;
     this.$axios({
       url:'/protocols/queryById',
+      method:'post',
       headers:{
         token:sessionStorage.token,
       },

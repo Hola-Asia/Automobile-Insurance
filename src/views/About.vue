@@ -7,7 +7,7 @@
             v-model="datePic1"
             type="daterange"
             range-separator="至"
-            start-placeholder="编辑时间1"
+            start-placeholder="编辑时间"
             end-placeholder="编辑时间">
         </el-date-picker>
       </div>
@@ -167,6 +167,7 @@ export default {
     viewInfo(index,data){
       this.$axios({
         url:'/protocols/queryById',
+        method:'post',
         headers:{
           token:sessionStorage.token,
         },
@@ -182,6 +183,7 @@ export default {
     changeStatus(index,data){
       this.$axios({
         url:'/protocols/queryById',
+        method:'post',
         headers:{
           token:sessionStorage.token,
         },
