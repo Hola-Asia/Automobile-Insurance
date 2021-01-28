@@ -3,7 +3,7 @@
     <el-container style="height: 100%">
       <el-aside width="200px">
         <el-col :span="12">
-          <el-menu
+          <el-menu 
             default-active="2"
             class="el-menu-vertical-demo"
             @open="handleOpen"
